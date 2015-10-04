@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">Water Level</string>
+    <string name="title_activity_main">Water Level</string>
+
+    <string name="action_settings">Configurações</string>
+    <string name="action_logout">Sair</string>
+
+    <string name="title_section1">Inicio</string>
+    <string name="title_section2">Usuario</string>
+    <string name="title_section3">Atividade</string>
+
+    <string name="navigation_drawer_open">Abrir menu</string>
+    <string name="navigation_drawer_close">Fechar menu</string>
+
+    <string name="action_example">Water Level</string>
+
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>
