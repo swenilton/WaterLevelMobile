@@ -43,9 +43,6 @@ public class AtividadeRealizadaDAO implements IAtividadeRealizadaDAO {
 			stmt.setTimestamp(5, new Timestamp(atividadeRealizada
 					.getDataHoraFim().getTime()));
 			stmt.execute();
-		} catch (com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException e) {
-			ViolacaoChaveEstrangeiraException exc = new ViolacaoChaveEstrangeiraException();
-			throw new RepositorioException(exc);
 		} catch (Exception e) {
 			throw new RepositorioException(e);
 		} finally {
@@ -131,9 +128,6 @@ public class AtividadeRealizadaDAO implements IAtividadeRealizadaDAO {
 			if (resultado == 0) {
 				throw new AtividadeNaoEncontradaException();
 			}
-		} catch (com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException e) {
-			ViolacaoChaveEstrangeiraException exc = new ViolacaoChaveEstrangeiraException();
-			throw new RepositorioException(exc);
 		} catch (Exception e) {
 			throw new RepositorioException(e);
 		} finally {

@@ -39,9 +39,6 @@ public class AcionamentoDAO implements IAcionamentoDAO {
 					.getTime()));
 			stmt.setInt(3, acionamento.getBomba().getCodigo());
 			stmt.execute();
-		} catch (com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException e) {
-			ViolacaoChaveEstrangeiraException exc = new ViolacaoChaveEstrangeiraException();
-			throw new RepositorioException(exc);
 		} catch (Exception e) {
 			throw new RepositorioException(e);
 		} finally {

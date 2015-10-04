@@ -4,9 +4,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.sun.org.apache.bcel.internal.generic.ISUB;
-import com.sun.xml.internal.txw2.IllegalAnnotationException;
-
 import br.com.coffeebeans.exception.ListaUsuarioVaziaException;
 import br.com.coffeebeans.exception.RepositorioException;
 import br.com.coffeebeans.exception.UsuarioInativoException;
@@ -24,7 +21,7 @@ public class ControladorUsuario {
 			UsuarioJaExistenteException, UsuarioNaoEncontradoException,
 			RepositorioException {
 		if (usuario == null) {
-			throw new IllegalAnnotationException("Usuário Null");
+			throw new IllegalArgumentException("Usuário Null");
 		}
 		iusuario.cadastrar(usuario);
 
