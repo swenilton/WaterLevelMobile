@@ -1,29 +1,28 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="br.com.coffeebeansdev.waterlevelmobile.FragmentAtividade">
+    tools:context="br.com.coffeebeansdev.waterlevelmobile.FragmentAtividade"
+    android:descendantFocusability="blocksDescendants" >
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView android:layout_width="match_parent" android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
-
-    <TextView
+    <ListView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Atividade"
-        android:id="@+id/textView2"
-        android:layout_gravity="center"
-        android:textSize="50dp" />
+        android:id="@+id/listView"
+        android:scrollbars="vertical"
+        android:headerDividersEnabled="true"
+        android:footerDividersEnabled="true"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:divider="@android:drawable/divider_horizontal_bright" />
 
-    <android.support.design.widget.CoordinatorLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+    <android.support.design.widget.FloatingActionButton android:id="@+id/fab"
+        android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:layout_gravity="right|bottom"
+        android:src="@drawable/ic_dialog_add"
+        android:layout_marginRight="@dimen/fab_margin"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="@dimen/fab_margin"
+        android:longClickable="false" />
 
-        <android.support.design.widget.FloatingActionButton android:id="@+id/fab"
-            android:layout_width="wrap_content" android:layout_height="wrap_content"
-            android:layout_gravity="bottom|end" android:layout_margin="@dimen/fab_margin"
-            android:src="@drawable/ic_dialog_add" />
-
-    </android.support.design.widget.CoordinatorLayout>
-
-</FrameLayout>
+</RelativeLayout>

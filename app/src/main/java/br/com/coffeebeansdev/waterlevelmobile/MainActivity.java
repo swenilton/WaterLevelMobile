@@ -1,13 +1,18 @@
 package br.com.coffeebeansdev.waterlevelmobile;
 
-import android.app.FragmentTransaction;
+import android.app.ActivityOptions;
 import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.view.View;
+import android.util.Log;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -16,9 +21,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
+import android.widget.Toast;
+
+import br.com.coffeebeans.fachada.Fachada;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    private Fachada fachada;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -39,6 +50,14 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.setCheckedItem(-1);
+
+        try{
+            fachada = Fachada.getInstance(this);
+        } catch (Exception e){
+            Log.i("ERRO", e.getMessage());
+            Toast.makeText(this, "Erro ao instanciar fachada\n" + e.getMessage(),
+                    Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
@@ -47,7 +66,7 @@ public class MainActivity extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            //super.onBackPressed();
         }
     }
 
@@ -70,7 +89,11 @@ public class MainActivity extends AppCompatActivity
             return true;
         } else if (id == R.id.action_logout) {
             Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-            startActivity(intent);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
+            } else {
+                startActivity(intent);
+            }
             return true;
         }
 
@@ -114,5 +137,27 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent){
+        if(requestCode == 12){
+            if(resultCode == RESULT_OK){
+
+                Uri imagemSelecionada = intent.getData();
+
+                String[] colunas = {MediaStore.Images.Media.DATA};
+
+                Cursor cursor = getContentResolver().query(imagemSelecionada, colunas, null, null, null);
+                cursor.moveToFirst();
+
+                int indexColuna = cursor.getColumnIndex(colunas[0]);
+                String pathImg = cursor.getString(indexColuna);
+                cursor.close();
+
+                Bitmap bitmap = BitmapFactory.decodeFile(pathImg);
+                DialogInserirUsuario.setImg(bitmap);
+
+            }
+        }
     }
 }

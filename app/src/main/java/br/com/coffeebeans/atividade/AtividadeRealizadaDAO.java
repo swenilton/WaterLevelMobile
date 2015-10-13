@@ -5,10 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import br.com.coffeebeans.exception.AtividadeJaExistenteException;
@@ -16,14 +13,13 @@ import br.com.coffeebeans.exception.AtividadeNaoEncontradaException;
 import br.com.coffeebeans.exception.ListaVaziaException;
 import br.com.coffeebeans.exception.RepositorioException;
 import br.com.coffeebeans.exception.ViolacaoChaveEstrangeiraException;
-import br.com.coffeebeans.util.Conexao;
 
 public class AtividadeRealizadaDAO implements IAtividadeRealizadaDAO {
 	private String sistema = "mysql";
 	private Connection conexao;
 
 	public AtividadeRealizadaDAO() throws Exception {
-		this.conexao = Conexao.conectar(sistema);
+		//this.conexao = Conexao.conectar(sistema);
 	}
 
 	@Override

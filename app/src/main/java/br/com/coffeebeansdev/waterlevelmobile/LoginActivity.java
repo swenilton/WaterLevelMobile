@@ -4,8 +4,8 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.ActivityOptions;
 import android.app.LoaderManager.LoaderCallbacks;
-import android.content.ContentResolver;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
@@ -15,9 +15,9 @@ import android.os.AsyncTask;
 
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -27,9 +27,14 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import br.com.coffeebeans.fachada.Fachada;
 
 /**
  * A login screen that offers login via email/password.
@@ -54,11 +59,21 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
     private View mProgressView;
     private View mLoginFormView;
     private TextView mEsqueceuSenha;
+    private Fachada fachada;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        try{
+            fachada = Fachada.getInstance(getApplicationContext());
+            //fachada.cadastrar(new Usuario("ADMIN", "admin", "admin", "admin@exemplo.com", "SIM", "ADMINISTRADOR"));
+        }catch (Exception e){
+            Log.i("Erro Login: ", e.getMessage());
+            Toast.makeText(getApplicationContext(), "Erro ao instanciar fachada\n" + e.getMessage(),
+                    Toast.LENGTH_LONG).show();
+        }
 
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
@@ -131,10 +146,12 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
             mEmailView.setError(getString(R.string.error_field_required));
             focusView = mEmailView;
             cancel = true;
-        } else if (!isEmailValid(email)) {
-            mEmailView.setError(getString(R.string.error_invalid_email));
-            focusView = mEmailView;
-            cancel = true;
+        } else if(email.contains("@")) {
+            if (!isEmailValid(email)) {
+                mEmailView.setError(getString(R.string.error_invalid_email));
+                focusView = mEmailView;
+                cancel = true;
+            }
         }
 
         if (cancel) {
@@ -148,14 +165,27 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
             mAuthTask = new UserLoginTask(email, password);
             mAuthTask.execute((Void) null);
 
-            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-            startActivity(intent);
+            if(mAuthTask.doInBackground()) {
+                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
+                } else {
+                    startActivity(intent);
+                }
+            } else {
+                Toast.makeText(getApplicationContext(), "Usuário ou senha inválido",
+                        Toast.LENGTH_LONG).show();
+            }
         }
     }
 
     private boolean isEmailValid(String email) {
-        //TODO: Replace this with your own logic
-        return email.contains("@") && email.contains(".");
+        if ((email == null) || (email.trim().length() == 0))
+            return false;
+        String emailPattern = "\\b(^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@([A-Za-z0-9-])+(\\.[A-Za-z0-9-]+)*((\\.[A-Za-z0-9]{2,})|(\\.[A-Za-z0-9]{2,}\\.[A-Za-z0-9]{2,}))$)\\b";
+        Pattern pattern = Pattern.compile(emailPattern, Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(email);
+        return matcher.matches();
     }
 
     private boolean isPasswordValid(String password) {
@@ -279,14 +309,20 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
         @Override
         protected Boolean doInBackground(Void... params) {
             // TODO: attempt authentication against a network service.
-
+            boolean vai = false;
             try {
                 // Simulate network access.
+                //vai = true;
+                vai = fachada.login(mEmail, mPassword);
+                Log.i("email e senha", mEmail + mPassword);
                 Thread.sleep(2000);
             } catch (InterruptedException e) {
-                return false;
+                vai = false;
+            } catch (Exception e) {
+                Log.i("Erro no login: ", e.getMessage());
+                vai = false;
             }
-
+            /*
             for (String credential : DUMMY_CREDENTIALS) {
                 String[] pieces = credential.split(":");
                 if (pieces[0].equals(mEmail)) {
@@ -294,9 +330,9 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
                     return pieces[1].equals(mPassword);
                 }
             }
-
+            */
             // TODO: register the new account here.
-            return true;
+            return vai;
         }
 
         @Override

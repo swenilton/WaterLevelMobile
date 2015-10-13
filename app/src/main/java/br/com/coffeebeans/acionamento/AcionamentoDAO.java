@@ -7,21 +7,18 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import br.com.coffeebeans.exception.AcionamentoJaExistenteException;
 import br.com.coffeebeans.exception.AcionamentoNaoEncontradoException;
 import br.com.coffeebeans.exception.RepositorioException;
-import br.com.coffeebeans.exception.ViolacaoChaveEstrangeiraException;
 import br.com.coffeebeans.exception.ListaVaziaException;
-import br.com.coffeebeans.util.Conexao;
 
 public class AcionamentoDAO implements IAcionamentoDAO {
 	private String sistema = "mysql";
 	private Connection conexao;
 
 	public AcionamentoDAO() throws Exception {
-		this.conexao = Conexao.conectar(sistema);
+		//this.conexao = Conexao.conectar(sistema);
 	}
 
 	@Override

@@ -1,10 +1,10 @@
 package br.com.coffeebeans.usuario;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
-import br.com.coffeebeans.exception.ListaUsuarioVaziaException;
+import android.content.Context;
+
 import br.com.coffeebeans.exception.RepositorioException;
 import br.com.coffeebeans.exception.UsuarioInativoException;
 import br.com.coffeebeans.exception.UsuarioJaExistenteException;
@@ -13,15 +13,14 @@ import br.com.coffeebeans.exception.UsuarioNaoEncontradoException;
 public class ControladorUsuario {
 	private IUsuarioDAO iusuario;
 
-	public ControladorUsuario() throws Exception {
-		this.iusuario = new UsuarioDAO();
+	public ControladorUsuario(Context context) throws Exception {
+		this.iusuario = new UsuarioDAO(context);
 	}
 
-	public void cadastrar(Usuario usuario) throws SQLException,
-			UsuarioJaExistenteException, UsuarioNaoEncontradoException,
-			RepositorioException {
+	public void cadastrar(Usuario usuario)
+			throws SQLException, UsuarioJaExistenteException, UsuarioNaoEncontradoException, RepositorioException {
 		if (usuario == null) {
-			throw new IllegalArgumentException("Usuário Null");
+			throw new IllegalArgumentException("Usuario Null");
 		}
 		iusuario.cadastrar(usuario);
 
@@ -32,8 +31,7 @@ public class ControladorUsuario {
 
 	}
 
-	public Usuario procurar(int id) throws SQLException,
-			UsuarioNaoEncontradoException, RepositorioException {
+	public Usuario procurar(int id) throws SQLException, UsuarioNaoEncontradoException, RepositorioException {
 		if (iusuario.procurar(id) == null) {
 			throw new UsuarioNaoEncontradoException();
 		}
@@ -42,8 +40,8 @@ public class ControladorUsuario {
 
 	}
 
-	public void atualizar(Usuario usuarioNovo) throws SQLException,
-			UsuarioNaoEncontradoException, RepositorioException {
+	public void atualizar(Usuario usuarioNovo)
+			throws SQLException, UsuarioNaoEncontradoException, RepositorioException {
 		if (usuarioNovo == null) {
 			throw new NullPointerException();
 		}
@@ -55,8 +53,7 @@ public class ControladorUsuario {
 		iusuario.atualizar(usuarioNovo);
 	}
 
-	public void remover(int id) throws SQLException,
-			UsuarioNaoEncontradoException, RepositorioException {
+	public void remover(int id) throws SQLException, UsuarioNaoEncontradoException, RepositorioException {
 		if (iusuario.procurar(id) == null) {
 			throw new UsuarioNaoEncontradoException();
 		} else {
@@ -64,18 +61,18 @@ public class ControladorUsuario {
 		}
 	}
 
-	public Usuario loginFacebook(String email) throws RepositorioException,
-			SQLException {
+	public Usuario loginFacebook(String email) throws RepositorioException, SQLException {
 		return iusuario.loginFacebook(email);
 	}
 
-	public void alterarSenha(int id, String senha) throws SQLException,
-			UsuarioNaoEncontradoException, RepositorioException {
-		
-			iusuario.alterarSenha(id, senha);		
+	public void alterarSenha(int id, String senha)
+			throws SQLException, UsuarioNaoEncontradoException, RepositorioException {
+
+		iusuario.alterarSenha(id, senha);
 	}
-	
-	public boolean login(String usuario, String senha) throws UsuarioInativoException, RepositorioException, SQLException{
+
+	public boolean login(String usuario, String senha)
+			throws UsuarioInativoException, RepositorioException, SQLException {
 		return iusuario.login(usuario, senha);
 	}
 

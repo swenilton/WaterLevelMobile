@@ -8,7 +8,6 @@ import br.com.coffeebeans.exception.AcionamentoJaExistenteException;
 import br.com.coffeebeans.exception.AcionamentoNaoEncontradoException;
 import br.com.coffeebeans.exception.ListaVaziaException;
 import br.com.coffeebeans.exception.RepositorioException;
-import br.com.coffeebeans.fachada.Fachada;
 
 public class ControladorAcionamento {
 	private IAcionamentoDAO iAcionamento;
@@ -26,7 +25,7 @@ public class ControladorAcionamento {
 		if (iAcionamento.procurar(acionamento.getId()) != null) {
 			throw new AcionamentoJaExistenteException();
 		}
-		// se j� tiver um acionamento nesse instante
+		// se ja tiver um acionamento nesse instante
 		if (iAcionamento.procurarIni(acionamento.getDataHoraInicio(),
 				acionamento.getDataHoraInicio()) != null) {
 			throw new AcionamentoJaExistenteException();
@@ -35,7 +34,7 @@ public class ControladorAcionamento {
 				|| acionamento.getDataHoraInicio().equals(
 						acionamento.getDataHoraFim())) {
 			throw new IllegalArgumentException(
-					"Imposs�vel a data hora de inicio ser maior ou igual a data hora fim");
+					"Impossivel a data hora de inicio ser maior ou igual a data hora fim");
 		}
 		iAcionamento.cadastrar(acionamento);
 	}
@@ -45,8 +44,8 @@ public class ControladorAcionamento {
 		ArrayList<Acionamento> acs = iAcionamento.listar();
 		try {
 			for (Acionamento ac : acs) {
-				ac.setBomba(Fachada.getInstance()
-						.bombaProcurar(ac.getIdBomba()));
+				//ac.setBomba(Fachada.getInstance()
+						//.bombaProcurar(ac.getIdBomba()));
 			}
 		} catch (Exception e) {
 			throw new RepositorioException(e);
@@ -59,8 +58,8 @@ public class ControladorAcionamento {
 		ArrayList<Acionamento> acs = iAcionamento.getUltimosAcionamentos();
 		try {
 			for (Acionamento ac : acs) {
-				ac.setBomba(Fachada.getInstance()
-						.bombaProcurar(ac.getIdBomba()));
+				//ac.setBomba(Fachada.getInstance()
+						//.bombaProcurar(ac.getIdBomba()));
 			}
 		} catch (Exception e) {
 			throw new RepositorioException(e);

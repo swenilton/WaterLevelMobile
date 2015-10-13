@@ -3,248 +3,309 @@ package br.com.coffeebeans.usuario;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import android.content.ContentValues;
+import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
-import br.com.coffeebeans.exception.UsuarioInativoException;
 import br.com.coffeebeans.exception.RepositorioException;
-import br.com.coffeebeans.exception.UsuarioJaExistenteException;
+import br.com.coffeebeans.exception.UsuarioInativoException;
 import br.com.coffeebeans.exception.UsuarioNaoEncontradoException;
-import br.com.coffeebeans.util.Conexao;
+import br.com.coffeebeans.util.CriarDb;
 
 public class UsuarioDAO implements IUsuarioDAO {
-
-	private Connection connection = null;
-	private String sistema = "mysql";
+	private static final String NOME_TABELA = "usuario";
+	private SQLiteDatabase db;
+	private static CriarDb conexao;
 	private static Usuario usuarioLogado;
 
-	public UsuarioDAO() throws Exception {
-		this.connection = Conexao.conectar(sistema);
+	public UsuarioDAO(Context context) {
+		conexao = CriarDb.getInstance(context);
+		db = conexao.openDb();
+	}
+
+	public boolean existe(String nome) throws SQLException {
+		boolean existe = false;
+
+		Cursor rs = null;
+		try {
+			if (db != null) {
+
+				String sql = "Select * from " + NOME_TABELA + " where NOME= ?";
+
+				String[] selectionArgs = { nome };
+
+				rs = db.rawQuery(sql, selectionArgs);
+
+				rs.moveToFirst();
+
+				if (rs.getCount() > 0 && rs != null) {
+					existe = true;
+				}
+
+				Log.i("metodo existe usuario", "o usuario existe ");
+			} else {
+				Log.i("Alerta", "banco nao existe ou nao foi aberto");
+			}
+		} catch (Exception e) {
+			Log.i("erro no metodo existir da classe usuario ", "" + e.getMessage());
+		}
+		return existe;
 	}
 
 	@Override
-	public void cadastrar(Usuario usuario) throws SQLException,
-			UsuarioJaExistenteException, RepositorioException {
-		PreparedStatement stmt = null;
-		try {
-			String sql = "INSERT INTO USUARIO(NOME, LOGIN, SENHA, EMAIL, TELEFONE, ATIVO, FOTO, PERFIL) VALUES"
-					+ " (?, ?, ?, ?, ?, ?, ?, ?)";
-			stmt = this.connection.prepareStatement(sql);
-			stmt.setString(1, usuario.getNome());
-			stmt.setString(2, usuario.getLogin());
-			stmt.setString(3, md5(usuario.getSenha()));
-			stmt.setString(4, usuario.getEmail());
-			stmt.setString(5, usuario.getTelefone());
-			stmt.setString(6, usuario.getAtivo());
-			stmt.setString(7, usuario.getFoto());
-			stmt.setString(8, usuario.getPerfil());
-			stmt.execute();
+	public void cadastrar(Usuario usuario) throws SQLException {
+		ContentValues valores = new ContentValues();
+		// valores.put("ID", atividade.getId());
+		valores.put("NOME", usuario.getNome());
+		valores.put("LOGIN", usuario.getLogin());
+		valores.put("SENHA", usuario.getSenha());
+		valores.put("EMAIL", usuario.getEmail());
+		//if (!usuario.getTelefone().equals(""))
+			valores.put("TELEFONE", usuario.getTelefone());
+		valores.put("ATIVO", usuario.getAtivo());
+		//if (!usuario.getFoto().equals(""))
+			valores.put("FOTO", usuario.getFoto());
+		valores.put("PERFIL", usuario.getPerfil());
 
-		} catch (SQLException e) {
-			throw new RepositorioException(e);
+		try {
+			if (db != null) {
+
+				// TODO //usuario ja existente
+				db.insert(NOME_TABELA, null, valores);
+			} else {
+				Log.i("Alerta", "banco nao existe ou nao foi aberto");
+			}
+
 		} catch (Exception e) {
-			throw new RepositorioException(e);
-		} finally {
-			stmt.close();
+			Log.i("erro ao cadastrar usuario ", "" + e.getMessage());
 		}
 	}
 
 	@Override
 	public List<Usuario> getLista() throws SQLException, RepositorioException {
-		List<Usuario> usuarios = new ArrayList<Usuario>();
-		PreparedStatement stmt = null;
-		ResultSet rs = null;
+		Cursor rs = null;
+		ArrayList<Usuario> usuarios = null;
 
 		try {
-			String sql = "SELECT * FROM USUARIO";
-			stmt = this.connection.prepareStatement(sql);
-			rs = stmt.executeQuery();
-			while (rs.next()) {
-				Usuario usuario = new Usuario(rs.getString("NOME"),
-						rs.getString("LOGIN"), rs.getString("SENHA"),
-						rs.getString("EMAIL"), rs.getString("ATIVO"),
-						rs.getString("PERFIL"));
-				usuario.setId(rs.getInt("ID"));
-				usuario.setFoto(rs.getString("FOTO"));
-				usuario.setTelefone(rs.getString("TELEFONE"));
-				usuarios.add(usuario);
+			usuarios = new ArrayList<Usuario>();
+			String sql = "SELECT * from " + NOME_TABELA;
+
+			if (db != null) {
+				rs = db.rawQuery(sql, null);
+
+				rs.moveToFirst();
+
+				if (rs.getCount() > 0 && rs != null) {
+
+					do {
+						Usuario usuario = new Usuario(rs.getString(rs.getColumnIndex("NOME")),
+								rs.getString(rs.getColumnIndex("LOGIN")), rs.getString(rs.getColumnIndex("SENHA")),
+								rs.getString(rs.getColumnIndex("EMAIL")), rs.getString(rs.getColumnIndex("ATIVO")),
+								rs.getString(rs.getColumnIndex("PERFIL")));
+
+						usuario.setId(rs.getInt(rs.getColumnIndex("ID")));
+						usuario.setTelefone(rs.getString(rs.getColumnIndex("TELEFONE")));
+						usuario.setFoto(rs.getString(rs.getColumnIndex("FOTO")));
+
+						usuarios.add(usuario);
+
+					} while (rs.moveToNext());
+
+				}
+			} else {
+				Log.i("Alerta", "banco nao existe ou nao foi aberto");
 			}
-		} catch (SQLException e) {
-			throw new RepositorioException(e);
+
 		} catch (Exception e) {
-			throw new RepositorioException(e);
+			Log.i("erro no metodo listar da classe usuario ", "" + e.getMessage());
 		} finally {
-			stmt.close();
-			rs.close();
+			if (rs != null) {
+				rs.close();
+			}
 		}
+
 		return usuarios;
 	}
 
 	@Override
-	public Usuario procurar(int id) throws SQLException, RepositorioException {
+	public Usuario procurar(int id) throws SQLException {
+		Cursor rs = null;
 		Usuario usuario = null;
-		PreparedStatement stmt = null;
-		ResultSet rs = null;
+
 		try {
-			String sql = "SELECT * FROM USUARIO WHERE ID = ?";
-			stmt = this.connection.prepareStatement(sql);
-			stmt.setInt(1, id);
-			rs = stmt.executeQuery();
-			if (rs.next()) {
-				usuario = new Usuario(rs.getString("NOME"),
-						rs.getString("LOGIN"), rs.getString("SENHA"),
-						rs.getString("EMAIL"), rs.getString("ATIVO"),
-						rs.getString("PERFIL"));
-				usuario.setId(rs.getInt("ID"));
-				usuario.setFoto(rs.getString("FOTO"));
-				usuario.setTelefone(rs.getString("TELEFONE"));
+			if (db != null) {
+
+				String sql = "Select * from " + NOME_TABELA + " where ID= ?";
+				String[] whereArgs = { String.valueOf(id) };
+
+				rs = db.rawQuery(sql, whereArgs);
+
+				rs.moveToFirst();
+
+				if (rs.getCount() > 0 && rs != null) {
+					usuario = new Usuario(rs.getString(rs.getColumnIndex("NOME")),
+							rs.getString(rs.getColumnIndex("LOGIN")), rs.getString(rs.getColumnIndex("SENHA")),
+							rs.getString(rs.getColumnIndex("EMAIL")), rs.getString(rs.getColumnIndex("ATIVO")),
+							rs.getString(rs.getColumnIndex("PERFIL")));
+
+					usuario.setId(rs.getInt(rs.getColumnIndex("ID")));
+					usuario.setTelefone(rs.getString(rs.getColumnIndex("TELEFONE")));
+					usuario.setFoto(rs.getString(rs.getColumnIndex("FOTO")));
+
+					Log.i("procurar usuario", "usuario achado com sucesso ");
+				}
 			} else {
-				throw new IllegalArgumentException("usuario não encontrado");
+				Log.i("Alerta", "banco nao existe ou nao foi aberto");
 			}
-		} catch (SQLException e) {
-			throw new RepositorioException(e);
 		} catch (Exception e) {
-			throw new RepositorioException(e);
+			Log.i("erro no meodo procurar da classe usuario ", "" + e.getMessage());
 		} finally {
-			stmt.close();
-			rs.close();
+			if (rs != null) {
+				rs.close();
+			}
 		}
 		return usuario;
 	}
 
 	@Override
-	public void atualizar(Usuario usuario)
-			throws UsuarioNaoEncontradoException, SQLException,
-			RepositorioException {
-		PreparedStatement stmt = null;
+	public void atualizar(Usuario usuario) throws SQLException {
 		try {
-			if (usuario != null) {
-				try {
-					String sql = "UPDATE USUARIO SET LOGIN= ?, NOME = ?, EMAIL = ?, TELEFONE = ?, FOTO = ?, ATIVO = ?, PERFIL = ? WHERE ID = ?";
-					stmt = this.connection.prepareStatement(sql);
-					stmt.setString(1, usuario.getLogin());
-					stmt.setString(2, usuario.getNome());
-					stmt.setString(3, usuario.getEmail());
-					stmt.setString(4, usuario.getTelefone());
-					stmt.setString(5, usuario.getFoto());
-					stmt.setString(6, usuario.getAtivo());
-					stmt.setString(7, usuario.getPerfil());
-					stmt.setInt(8, usuario.getId());
-					Integer resultado = stmt.executeUpdate();
-					if (resultado == 0)
-						throw new UsuarioNaoEncontradoException();
-				} catch (SQLException e) {
-					throw new RepositorioException(e);
-				}
-			}
-		} finally {
-			stmt.close();
-		}
-	}
+			// TODO //usuario ja existente
+			ContentValues valores = new ContentValues();
+			valores.put("NOME", usuario.getNome());
+			valores.put("LOGIN", usuario.getLogin());
+			valores.put("SENHA", usuario.getSenha());
+			valores.put("EMAIL", usuario.getEmail());
+			//if (!usuario.getTelefone().equals(""))
+				valores.put("TELEFONE", usuario.getTelefone());
+			valores.put("ATIVO", usuario.getAtivo());
+			//if (!usuario.getFoto().equals(""))
+				valores.put("FOTO", usuario.getFoto());
+			valores.put("PERFIL", usuario.getPerfil());
 
-	public void alterarSenha(int id, String senha)
-			throws UsuarioNaoEncontradoException, SQLException,
-			RepositorioException {
-		PreparedStatement stmt = null;
-		try {
-			if (id != 0) {
-				try {
-					String sql = "UPDATE USUARIO SET SENHA= ? WHERE ID = ?";
-					stmt = this.connection.prepareStatement(sql);
-					stmt.setString(1, md5(senha));
-					stmt.setInt(2, id);
-					Integer resultado = stmt.executeUpdate();
-					if (resultado == 0)
-						throw new UsuarioNaoEncontradoException();
-				} catch (SQLException e) {
-					throw new RepositorioException(e);
-				}
-			}
-		} finally {
-			stmt.close();
+			String where = "ID =?";
+
+			String[] whereArgs = { String.valueOf(usuario.getId()) };
+
+			db.update(NOME_TABELA, valores, where, whereArgs);
+		} catch (Exception e) {
+			Log.i("erro metodo atualizar usuario", "" + e.getMessage());
 		}
 	}
 
 	@Override
-	public void excluir(int id) throws SQLException,
-			UsuarioNaoEncontradoException, RepositorioException {
-		PreparedStatement stmt = null;
+	public void excluir(int id) throws SQLException {
 		try {
-			String sql = "DELETE FROM USUARIO WHERE ID = ?";
-			stmt = this.connection.prepareStatement(sql);
-			stmt.setInt(1, id);
-			stmt.execute();
-		} catch (SQLException e) {
-			throw new RepositorioException(e);
-		} catch (Exception e) {
-			throw new RepositorioException(e);
-		} finally {
-			stmt.close();
-		}
 
+			String where = " ID =?";
+			String[] whereArgs = new String[] { String.valueOf(id) };
+			db.delete(NOME_TABELA, where, whereArgs);
+		} catch (Exception e) {
+			Log.i("erro metodo excluir usuario", "" + e.getMessage());
+		}
 	}
 
-	public Usuario loginFacebook(String email) throws RepositorioException,
-			SQLException {
+	@Override
+	public Usuario loginFacebook(String email) throws RepositorioException, SQLException {
 		Usuario usuario = null;
-		PreparedStatement stmt = null;
-		ResultSet rs = null;
+		Cursor rs = null;
+
 		try {
-			String sql = "SELECT * FROM USUARIO WHERE EMAIL = ?";
-			stmt = this.connection.prepareStatement(sql);
-			stmt.setString(1, email);
-			rs = stmt.executeQuery();
-			if (rs.next()) {
-				usuario = new Usuario(rs.getString("NOME"),
-						rs.getString("LOGIN"), rs.getString("SENHA"),
-						rs.getString("EMAIL"), rs.getString("ATIVO"),
-						rs.getString("PERFIL"));
-				usuario.setId(rs.getInt("ID"));
-				usuario.setFoto(rs.getString("FOTO"));
-				usuario.setTelefone(rs.getString("TELEFONE"));
+			if (db != null) {
+
+				String sql = "Select * from " + NOME_TABELA + " where EMAIL= ?";
+				String[] whereArgs = { email };
+
+				rs = db.rawQuery(sql, whereArgs);
+
+				rs.moveToFirst();
+
+				if (rs.getCount() > 0 && rs != null) {
+					usuario = new Usuario(rs.getString(rs.getColumnIndex("NOME")),
+							rs.getString(rs.getColumnIndex("LOGIN")), rs.getString(rs.getColumnIndex("SENHA")),
+							rs.getString(rs.getColumnIndex("EMAIL")), rs.getString(rs.getColumnIndex("ATIVO")),
+							rs.getString(rs.getColumnIndex("PERFIL")));
+
+					usuario.setId(rs.getInt(rs.getColumnIndex("ID")));
+					usuario.setTelefone(rs.getString(rs.getColumnIndex("TELEFONE")));
+					usuario.setFoto(rs.getString(rs.getColumnIndex("FOTO")));
+
+					Log.i("procurar usuario", "usuario achado com sucesso ");
+				}
+			} else {
+				Log.i("Alerta", "banco nao existe ou nao foi aberto");
 			}
-		} catch (SQLException e) {
-			throw new RepositorioException(e);
 		} catch (Exception e) {
-			throw new RepositorioException(e);
+			Log.i("erro no metodo loginFacebook da classe usuario ", "" + e.getMessage());
 		} finally {
-			stmt.close();
-			rs.close();
+
+			if (rs != null) {
+				rs.close();
+			}
+
 		}
 		return usuario;
+
 	}
 
+	@Override
+	public void alterarSenha(int id, String senha)
+			throws UsuarioNaoEncontradoException, SQLException, RepositorioException {
+
+		ContentValues valores = new ContentValues();
+	
+		valores.put("SENHA", senha);
+		String where = "ID =?";
+
+		String[] whereArgs = { String.valueOf(id) };
+
+		db.update(NOME_TABELA, valores, where, whereArgs);
+	}
+
+	@Override
 	public boolean login(String usuario, String senha)
 			throws UsuarioInativoException, RepositorioException, SQLException {
-		PreparedStatement stmt = null;
-		ResultSet rs;
+		Cursor rs = null;
 		String sql = "";
+		boolean result = false;
 		try {
-			if(usuario.contains("@")) sql = "SELECT * FROM USUARIO WHERE EMAIL = ? AND SENHA = ?";
-			else sql = "SELECT * FROM USUARIO WHERE LOGIN = ? AND SENHA = ?";
-			stmt = this.connection.prepareStatement(sql);
-			stmt.setString(1, usuario);
-			stmt.setString(2, md5(senha));
-			rs = stmt.executeQuery();
-			if (rs.next()) {
-				if (rs.getString("ATIVO").equals("Nao"))
-					throw new UsuarioInativoException(procurar(rs.getInt("id")));
-				this.usuarioLogado = procurar(rs.getInt("id"));
-				return true;
-			} else {
-				return false;
+			if (usuario.contains("@"))
+				sql = "SELECT * FROM USUARIO WHERE EMAIL = ? AND SENHA = ?";
+			else
+				sql = "SELECT * FROM USUARIO WHERE LOGIN = ? AND SENHA = ?";
+
+			if (db != null) {
+
+				String[] whereArgs = { usuario, senha };
+
+				rs = db.rawQuery(sql, whereArgs);
+
+				rs.moveToFirst();
+
+				if (rs.getCount() > 0 && rs != null) {
+					if (rs.getString(rs.getColumnIndex("ATIVO")).equals("NAO"))
+						throw new UsuarioInativoException(procurar(rs.getInt(rs.getColumnIndex("id"))));
+					this.usuarioLogado = procurar(rs.getInt(rs.getColumnIndex("ID")));
+					result = true;
+				} else {
+					result = false;
+				}
 			}
 		} catch (SQLException e) {
 			throw new RepositorioException(e);
 		} finally {
-			stmt.close();
+			if (rs != null) {
+				rs.close();
+			}
 		}
+		return result;
 	}
-	
+
 	public String md5(String senha) {
 		String sen = "";
 		MessageDigest md = null;
@@ -258,9 +319,12 @@ public class UsuarioDAO implements IUsuarioDAO {
 		return sen;
 	}
 
-
 	public static Usuario getUsuarioLogado() {
 		return usuarioLogado;
+	}
+
+	public static CriarDb getConexao() {
+		return conexao;
 	}
 
 }

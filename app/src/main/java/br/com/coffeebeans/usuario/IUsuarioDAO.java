@@ -1,10 +1,8 @@
 package br.com.coffeebeans.usuario;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
-import br.com.coffeebeans.exception.ListaUsuarioVaziaException;
 import br.com.coffeebeans.exception.RepositorioException;
 import br.com.coffeebeans.exception.UsuarioInativoException;
 import br.com.coffeebeans.exception.UsuarioJaExistenteException;

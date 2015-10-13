@@ -1,7 +1,6 @@
 package br.com.coffeebeans.atividade;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 import br.com.coffeebeans.exception.AtividadeJaExistenteException;

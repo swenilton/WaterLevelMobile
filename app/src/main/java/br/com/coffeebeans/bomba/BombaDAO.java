@@ -9,14 +9,13 @@ import java.util.ArrayList;
 import br.com.coffeebeans.exception.BombaNaoEncontradaException;
 import br.com.coffeebeans.exception.RepositorioException;
 import br.com.coffeebeans.exception.ViolacaoChaveEstrangeiraException;
-import br.com.coffeebeans.util.Conexao;
 
 public class BombaDAO implements IBombaDAO {
 	private Connection connection = null;
 	private String sistema = "mysql";
 
 	public BombaDAO() throws Exception {
-		this.connection = Conexao.conectar(sistema);
+		//this.connection = Conexao.conectar(sistema);
 	}
 
 	public void cadastrar(Bomba bomba) throws SQLException,

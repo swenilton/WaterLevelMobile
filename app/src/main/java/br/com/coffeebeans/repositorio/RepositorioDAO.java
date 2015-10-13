@@ -9,14 +9,13 @@ import java.util.ArrayList;
 import br.com.coffeebeans.exception.RepositorioException;
 import br.com.coffeebeans.exception.RepositorioJaExistenteException;
 import br.com.coffeebeans.exception.RepositorioNaoEncontradoException;
-import br.com.coffeebeans.util.Conexao;
 
 public class RepositorioDAO implements IRepositorioDAO {
 	private Connection connection = null;
 	private String sistema = "mysql";
 
 	public RepositorioDAO() throws Exception {
-		this.connection = Conexao.conectar(sistema);
+		//this.connection = Conexao.conectar(sistema);
 	}
 
 	@Override

@@ -1,52 +1,48 @@
 package br.com.coffeebeans.atividade;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
+import android.content.Context;
 import br.com.coffeebeans.exception.AtividadeNaoEncontradaException;
-import br.com.coffeebeans.exception.ListaUsuarioVaziaException;
-import br.com.coffeebeans.exception.RepositorioException;
 
 public class ControladorAtividade {
 	private IAtividadeDAO iatividade;
-	
-	public ControladorAtividade() throws Exception {
-		this.iatividade = new AtividadeDAO();
+
+	public ControladorAtividade(Context context) throws Exception {
+		this.iatividade = new AtividadeDAO(context);
 	}
-	
-	public void cadastrar (Atividade atividade) throws SQLException,
-		RepositorioException {
+
+	public void cadastrar(Atividade atividade) throws SQLException {
 		if (atividade == null) {
 			throw new IllegalArgumentException("Atividade null");
 		}
 		iatividade.cadastrar(atividade);
 	}
-	
-	public List<Atividade> listar() throws SQLException, RepositorioException,
-		ListaUsuarioVaziaException {
+
+	public List<Atividade> listar() throws SQLException {
 		return iatividade.listar();
 	}
-	
-	public Atividade procurar (int id) throws SQLException,
-		AtividadeNaoEncontradaException, RepositorioException {		
+
+	public Atividade procurar(int id) throws SQLException, AtividadeNaoEncontradaException {
+		if (iatividade.procurar(id) == null) {
+			throw new AtividadeNaoEncontradaException();
+		}
 		return iatividade.procurar(id);
 	}
-	
-	public void atualizar (Atividade atividadeNova) throws SQLException,
-		AtividadeNaoEncontradaException, RepositorioException {
+
+	public void atualizar(Atividade atividadeNova) throws SQLException, AtividadeNaoEncontradaException {
 		if (atividadeNova == null) {
 			throw new NullPointerException();
 		}
-		
+
 		if (iatividade.procurar(atividadeNova.getId()) == null) {
 			throw new AtividadeNaoEncontradaException();
 		}
 		iatividade.atualizar(atividadeNova);
 	}
-	
-	public void remover(int id) throws SQLException,
-		AtividadeNaoEncontradaException, RepositorioException {
+
+	public void remover(int id) throws SQLException, AtividadeNaoEncontradaException {
 		if (iatividade.procurar(id) == null) {
 			throw new AtividadeNaoEncontradaException();
 		} else {

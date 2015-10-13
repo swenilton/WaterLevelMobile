@@ -1,24 +1,13 @@
 package br.com.coffeebeans.atividade;
 
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-
-import br.com.coffeebeans.exception.AtividadeJaExistenteException;
-import br.com.coffeebeans.exception.AtividadeNaoEncontradaException;
-import br.com.coffeebeans.exception.ListaVaziaException;
-import br.com.coffeebeans.exception.RepositorioException;
-import br.com.coffeebeans.exception.ViolacaoChaveEstrangeiraException;
-import br.com.coffeebeans.fachada.Fachada;
-
 public class ControladorAtividadeRealizada {
 	private IAtividadeRealizadaDAO iAtividadeRealizada;
 
 	public ControladorAtividadeRealizada() throws Exception {
-		this.iAtividadeRealizada = new AtividadeRealizadaDAO();
+		//this.iAtividadeRealizada = new AtividadeRealizadaDAO();
 	}
 
-	public void cadastrar(AtividadeRealizada atividadeRealizada)
+	/*public void cadastrar(AtividadeRealizada atividadeRealizada)
 			throws SQLException, AtividadeJaExistenteException,
 			ViolacaoChaveEstrangeiraException, AtividadeNaoEncontradaException,
 			RepositorioException {
@@ -147,5 +136,5 @@ public class ControladorAtividadeRealizada {
 			throw new RepositorioException(e);
 		}
 		return ar2;
-	}
+	}*/
 }

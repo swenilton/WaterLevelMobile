@@ -1,24 +1,20 @@
 package br.com.coffeebeans.atividade;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 import br.com.coffeebeans.exception.AtividadeNaoEncontradaException;
-import br.com.coffeebeans.exception.RepositorioException;
 
 public interface IAtividadeDAO {
 	
-	public void cadastrar(Atividade atividade) throws SQLException,  
-	RepositorioException;
+	public void cadastrar(Atividade atividade) throws SQLException;
 	
-	public List<Atividade> listar() throws SQLException, RepositorioException;
+	public List<Atividade> listar() throws SQLException;
 	
-	public Atividade procurar (int id) throws SQLException, RepositorioException;
+	public Atividade procurar (int id) throws SQLException,AtividadeNaoEncontradaException;
 	
 	public void atualizar(Atividade atividade) throws AtividadeNaoEncontradaException,
-	SQLException, RepositorioException;
+	SQLException;
 	
-	public void excluir (int id) throws SQLException, AtividadeNaoEncontradaException,
-	RepositorioException;
+	public void excluir (int id) throws SQLException, AtividadeNaoEncontradaException;
 }

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:padding="10dp"
+    android:background="@drawable/list_selector"
+    android:clickable="true"
+    android:contextClickable="true">
+    <ImageView
+        android:id="@+id/imgUsuario"
+        android:layout_width="60dp"
+        android:layout_height="42dp"
+        android:background="#ffffff"
+        android:scaleType="centerCrop"/>
+    <TextView
+        android:id="@+id/textDescricao"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/imgUsuario"
+        android:layout_alignTop="@+id/imgUsuario"
+        android:text="Nome"
+        android:textSize="18sp"
+        android:textColor="#333333"
+        android:paddingLeft="5dp"/>
+    <TextView
+        android:id="@+id/textPerfil"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textDescricao"
+        android:layout_toRightOf="@+id/imgUsuario"
+        android:text="Perfil"
+        android:textColor="#333333"
+        android:paddingLeft="5dp"
+        android:paddingTop="3dp" />
+    <TextView
+        android:id="@+id/textStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textDescricao"
+        android:layout_alignParentRight="true"
+        android:text="STATUS"
+        android:textColor="#333333"
+        android:paddingTop="3dp" />
+    <TextView
+        android:id="@+id/textLabelStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Ativo: "
+        android:textColor="#333333"
+        android:layout_alignParentEnd="false"
+        android:layout_alignBaseline="@+id/textStatus"
+        android:layout_toLeftOf="@+id/textStatus"
+        android:paddingTop="3dp" />
+</RelativeLayout>
