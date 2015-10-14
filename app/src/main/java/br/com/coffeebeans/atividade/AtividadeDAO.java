@@ -132,9 +132,11 @@ public class AtividadeDAO implements IAtividadeDAO {
 				}
 			} else {
 				Log.i("Alerta", "banco nao existe ou nao foi aberto");
+				throw new IllegalArgumentException("banco nao existe ou nao foi aberto");
 			}
 		} catch (Exception e) {
 			Log.i("erro no metodo procurar da classe atividade ", "" + e.getMessage());
+			throw new IllegalArgumentException(e);
 		}
 		return atividade;
 	}

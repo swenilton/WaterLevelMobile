@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+    android:id="@+id/modal"
+
+    android:layout_width="wrap_content" android:layout_height="wrap_content"
+
+    android:layout_gravity="center" android:orientation="vertical"
+    android:padding="5dp">
+
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="88dp"
+        android:layout_height="88dp"
+        android:id="@+id/imageView2"
+        android:layout_gravity="center_horizontal"
+        android:clickable="true"
+        android:layout_marginTop="15dp"
+        app:civ_border_width="2dp"
+        app:civ_border_color="#FFcccccc"
+        android:src="@android:drawable/ic_search_category_default" />
+
+    <EditText
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:id="@+id/txtNome"
+        android:hint="Nome"
+        android:capitalize="words" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:id="@+id/txtLogin"
+        android:hint="Login" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textEmailAddress"
+        android:ems="10"
+        android:id="@+id/txtEmail"
+        android:hint="Email" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textPassword"
+        android:ems="10"
+        android:id="@+id/txtSenha"
+        android:hint="Senha"
+        android:password="true" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textPassword"
+        android:ems="10"
+        android:id="@+id/txtConfirmaSenha"
+        android:hint="Confirmar Senha"
+        android:password="true" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="phone"
+        android:ems="10"
+        android:id="@+id/txtTelefone"
+        android:hint="Telefone"
+        android:phoneNumber="true" />
+
+    <TextView
+        android:layout_width="148dp"
+        android:layout_height="wrap_content"
+        android:text="Perfil"
+        android:id="@+id/lblPerfil"
+        android:width="150dp"
+        android:gravity="center_horizontal" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Ativo"
+        android:id="@+id/lblAtivo"
+        android:layout_gravity="right"
+        android:layout_marginTop="-17dp"
+        android:width="106dp"
+        android:gravity="center_horizontal" />
+
+    <Spinner
+        android:layout_width="150dp"
+        android:layout_height="28dp"
+        android:id="@+id/spinner"
+        android:spinnerMode="dropdown"
+        android:textAlignment="center" />
+
+    <Spinner
+        android:layout_width="106dp"
+        android:layout_height="28dp"
+        android:id="@+id/spinner2"
+        android:spinnerMode="dropdown"
+        android:layout_marginTop="-28dp"
+        android:layout_gravity="right" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Cancelar"
+        android:id="@+id/btnCancelar"
+        android:layout_gravity="center" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Salvar"
+        android:id="@+id/btnSalvar"
+        android:layout_marginLeft="100dp"
+        android:layout_marginTop="-48sp"
+        android:layout_gravity="center" />
+
+</LinearLayout>
