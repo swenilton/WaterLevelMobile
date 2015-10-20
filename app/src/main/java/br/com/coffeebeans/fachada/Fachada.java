@@ -30,13 +30,15 @@ public class Fachada {
 	public static Fachada getInstance(Context context) throws Exception {
 		if (Fachada.instance == null) {
 			Fachada.instance = new Fachada(context);
+			//instance.cadastrar(new Usuario("ADMIN", "admin", "admin", "admin@exemplo.com", "SIM", "ADMINISTRADOR"));
+
 		}
 		return Fachada.instance;
 	}
 
 	public <E> void cadastrar(E element) throws SQLException, UsuarioJaExistenteException,
 			UsuarioNaoEncontradoException, ViolacaoChaveEstrangeiraException, AtividadeJaExistenteException,
-			AtividadeNaoEncontradaException, RepositorioException {
+			AtividadeNaoEncontradaException, RepositorioException,DAOException {
 
 		if (element instanceof Usuario) {
 			controladorUsuario.cadastrar((Usuario) element);
@@ -50,7 +52,7 @@ public class Fachada {
 	}
 
 	public <E> void atualizar(E element)
-			throws SQLException, UsuarioNaoEncontradoException, RepositorioException, AtividadeNaoEncontradaException {
+			throws SQLException, UsuarioNaoEncontradoException, RepositorioException, AtividadeNaoEncontradaException, DAOException, AtividadeJaExistenteException {
 		if (element instanceof Usuario) {
 			controladorUsuario.atualizar((Usuario) element);
 		} else if (element instanceof Atividade) {
@@ -71,7 +73,7 @@ public class Fachada {
 		controladorUsuario.remover(id);
 	}
 
-	public void atividadeRemover(int id) throws SQLException, AtividadeNaoEncontradaException {
+	public void atividadeRemover(int id) throws SQLException, AtividadeNaoEncontradaException,DAOException {
 		controladorAtividade.remover(id);
 	}
 
@@ -85,7 +87,7 @@ public class Fachada {
 	 * controladorAtividadeRealizada.listar(id); }
 	 */
 
-	public List<Atividade> atividadeListar() throws SQLException {
+	public List<Atividade> atividadeListar() throws SQLException,DAOException {
 		return controladorAtividade.listar();
 	}
 
@@ -105,7 +107,7 @@ public class Fachada {
 	}
 
 	public Atividade atividadeProcurar(int id)
-			throws SQLException, AtividadeNaoEncontradaException, RepositorioException {
+			throws SQLException, AtividadeNaoEncontradaException, RepositorioException,DAOException {
 		return controladorAtividade.procurar(id);
 	}
 

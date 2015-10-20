@@ -3,172 +3,234 @@ package br.com.coffeebeans.atividade;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
+
 import br.com.coffeebeans.exception.AtividadeNaoEncontradaException;
+import br.com.coffeebeans.exception.BDException;
+import br.com.coffeebeans.exception.DAOException;
 import br.com.coffeebeans.util.CriarDb;
 
 public class AtividadeDAO implements IAtividadeDAO {
-	private static final String NOME_TABELA = "atividade";
-	private SQLiteDatabase db;
-	private CriarDb conexao;
+    private static final String NOME_TABELA = "atividade";
+    private SQLiteDatabase db;
+    private CriarDb conexao;
 
-	public AtividadeDAO(Context context) {
-		conexao = CriarDb.getInstance(context);
-		db = conexao.openDb();
-	}
+    public AtividadeDAO(Context context) throws Exception {
+        //conexao.openDb();            //simulando erro
+        conexao = CriarDb.getInstance(context);
+        //TODO //ver ultimas atividades REALIZADAS
+        //TODO //adm ver atividades REALIZADAS de todos   //user ver as proprias atividades REALIZADAS
+    }
 
-	public boolean existe(String descricao) throws SQLException {
-		boolean existe = false;
+    public boolean existe(String descricao) throws SQLException, DAOException {
+        boolean existe = false;
+        Cursor cursor = null;
 
-		Cursor rs = null;
-		try {
-			if (db != null) {
+        try {
+            db = conexao.openDb();
+            if (db != null) {
 
-				String sql = "Select * from " + NOME_TABELA + "where descricao= ?";
-				
-				String[] selectionArgs={descricao};
-				
-				rs = db.rawQuery(sql, selectionArgs);
+                String sql = "Select * from " + NOME_TABELA + " where descricao= ?";
 
-				rs.moveToFirst();
+                String[] selectionArgs = {descricao};
 
-				if (rs.getCount() > 0 && rs != null) {
-					existe = true;
-				}
+                cursor = db.rawQuery(sql, selectionArgs);
 
-				Log.i("metodo existe atividade", "atividade retornada com sucesso ");
-			} else {
-				Log.i("Alerta", "banco nao existe ou nao foi aberto");
-			}
-		} catch (Exception e) {
-			Log.i("erro no metodo existir da classe atividade ", e.getMessage());
-		}
-		return existe;
-	}
+                cursor.moveToFirst();
 
-	@Override
-	public void cadastrar(Atividade atividade) throws SQLException {
-		ContentValues valores = new ContentValues();
-		// valores.put("ID", atividade.getId());
-		valores.put("DESCRICAO", atividade.getDescricao());
+                if (cursor.getCount() > 0 && cursor != null) {
+                    existe = true;
+                }
 
-		try {
-			if (db != null) {
+                Log.i("metodo existe atividade", "atividade retornada com sucesso ");
 
-				// TODO //atividade ja existente
-				db.insert(NOME_TABELA, null, valores);
-			} else {
-				Log.i("Alerta", "banco nao existe ou nao foi aberto");
-			}
+            } else {
+                throw new BDException();
+            }
+        } catch (Exception e) {
+            Log.i("erro no metodo existir da classe atividade DAO ", e.getMessage());
+            throw new DAOException(e);
+        } finally {
+            if (cursor != null) cursor.close();
+            if (db != null) {
+                if (db.isOpen())
+                    db.close();
+            }
+        }
+        return existe;
+    }
 
-		} catch (Exception e) {
-			Log.i("erro ao cadastrar atividade ", "" + e.getMessage());
-		}
-	}
+    @Override
+    public void cadastrar(Atividade atividade) throws SQLException, DAOException {
+        ContentValues valores = new ContentValues();
+        // valores.put("ID", atividade.getId());
 
-	@Override
-	public List<Atividade> listar() throws SQLException {
-		Cursor rs = null;
-		ArrayList<Atividade> atividades = null;
+        try {
+            db = conexao.openDb();
+            valores.put("DESCRICAO", atividade.getDescricao());
 
-		try {
-			atividades = new ArrayList<Atividade>();
-			String sql = "SELECT * from " + NOME_TABELA;
+            if (db != null) {
 
-			if (db != null) {
-				rs = db.rawQuery(sql, null);
+                db.insert(NOME_TABELA, null, valores);
+            } else {
+                throw new BDException();
+            }
 
-				rs.moveToFirst();
+        } catch (Exception e) {
+            Log.i("erro ao cadastrar atividade ", "" + e.getMessage());
+            throw new DAOException(e);
+        } finally {
+            if (db != null) {
+                if (db.isOpen())
+                    db.close();
+            }
+        }
 
-				if (rs.getCount() > 0 && rs != null) {
+    }
 
-					do {
-						Atividade atividade = new Atividade(rs.getString(rs.getColumnIndex("DESCRICAO")));
-						atividade.setId(rs.getInt(rs.getColumnIndex("ID")));
+    @Override
+    public List<Atividade> listar() throws SQLException, DAOException {
+        Cursor cursor = null;
+        ArrayList<Atividade> atividades = null;
 
-						atividades.add(atividade);
+        try {
+            db = conexao.openDb();
+            atividades = new ArrayList<Atividade>();
+            String sql = "SELECT * from " + NOME_TABELA;
 
-					} while (rs.moveToNext());
+            if (db != null) {
+                cursor = db.rawQuery(sql, null);
 
-				}
-			} else {
-				Log.i("Alerta", "banco nao existe ou nao foi aberto");
-			}
+                cursor.moveToFirst();
 
-		} catch (Exception e) {
-			Log.i("erro no metodo listar da classe atividade ", "" + e.getMessage());
-		} finally {
-			if (rs != null) {
-				rs.close();
-			}
-		}
+                if (cursor.getCount() > 0 && cursor != null) {
 
-		return atividades;
-	}
+                    do {
+                        Atividade atividade = new Atividade(cursor.getString(cursor.getColumnIndex("DESCRICAO")));
+                        atividade.setId(cursor.getInt(cursor.getColumnIndex("ID")));
 
-	@Override
-	public Atividade procurar(int id) throws SQLException, AtividadeNaoEncontradaException {
-		Cursor rs = null;
-		Atividade atividade = null;
-		try {
-			if (db != null) {
+                        atividades.add(atividade);
 
-				String sql = "Select * from " + NOME_TABELA + " where ID= ?";
-				String[] whereArgs = {String.valueOf(id)};
+                    } while (cursor.moveToNext());
 
-				rs = db.rawQuery(sql, whereArgs);
+                }
+            } else {
+                throw new BDException();
+            }
 
-				rs.moveToFirst();
+        } catch (Exception e) {
+            Log.i("erro no metodo listar da classe atividade ", "" + e.getMessage());
+            throw new DAOException(e);
 
-				if (rs.getCount() > 0 && rs != null) {
-					atividade = new Atividade(rs.getString(rs.getColumnIndex("DESCRICAO")));
-					atividade.setId(rs.getInt(rs.getColumnIndex("ID")));
+        } finally {
+            if (cursor != null)
+                cursor.close();
 
-					Log.i("procurar atividade", "atividade achada com sucesso ");
-				}
-			} else {
-				Log.i("Alerta", "banco nao existe ou nao foi aberto");
-				throw new IllegalArgumentException("banco nao existe ou nao foi aberto");
-			}
-		} catch (Exception e) {
-			Log.i("erro no metodo procurar da classe atividade ", "" + e.getMessage());
-			throw new IllegalArgumentException(e);
-		}
-		return atividade;
-	}
+            if (db != null) {
+                if (db.isOpen())
+                    db.close();
+            }
+        }
 
-	@Override
-	public void atualizar(Atividade atividade) throws AtividadeNaoEncontradaException, SQLException {
-		try {
-			//TODO //atividade ja existente
-			ContentValues valores = new ContentValues();
-			
-			valores.put("DESCRICAO", atividade.getDescricao());
+        return atividades;
+    }
 
-			String where = "ID =?";
+    @Override
+    public Atividade procurar(int id) throws SQLException, AtividadeNaoEncontradaException, DAOException {
+        Cursor cursor = null;
+        Atividade atividade = null;
+        try {
+            db = conexao.openDb();
+            if (db != null) {
 
-			String[] whereArgs ={String.valueOf(atividade.getId())};
+                String sql = "Select * from " + NOME_TABELA + " where ID= ?";
+                String[] whereArgs = {String.valueOf(id)};
 
-			db.update(NOME_TABELA, valores, where, whereArgs);
-		} catch (Exception e) {
-			Log.i("erro metodo atualizar atividade", "" + e.getMessage());
-		}
-	}
+                cursor = db.rawQuery(sql, whereArgs);
 
-	@Override
-	public void excluir(int id) throws SQLException, AtividadeNaoEncontradaException {
-		try {
-			
-			String where = " ID =?";
-			String[] whereArgs = new String[] { String.valueOf(id) };
-			db.delete(NOME_TABELA, where, whereArgs);
-			Log.i("delete atividade", "atividade deletada com sucesso ");
-		} catch (Exception e) {
-			Log.i("erro metodo excluir atividade", "" + e.getMessage());
-		}
-	}
+                cursor.moveToFirst();
+
+                if (cursor.getCount() > 0 && cursor != null) {
+                    atividade = new Atividade(cursor.getString(cursor.getColumnIndex("DESCRICAO")));
+                    atividade.setId(cursor.getInt(cursor.getColumnIndex("ID")));
+
+                    Log.i("procurar atividade", "atividade achada com sucesso ");
+                }
+            } else {
+                Log.i("Alerta", "banco nao existe ou nao foi aberto");
+                throw new BDException();
+            }
+        } catch (Exception e) {
+            Log.i("erro no metodo procurar da classe atividade ", "" + e.getMessage());
+            throw new DAOException(e);
+        } finally {
+            if (cursor != null)
+                cursor.close();
+
+            if (db != null) {
+                if (db.isOpen())
+                    db.close();
+            }
+        }
+        return atividade;
+    }
+
+    @Override
+    public void atualizar(Atividade atividade) throws AtividadeNaoEncontradaException, SQLException, DAOException {
+
+        ContentValues valores = new ContentValues();
+        String where = "ID =?";
+
+        try {
+
+            valores.put("DESCRICAO", atividade.getDescricao());
+
+            String[] whereArgs = {String.valueOf(atividade.getId())};
+
+            db = conexao.openDb();
+            if (db != null) {
+                db.update(NOME_TABELA, valores, where, whereArgs);
+            } else {
+                throw new BDException();
+            }
+        } catch (Exception e) {
+            Log.i("erro metodo atualizar atividade", "" + e.getMessage());
+            throw new DAOException(e);
+        } finally {
+            if (db != null) {
+                if (db.isOpen())
+                    db.close();
+            }
+        }
+    }
+
+    @Override
+    public void excluir(int id) throws SQLException, AtividadeNaoEncontradaException, DAOException {
+        String where = " ID =?";
+        try {
+
+            String[] whereArgs = new String[]{String.valueOf(id)};
+            db = conexao.openDb();
+            if (db != null)
+                db.delete(NOME_TABELA, where, whereArgs);
+
+            else
+                throw new BDException();
+
+
+        } catch (Exception e) {
+            Log.i("erro metodo excluir atividade", "" + e.getMessage());
+            throw new DAOException(e);
+        } finally {
+            if (db != null) {
+                if (db.isOpen())
+                    db.close();
+            }
+        }
+    }
 }

@@ -19,6 +19,9 @@ public class ControladorUsuario {
 
 	public void cadastrar(Usuario usuario)
 			throws SQLException, UsuarioJaExistenteException, UsuarioNaoEncontradoException, RepositorioException {
+
+		//TODO //permissões de usuário
+
 		if (usuario == null) {
 			throw new IllegalArgumentException("Usuario Null");
 		}

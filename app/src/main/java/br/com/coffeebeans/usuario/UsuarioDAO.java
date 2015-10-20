@@ -23,7 +23,10 @@ public class UsuarioDAO implements IUsuarioDAO {
 	private static CriarDb conexao;
 	private static Usuario usuarioLogado;
 
-	public UsuarioDAO(Context context) {
+	//TODO //usuario nao encontrado ao não logar, cadastrar admin através de método, nao poder excluir user adm
+
+
+	public UsuarioDAO(Context context) throws Exception {
 		conexao = CriarDb.getInstance(context);
 		db = conexao.openDb();
 	}
