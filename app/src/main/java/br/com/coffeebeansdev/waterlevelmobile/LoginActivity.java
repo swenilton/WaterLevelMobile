@@ -35,6 +35,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import br.com.coffeebeans.fachada.Fachada;
+import br.com.coffeebeans.usuario.Usuario;
 
 /**
  * A login screen that offers login via email/password.
@@ -68,7 +69,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
 
         try{
             fachada = Fachada.getInstance(getApplicationContext());
-            //fachada.cadastrar(new Usuario("ADMIN", "admin", "admin", "admin@exemplo.com", "SIM", "ADMINISTRADOR"));
+//            fachada.cadastrar(new Usuario("ADMIN", "admin", "admin", "admin@exemplo.com", "SIM", "ADMINISTRADOR"));
         }catch (Exception e){
             Log.i("Erro Login: ", e.getMessage());
             Toast.makeText(getApplicationContext(), "Erro ao instanciar fachada\n" + e.getMessage(),
@@ -164,18 +165,6 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
             showProgress(true);
             mAuthTask = new UserLoginTask(email, password);
             mAuthTask.execute((Void) null);
-
-            if(mAuthTask.doInBackground()) {
-                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
-                } else {
-                    startActivity(intent);
-                }
-            } else {
-                Toast.makeText(getApplicationContext(), "Usuário ou senha inválido",
-                        Toast.LENGTH_LONG).show();
-            }
         }
     }
 
@@ -314,7 +303,6 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
                 // Simulate network access.
                 //vai = true;
                 vai = fachada.login(mEmail, mPassword);
-                Log.i("email e senha", mEmail + mPassword);
                 Thread.sleep(2000);
             } catch (InterruptedException e) {
                 vai = false;
@@ -341,10 +329,19 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
             showProgress(false);
 
             if (success) {
+                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(LoginActivity.this).toBundle());
+                } else {
+                    startActivity(intent);
+                }
                 finish();
             } else {
-                mPasswordView.setError(getString(R.string.error_incorrect_password));
-                mPasswordView.requestFocus();
+//                mPasswordView.setError(getString(R.string.error_incorrect_password));
+//                mPasswordView.requestFocus();
+                Toast.makeText(getApplicationContext(), "Usuário ou senha inválida",
+                        Toast.LENGTH_LONG).show();
+                mEmailView.requestFocus();
             }
         }
 

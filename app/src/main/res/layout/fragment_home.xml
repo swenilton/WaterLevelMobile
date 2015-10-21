@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent" >
@@ -11,21 +12,40 @@
             android:orientation="vertical" >
             <!-- TabWidget used to creat tabs -->
             <TabWidget
+                android:id="@android:id/tabs"
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:layout_height="wrap_content" >
             </TabWidget>
             <!-- container of tabs -->
             <FrameLayout
                 android:id="@android:id/tabcontent"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent" >
+
+                <!-- tab N°1 -->
+                <!-- Inclusion of the interface -->
                 <include
                     android:id="@+id/onglet1"
                     android:layout_width="fill_parent"
                     android:layout_height="match_parent"
                     layout="@layout/tab_rep" >
                 </include>
+                <!-- tab N°2 -->
+                <!-- Inclusion of the interface -->
+                <include
+                    android:id="@+id/Onglet2"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    layout="@layout/tab_rep" >
+                </include>
+                <!-- tab N°3 -->
+                <!-- Inclusion of the interface -->
+                <!--<include-->
+                    <!--android:id="@+id/Onglet3"-->
+                    <!--android:layout_width="fill_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--layout="@layout/show_all" >-->
+                <!--</include>-->
             </FrameLayout>
         </LinearLayout>
     </TabHost>
