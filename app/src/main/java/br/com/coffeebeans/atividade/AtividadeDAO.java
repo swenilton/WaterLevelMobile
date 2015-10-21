@@ -71,9 +71,10 @@ public class AtividadeDAO implements IAtividadeDAO {
         // valores.put("ID", atividade.getId());
 
         try {
-            db = conexao.openDb();
+
             valores.put("DESCRICAO", atividade.getDescricao());
 
+            db = conexao.openDb();
             if (db != null) {
 
                 db.insert(NOME_TABELA, null, valores);
