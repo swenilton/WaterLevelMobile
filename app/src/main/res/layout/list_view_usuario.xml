@@ -6,7 +6,7 @@
     android:background="@drawable/list_selector"
     android:clickable="true"
     android:contextClickable="true">
-    <ImageView
+    <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/imgUsuario"
         android:layout_width="60dp"
         android:layout_height="42dp"
