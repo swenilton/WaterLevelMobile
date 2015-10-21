@@ -17,10 +17,11 @@
         android:layout_marginTop="3dp" />
 
     <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
-        android:paddingTop="@dimen/nav_header_vertical_spacing" android:text="Swenilton Souza"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+        android:paddingTop="@dimen/nav_header_vertical_spacing"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:id="@+id/tvNome" />
 
-    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-        android:text="susu360graus@hotmail.com" android:id="@+id/textView" />
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:id="@+id/tvEmail" />
 
 </LinearLayout>

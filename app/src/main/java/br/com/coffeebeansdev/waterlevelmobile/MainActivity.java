@@ -22,14 +22,19 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import br.com.coffeebeans.fachada.Fachada;
+import br.com.coffeebeans.usuario.Usuario;
+import br.com.coffeebeans.usuario.UsuarioDAO;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private Fachada fachada;
+    private TextView textViewEmail;
+    private TextView textViewNome;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -37,6 +42,11 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        textViewEmail = (TextView) findViewById(R.id.tvEmail);
+        textViewNome = (TextView) findViewById(R.id.tvNome);
+        textViewNome.setText(UsuarioDAO.getUsuarioLogado().getNome());
+        textViewEmail.setText(UsuarioDAO.getUsuarioLogado().getEmail());
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setVisibility(FloatingActionButton.INVISIBLE);

@@ -75,12 +75,17 @@
                 android:layout_alignParentLeft="true" />
         </LinearLayout>
 
-    </RelativeLayout>
+        <ProgressBar android:id="@+id/login_progress" style="?android:attr/progressBarStyleLarge"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:gravity = "center_vertical|center_horizontal"
+            android:visibility="gone"
+            android:layout_alignParentStart="false"
+            android:layout_alignParentEnd="false"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true"
+            android:layout_below="@+id/imageView" />
 
-    <ProgressBar android:id="@+id/login_progress" style="?android:attr/progressBarStyleLarge"
-        android:layout_width="wrap_content" android:layout_height="wrap_content"
-        android:gravity = "center_vertical|center_horizontal"
-        android:visibility="gone" />
+    </RelativeLayout>
 
     <TextView
         android:layout_width="wrap_content"
