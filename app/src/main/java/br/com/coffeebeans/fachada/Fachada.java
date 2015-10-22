@@ -69,7 +69,7 @@ public class Fachada {
 		// controladorAtividadeRealizada.excluir(id);
 	}
 
-	public void usuarioRemover(int id) throws SQLException, UsuarioNaoEncontradoException, RepositorioException {
+	public void usuarioRemover(int id) throws SQLException, UsuarioNaoEncontradoException, RepositorioException, DAOException {
 		controladorUsuario.remover(id);
 	}
 
@@ -91,7 +91,7 @@ public class Fachada {
 		return controladorAtividade.listar();
 	}
 
-	public List<Usuario> getUsuarioLista() throws SQLException, RepositorioException {
+	public List<Usuario> getUsuarioLista() throws SQLException, RepositorioException, DAOException {
 		return controladorUsuario.getLista();
 
 	}
@@ -102,7 +102,7 @@ public class Fachada {
 	 * return controladorAtividadeRealizada.procurar(id); }
 	 */
 
-	public Usuario usuarioProcurar(int id) throws SQLException, UsuarioNaoEncontradoException, RepositorioException {
+	public Usuario usuarioProcurar(int id) throws SQLException, UsuarioNaoEncontradoException, RepositorioException, DAOException {
 		return controladorUsuario.procurar(id);
 	}
 
@@ -111,17 +111,17 @@ public class Fachada {
 		return controladorAtividade.procurar(id);
 	}
 
-	public Usuario loginFacebook(String email) throws RepositorioException, SQLException {
+	public Usuario loginFacebook(String email) throws RepositorioException, SQLException, DAOException {
 		return controladorUsuario.loginFacebook(email);
 	}
 
 	public void alterarSenhaUsuario(int id, String senha)
-			throws SQLException, UsuarioNaoEncontradoException, RepositorioException {
+			throws SQLException, UsuarioNaoEncontradoException, RepositorioException, DAOException {
 		controladorUsuario.alterarSenha(id, senha);
 	}
 
 	public boolean login(String usuario, String senha)
-			throws UsuarioInativoException, RepositorioException, SQLException {
+			throws UsuarioInativoException, RepositorioException, SQLException, DAOException {
 		return controladorUsuario.login(usuario, senha);
 	}
 

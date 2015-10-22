@@ -42,8 +42,10 @@ public class CriarDb extends SQLiteOpenHelper {
 
         try {
             //db.execSQL("drop table atividade");
+            Log.i("oncreate","entrou no oncreate");
             db.execSQL(createTableAtividade);
             db.execSQL(createTableUsuario);
+            //db.execSQL("insert into usuario values(ADMIN,admin,admin,admin@exemplo.com,NULL,SIM,NULL,ADMINISTRADOR)");
 
             Log.i("db get version", String.valueOf(db.getVersion()));
 

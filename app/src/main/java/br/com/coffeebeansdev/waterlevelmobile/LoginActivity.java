@@ -69,7 +69,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
 
         try{
             fachada = Fachada.getInstance(getApplicationContext());
-//            fachada.cadastrar(new Usuario("ADMIN", "admin", "admin", "admin@exemplo.com", "SIM", "ADMINISTRADOR"));
+
         }catch (Exception e){
             Log.i("Erro Login: ", e.getMessage());
             Toast.makeText(getApplicationContext(), "Erro ao instanciar fachada\n" + e.getMessage(),
