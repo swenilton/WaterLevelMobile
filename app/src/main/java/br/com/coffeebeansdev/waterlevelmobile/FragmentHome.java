@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TabHost;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.w3c.dom.Text;
 
@@ -58,9 +59,9 @@ public class FragmentHome extends Fragment {
         textView = (TextView) rootView.findViewById(R.id.lblNivel);
 
         myTabHost =(TabHost) rootView.findViewById(R.id.TabHost01);
-// Before adding tabs, it is imperative to call the method setup()
+        // Before adding tabs, it is imperative to call the method setup()
         myTabHost.setup();
-// Adding tabs
+        // Adding tabs
         // tab1 settings
         TabHost.TabSpec spec = myTabHost.newTabSpec("tab_creation");
         // text and image of tab
@@ -69,43 +70,11 @@ public class FragmentHome extends Fragment {
         spec.setContent(R.id.onglet1);
         // adding tab in TabHost
         myTabHost.addTab(spec);
-// otherwise :
-       myTabHost.addTab(myTabHost.newTabSpec("tab_inser").setIndicator("Repositorio 2", getResources().getDrawable(android.R.drawable.ic_menu_edit)).setContent(R.id.Onglet2));
+        // otherwise :
+        myTabHost.addTab(myTabHost.newTabSpec("tab_inser").setIndicator("Repositorio 2", getResources().getDrawable(android.R.drawable.ic_menu_edit)).setContent(R.id.Onglet2));
 
-       // myTabHost.addTab(myTabHost.newTabSpec("tab_affiche").setIndicator("Show All",getResources().getDrawable(android.R.drawable.ic_menu_view)).setContent(R.id.Onglet3));
+        // myTabHost.addTab(myTabHost.newTabSpec("tab_affiche").setIndicator("Show All",getResources().getDrawable(android.R.drawable.ic_menu_view)).setContent(R.id.Onglet3));
 
-
-
-
-
-//        try{
-//            new Thread(new Runnable() {
-//                @Override
-//                public void run() {
-//                    while (true) {
-//                        try {
-//                            nivel(progressBar, textView, random.nextInt(100));
-//                            Thread.sleep(2000);
-//                        } catch (InterruptedException e) {
-//                            Log.i("Erro ProgressBar", e.getMessage());
-//                            break;
-//                        } catch (Exception e){
-//                            Log.i("Erro ProgressBar", e.getMessage());
-//                            break;
-//                        }
-//                    }
-//                }
-//                public synchronized void nivel(ProgressBar progressBar, TextView textView, int nivel){
-//                    progressBar.setProgress(nivel);
-//                    textView.setText(nivel + "%");
-////        ProgressBarAnimation anim = new ProgressBarAnimation(progressBar, progressBar.getProgress(), nivel);
-////        anim.setDuration(1000);
-////        progressBar.startAnimation(anim);
-//                }
-//            }).start();
-//        } catch (Exception e){
-//            Log.i("Erro Thread - ProgressBar", e.getMessage());
-//        }
         return rootView;
     }
 
@@ -113,10 +82,11 @@ public class FragmentHome extends Fragment {
     public void onStart() {
         super.onStart();
         progressBar.setProgress(0);
+        isRunning = true;
         Thread background = new Thread(new Runnable() {
             public void run() {
                 try {
-                    while (true) {
+                    while (isRunning) {
                         try {
                             oldProgress = progressBar.getProgress();
                             progressBar.setProgress(random.nextInt(100));
@@ -124,19 +94,24 @@ public class FragmentHome extends Fragment {
                             handler.sendMessage(handler.obtainMessage());
                         } catch (InterruptedException e) {
                             Log.i("Erro ProgressBar", e.getMessage());
+                            Toast.makeText(getContext(), "Erro ProgressBar\n" + e.getMessage(),
+                                    Toast.LENGTH_SHORT).show();
                             break;
                         } catch (Exception e) {
                             Log.i("Erro ProgressBar", e.getMessage());
+                            Toast.makeText(getContext(), "Erro ProgressBar\n" + e.getMessage(),
+                                    Toast.LENGTH_SHORT).show();
                             break;
                         }
                     }
                 }
                 catch(Throwable t) {
-                    // just end the background thread
+                    Log.i("Erro Thread", t.getMessage());
+                    Toast.makeText(getContext(), "Erro thread\n" + t.getMessage(),
+                            Toast.LENGTH_SHORT).show();
                 }
             }
         });
-        isRunning = true;
         background.start();
     }
 

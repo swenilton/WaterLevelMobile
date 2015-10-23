@@ -6,6 +6,7 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.ActivityOptions;
 import android.app.LoaderManager.LoaderCallbacks;
+import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
@@ -22,6 +23,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -119,6 +121,9 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
         if (mAuthTask != null) {
             return;
         }
+
+        ((InputMethodManager) getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(
+                mEsqueceuSenha.getWindowToken(), 0);
 
         // Reset errors.
         mEmailView.setError(null);
@@ -289,6 +294,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
 
         private final String mEmail;
         private final String mPassword;
+        private Exception erro = new Exception("Usuário ou senha inválidos.");
 
         UserLoginTask(String email, String password) {
             mEmail = email;
@@ -305,9 +311,11 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
                 vai = fachada.login(mEmail, mPassword);
                 Thread.sleep(2000);
             } catch (InterruptedException e) {
+                erro = e;
                 vai = false;
             } catch (Exception e) {
                 Log.i("Erro no login: ", e.getMessage());
+                erro = e;
                 vai = false;
             }
             /*
@@ -339,7 +347,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
             } else {
 //                mPasswordView.setError(getString(R.string.error_incorrect_password));
 //                mPasswordView.requestFocus();
-                Toast.makeText(getApplicationContext(), "Usuário ou senha inválida",
+                Toast.makeText(getApplicationContext(), "Erro ao logar:\n" + erro.getMessage(),
                         Toast.LENGTH_LONG).show();
                 mEmailView.requestFocus();
             }

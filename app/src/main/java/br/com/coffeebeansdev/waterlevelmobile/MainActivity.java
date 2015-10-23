@@ -59,7 +59,9 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        navigationView.setCheckedItem(0);
+        navigationView.setCheckedItem(R.id.nav_inicio);
+
+        onNavigationItemSelected(navigationView.getMenu().getItem(0));
 
         try{
             fachada = Fachada.getInstance(this);
