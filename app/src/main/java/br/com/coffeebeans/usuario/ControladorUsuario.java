@@ -5,78 +5,88 @@ import java.util.List;
 
 import android.content.Context;
 
+import br.com.coffeebeans.exception.DAOException;
 import br.com.coffeebeans.exception.RepositorioException;
 import br.com.coffeebeans.exception.UsuarioInativoException;
 import br.com.coffeebeans.exception.UsuarioJaExistenteException;
 import br.com.coffeebeans.exception.UsuarioNaoEncontradoException;
 
 public class ControladorUsuario {
-	private IUsuarioDAO iusuario;
+    private IUsuarioDAO iusuario;
 
-	public ControladorUsuario(Context context) throws Exception {
-		this.iusuario = new UsuarioDAO(context);
-	}
+    public ControladorUsuario(Context context) throws Exception {
+        this.iusuario = new UsuarioDAO(context);
+    }
 
-	public void cadastrar(Usuario usuario)
-			throws SQLException, UsuarioJaExistenteException, UsuarioNaoEncontradoException, RepositorioException {
+    public boolean existe(String descricao) throws SQLException, DAOException {
+        return iusuario.existe(descricao);
+    }
 
-		//TODO //permissões de usuário
+    public void cadastrar(Usuario usuario)
+            throws SQLException, UsuarioJaExistenteException, UsuarioNaoEncontradoException, RepositorioException, DAOException {
 
-		if (usuario == null) {
-			throw new IllegalArgumentException("Usuario Null");
-		}
-		iusuario.cadastrar(usuario);
+        //TODO //permissões de usuário
 
-	}
+        if (usuario == null) {
+            throw new IllegalArgumentException("Usuario Null");
+        }
+        if (existe(usuario.getLogin())) {
+            throw new UsuarioJaExistenteException();
+        }
+        iusuario.cadastrar(usuario);
 
-	public List<Usuario> getLista() throws SQLException, RepositorioException {
-		return iusuario.getLista();
+    }
 
-	}
 
-	public Usuario procurar(int id) throws SQLException, UsuarioNaoEncontradoException, RepositorioException {
-		if (iusuario.procurar(id) == null) {
-			throw new UsuarioNaoEncontradoException();
-		}
+    public List<Usuario> getLista() throws SQLException, RepositorioException, DAOException {
+        return iusuario.getLista();
 
-		return iusuario.procurar(id);
+    }
 
-	}
+    public Usuario procurar(int id) throws SQLException, UsuarioNaoEncontradoException, RepositorioException, DAOException {
+        if (iusuario.procurar(id) == null) {
+            throw new UsuarioNaoEncontradoException();
+        }
 
-	public void atualizar(Usuario usuarioNovo)
-			throws SQLException, UsuarioNaoEncontradoException, RepositorioException {
-		if (usuarioNovo == null) {
-			throw new NullPointerException();
-		}
+        return iusuario.procurar(id);
 
-		if (iusuario.procurar(usuarioNovo.getId()) == null) {
-			throw new UsuarioNaoEncontradoException();
+    }
 
-		}
-		iusuario.atualizar(usuarioNovo);
-	}
+    public void atualizar(Usuario usuarioNovo)
+            throws SQLException, UsuarioNaoEncontradoException, RepositorioException, DAOException {
+        if (usuarioNovo == null) {
+            throw new NullPointerException();
+        }
 
-	public void remover(int id) throws SQLException, UsuarioNaoEncontradoException, RepositorioException {
-		if (iusuario.procurar(id) == null) {
-			throw new UsuarioNaoEncontradoException();
-		} else {
-			iusuario.excluir(id);
-		}
-	}
+        if (iusuario.procurar(usuarioNovo.getId()) == null) {
+            throw new UsuarioNaoEncontradoException();
 
-	public Usuario loginFacebook(String email) throws RepositorioException, SQLException {
-		return iusuario.loginFacebook(email);
-	}
+        }
+        iusuario.atualizar(usuarioNovo);
+    }
 
-	public void alterarSenha(int id, String senha)
-			throws SQLException, UsuarioNaoEncontradoException, RepositorioException {
+    public void remover(int id) throws SQLException, UsuarioNaoEncontradoException, RepositorioException, DAOException {
+        if (iusuario.procurar(id) == null) {
+            throw new UsuarioNaoEncontradoException();
+        }
+        else {
+            iusuario.excluir(id);
+        }
+    }
 
-		iusuario.alterarSenha(id, senha);
-	}
+    public Usuario loginFacebook(String email) throws RepositorioException, SQLException, DAOException {
+        return iusuario.loginFacebook(email);
+    }
 
-	public boolean login(String usuario, String senha)
-			throws UsuarioInativoException, RepositorioException, SQLException {
-		return iusuario.login(usuario, senha);
-	}
+    public void alterarSenha(int id, String senha)
+            throws SQLException, UsuarioNaoEncontradoException, RepositorioException, DAOException {
+
+        iusuario.alterarSenha(id, senha);
+    }
+
+    public boolean login(String usuario, String senha)
+            throws UsuarioInativoException, RepositorioException, SQLException, DAOException {
+        return iusuario.login(usuario, senha);
+    }
 
 }

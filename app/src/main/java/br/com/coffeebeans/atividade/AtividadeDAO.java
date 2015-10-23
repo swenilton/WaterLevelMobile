@@ -75,6 +75,8 @@ public class AtividadeDAO implements IAtividadeDAO {
             valores.put("DESCRICAO", atividade.getDescricao());
 
             db = conexao.openDb();
+            //Log.i("db get version", String.valueOf(db.getVersion()));
+
             if (db != null) {
 
                 db.insert(NOME_TABELA, null, valores);
@@ -163,7 +165,6 @@ public class AtividadeDAO implements IAtividadeDAO {
                     Log.i("procurar atividade", "atividade achada com sucesso ");
                 }
             } else {
-                Log.i("Alerta", "banco nao existe ou nao foi aberto");
                 throw new BDException();
             }
         } catch (Exception e) {

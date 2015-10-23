@@ -13,6 +13,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import br.com.coffeebeans.exception.BDException;
+import br.com.coffeebeans.exception.DAOException;
 import br.com.coffeebeans.exception.RepositorioException;
 import br.com.coffeebeans.exception.UsuarioInativoException;
 import br.com.coffeebeans.exception.UsuarioNaoEncontradoException;
@@ -24,7 +26,7 @@ public class UsuarioDAO implements IUsuarioDAO {
     private static CriarDb conexao;
     private static Usuario usuarioLogado;
 
-    //TODO //usuario nao encontrado ao não logar, cadastrar admin através de método, nao poder excluir user adm
+    //TODO //usuario nao encontrado ao não logar // cadastrar admin através de método // nao poder excluir user adm // permissao para cadastro de usuario //nao deixar cadastrar com o login ADMIN
 
 
     public UsuarioDAO(Context context) throws Exception {
@@ -32,34 +34,37 @@ public class UsuarioDAO implements IUsuarioDAO {
 
     }
 
-    public boolean existe(String nome) throws SQLException {
+    public boolean existe(String nome) throws SQLException, DAOException {
         boolean existe = false;
+        Cursor cursor = null;
 
-        Cursor rs = null;
         try {
             db = conexao.openDb();
             if (db != null) {
 
-                String sql = "Select * from " + NOME_TABELA + " where NOME= ?";
+                String sql = "Select * from " + NOME_TABELA + " where login= ?";
 
                 String[] selectionArgs = {nome};
 
-                rs = db.rawQuery(sql, selectionArgs);
+                cursor = db.rawQuery(sql, selectionArgs);
 
-                rs.moveToFirst();
+                cursor.moveToFirst();
 
-                if (rs.getCount() > 0 && rs != null) {
+                if (cursor.getCount() > 0 && cursor != null) {
                     existe = true;
                 }
 
                 Log.i("metodo existe usuario", "o usuario existe ");
             } else {
-                Log.i("Alerta", "banco nao existe ou nao foi aberto");
+                throw new BDException();
+
             }
         } catch (Exception e) {
             Log.i("erro no metodo existir da classe usuario ", "" + e.getMessage());
+            throw new DAOException(e);
+
         } finally {
-            if (rs != null) rs.close();
+            if (cursor != null) cursor.close();
             if (db != null) {
                 if (db.isOpen())
                     db.close();
@@ -69,7 +74,7 @@ public class UsuarioDAO implements IUsuarioDAO {
     }
 
     @Override
-    public void cadastrar(Usuario usuario) throws SQLException {
+    public void cadastrar(Usuario usuario) throws SQLException, DAOException {
         ContentValues valores = new ContentValues();
         // valores.put("ID", atividade.getId());
 
@@ -79,10 +84,8 @@ public class UsuarioDAO implements IUsuarioDAO {
             valores.put("LOGIN", usuario.getLogin());
             valores.put("SENHA", usuario.getSenha());
             valores.put("EMAIL", usuario.getEmail());
-            //if (!usuario.getTelefone().equals(""))
             valores.put("TELEFONE", usuario.getTelefone());
             valores.put("ATIVO", usuario.getAtivo());
-            //if (!usuario.getFoto().equals(""))
             valores.put("FOTO", usuario.getFoto());
             valores.put("PERFIL", usuario.getPerfil());
 
@@ -90,14 +93,15 @@ public class UsuarioDAO implements IUsuarioDAO {
 
             if (db != null) {
 
-                // TODO //usuario ja existente
                 db.insert(NOME_TABELA, null, valores);
             } else {
-                Log.i("Alerta", "banco nao existe ou nao foi aberto");
+                throw new BDException();
             }
 
         } catch (Exception e) {
             Log.i("erro ao cadastrar usuario ", "" + e.getMessage());
+            throw new DAOException(e);
+
         } finally {
             if (db != null) {
                 if (db.isOpen())
@@ -107,8 +111,8 @@ public class UsuarioDAO implements IUsuarioDAO {
     }
 
     @Override
-    public List<Usuario> getLista() throws SQLException, RepositorioException {
-        Cursor rs = null;
+    public List<Usuario> getLista() throws SQLException, RepositorioException, DAOException {
+        Cursor cursor = null;
         ArrayList<Usuario> usuarios = null;
 
         try {
@@ -117,36 +121,38 @@ public class UsuarioDAO implements IUsuarioDAO {
             String sql = "SELECT * from " + NOME_TABELA;
 
             if (db != null) {
-                rs = db.rawQuery(sql, null);
+                cursor = db.rawQuery(sql, null);
 
-                rs.moveToFirst();
+                cursor.moveToFirst();
 
-                if (rs.getCount() > 0 && rs != null) {
+                if (cursor.getCount() > 0 && cursor != null) {
 
                     do {
-                        Usuario usuario = new Usuario(rs.getString(rs.getColumnIndex("NOME")),
-                                rs.getString(rs.getColumnIndex("LOGIN")), rs.getString(rs.getColumnIndex("SENHA")),
-                                rs.getString(rs.getColumnIndex("EMAIL")), rs.getString(rs.getColumnIndex("ATIVO")),
-                                rs.getString(rs.getColumnIndex("PERFIL")));
+                        Usuario usuario = new Usuario(cursor.getString(cursor.getColumnIndex("NOME")),
+                                cursor.getString(cursor.getColumnIndex("LOGIN")), cursor.getString(cursor.getColumnIndex("SENHA")),
+                                cursor.getString(cursor.getColumnIndex("EMAIL")), cursor.getString(cursor.getColumnIndex("ATIVO")),
+                                cursor.getString(cursor.getColumnIndex("PERFIL")));
 
-                        usuario.setId(rs.getInt(rs.getColumnIndex("ID")));
-                        usuario.setTelefone(rs.getString(rs.getColumnIndex("TELEFONE")));
-                        usuario.setFoto(rs.getString(rs.getColumnIndex("FOTO")));
+                        usuario.setId(cursor.getInt(cursor.getColumnIndex("ID")));
+                        usuario.setTelefone(cursor.getString(cursor.getColumnIndex("TELEFONE")));
+                        usuario.setFoto(cursor.getString(cursor.getColumnIndex("FOTO")));
 
                         usuarios.add(usuario);
 
-                    } while (rs.moveToNext());
+                    } while (cursor.moveToNext());
 
                 }
             } else {
-                Log.i("Alerta", "banco nao existe ou nao foi aberto");
+                throw new BDException();
             }
 
         } catch (Exception e) {
-            Log.i("erro no metodo listar da classe usuario ", "" + e.getMessage());
+            Log.i("erro no metodo listar da classe usuario dao ", "" + e.getMessage());
+            throw new DAOException(e);
+
         } finally {
-            if (rs != null) {
-                rs.close();
+            if (cursor != null) {
+                cursor.close();
             }
             if (db != null) {
                 if (db.isOpen())
@@ -158,8 +164,8 @@ public class UsuarioDAO implements IUsuarioDAO {
     }
 
     @Override
-    public Usuario procurar(int id) throws SQLException {
-        Cursor rs = null;
+    public Usuario procurar(int id) throws SQLException, DAOException {
+        Cursor cursor = null;
         Usuario usuario = null;
 
         try {
@@ -169,30 +175,31 @@ public class UsuarioDAO implements IUsuarioDAO {
                 String sql = "Select * from " + NOME_TABELA + " where ID= ?";
                 String[] whereArgs = {String.valueOf(id)};
 
-                rs = db.rawQuery(sql, whereArgs);
+                cursor = db.rawQuery(sql, whereArgs);
 
-                rs.moveToFirst();
+                cursor.moveToFirst();
 
-                if (rs.getCount() > 0 && rs != null) {
-                    usuario = new Usuario(rs.getString(rs.getColumnIndex("NOME")),
-                            rs.getString(rs.getColumnIndex("LOGIN")), rs.getString(rs.getColumnIndex("SENHA")),
-                            rs.getString(rs.getColumnIndex("EMAIL")), rs.getString(rs.getColumnIndex("ATIVO")),
-                            rs.getString(rs.getColumnIndex("PERFIL")));
+                if (cursor.getCount() > 0 && cursor != null) {
+                    usuario = new Usuario(cursor.getString(cursor.getColumnIndex("NOME")),
+                            cursor.getString(cursor.getColumnIndex("LOGIN")), cursor.getString(cursor.getColumnIndex("SENHA")),
+                            cursor.getString(cursor.getColumnIndex("EMAIL")), cursor.getString(cursor.getColumnIndex("ATIVO")),
+                            cursor.getString(cursor.getColumnIndex("PERFIL")));
 
-                    usuario.setId(rs.getInt(rs.getColumnIndex("ID")));
-                    usuario.setTelefone(rs.getString(rs.getColumnIndex("TELEFONE")));
-                    usuario.setFoto(rs.getString(rs.getColumnIndex("FOTO")));
+                    usuario.setId(cursor.getInt(cursor.getColumnIndex("ID")));
+                    usuario.setTelefone(cursor.getString(cursor.getColumnIndex("TELEFONE")));
+                    usuario.setFoto(cursor.getString(cursor.getColumnIndex("FOTO")));
 
                     Log.i("procurar usuario", "usuario achado com sucesso ");
                 }
             } else {
-                Log.i("Alerta", "banco nao existe ou nao foi aberto");
+                throw new BDException();
             }
         } catch (Exception e) {
-            Log.i("erro no meodo procurar da classe usuario ", "" + e.getMessage());
+            Log.i("erro no metodo procurar da classe usuarioDAO ", "" + e.getMessage());
+            throw new DAOException(e);
         } finally {
-            if (rs != null) {
-                rs.close();
+            if (cursor != null) {
+                cursor.close();
             }
             if (db != null) {
                 if (db.isOpen())
@@ -203,18 +210,16 @@ public class UsuarioDAO implements IUsuarioDAO {
     }
 
     @Override
-    public void atualizar(Usuario usuario) throws SQLException {
+    public void atualizar(Usuario usuario) throws SQLException, DAOException {
         try {
-            // TODO //usuario ja existente
+
             ContentValues valores = new ContentValues();
             valores.put("NOME", usuario.getNome());
             valores.put("LOGIN", usuario.getLogin());
             valores.put("SENHA", usuario.getSenha());
             valores.put("EMAIL", usuario.getEmail());
-            //if (!usuario.getTelefone().equals(""))
             valores.put("TELEFONE", usuario.getTelefone());
             valores.put("ATIVO", usuario.getAtivo());
-            //if (!usuario.getFoto().equals(""))
             valores.put("FOTO", usuario.getFoto());
             valores.put("PERFIL", usuario.getPerfil());
 
@@ -225,9 +230,12 @@ public class UsuarioDAO implements IUsuarioDAO {
             db = conexao.openDb();
             if (db != null) {
                 db.update(NOME_TABELA, valores, where, whereArgs);
+            } else {
+                throw new BDException();
             }
         } catch (Exception e) {
             Log.i("erro metodo atualizar usuario", "" + e.getMessage());
+            throw new DAOException(e);
         } finally {
 
             if (db != null) {
@@ -238,17 +246,21 @@ public class UsuarioDAO implements IUsuarioDAO {
     }
 
     @Override
-    public void excluir(int id) throws SQLException {
+    public void excluir(int id) throws SQLException, DAOException {
         try {
-
             String where = " ID =?";
             String[] whereArgs = new String[]{String.valueOf(id)};
 
             db = conexao.openDb();
             if (db != null)
                 db.delete(NOME_TABELA, where, whereArgs);
+            else
+                throw new BDException();
+
         } catch (Exception e) {
-            Log.i("erro metodo excluir usuario", "" + e.getMessage());
+            Log.i("erro metodo excluir usuarioDAO", "" + e.getMessage());
+            throw new DAOException(e);
+
         } finally {
             if (db != null) {
                 if (db.isOpen())
@@ -258,9 +270,9 @@ public class UsuarioDAO implements IUsuarioDAO {
     }
 
     @Override
-    public Usuario loginFacebook(String email) throws RepositorioException, SQLException {
+    public Usuario loginFacebook(String email) throws RepositorioException, SQLException, DAOException {
         Usuario usuario = null;
-        Cursor rs = null;
+        Cursor cursor = null;
 
         try {
             db = conexao.openDb();
@@ -269,31 +281,32 @@ public class UsuarioDAO implements IUsuarioDAO {
                 String sql = "Select * from " + NOME_TABELA + " where EMAIL= ?";
                 String[] whereArgs = {email};
 
-                rs = db.rawQuery(sql, whereArgs);
+                cursor = db.rawQuery(sql, whereArgs);
 
-                rs.moveToFirst();
+                cursor.moveToFirst();
 
-                if (rs.getCount() > 0 && rs != null) {
-                    usuario = new Usuario(rs.getString(rs.getColumnIndex("NOME")),
-                            rs.getString(rs.getColumnIndex("LOGIN")), rs.getString(rs.getColumnIndex("SENHA")),
-                            rs.getString(rs.getColumnIndex("EMAIL")), rs.getString(rs.getColumnIndex("ATIVO")),
-                            rs.getString(rs.getColumnIndex("PERFIL")));
+                if (cursor.getCount() > 0 && cursor != null) {
+                    usuario = new Usuario(cursor.getString(cursor.getColumnIndex("NOME")),
+                            cursor.getString(cursor.getColumnIndex("LOGIN")), cursor.getString(cursor.getColumnIndex("SENHA")),
+                            cursor.getString(cursor.getColumnIndex("EMAIL")), cursor.getString(cursor.getColumnIndex("ATIVO")),
+                            cursor.getString(cursor.getColumnIndex("PERFIL")));
 
-                    usuario.setId(rs.getInt(rs.getColumnIndex("ID")));
-                    usuario.setTelefone(rs.getString(rs.getColumnIndex("TELEFONE")));
-                    usuario.setFoto(rs.getString(rs.getColumnIndex("FOTO")));
+                    usuario.setId(cursor.getInt(cursor.getColumnIndex("ID")));
+                    usuario.setTelefone(cursor.getString(cursor.getColumnIndex("TELEFONE")));
+                    usuario.setFoto(cursor.getString(cursor.getColumnIndex("FOTO")));
 
                     Log.i("procurar usuario", "usuario achado com sucesso ");
                 }
             } else {
-                Log.i("Alerta", "banco nao existe ou nao foi aberto");
+                throw new BDException();
             }
         } catch (Exception e) {
             Log.i("erro no metodo loginFacebook da classe usuario ", "" + e.getMessage());
+            throw new DAOException(e);
         } finally {
 
-            if (rs != null) {
-                rs.close();
+            if (cursor != null) {
+                cursor.close();
             }
             if (db != null) {
                 if (db.isOpen())
@@ -307,7 +320,7 @@ public class UsuarioDAO implements IUsuarioDAO {
 
     @Override
     public void alterarSenha(int id, String senha)
-            throws UsuarioNaoEncontradoException, SQLException, RepositorioException {
+            throws UsuarioNaoEncontradoException, SQLException, RepositorioException, DAOException {
 
         ContentValues valores = new ContentValues();
         String where = "ID =?";
@@ -321,9 +334,11 @@ public class UsuarioDAO implements IUsuarioDAO {
             if (db != null)
                 db.update(NOME_TABELA, valores, where, whereArgs);
 
+            else
+                throw new BDException();
         } catch (Exception e) {
             Log.i("erro no metodo alterarSenha da classe usuario ", "" + e.getMessage());
-
+            throw new DAOException(e);
         } finally {
             if (db != null) {
                 if (db.isOpen())
@@ -335,8 +350,8 @@ public class UsuarioDAO implements IUsuarioDAO {
 
     @Override
     public boolean login(String usuario, String senha)
-            throws UsuarioInativoException, RepositorioException, SQLException {
-        Cursor rs = null;
+            throws UsuarioInativoException, RepositorioException, SQLException, DAOException {
+        Cursor cursor = null;
         String sql = "";
         boolean result = false;
         try {
@@ -351,27 +366,27 @@ public class UsuarioDAO implements IUsuarioDAO {
 
                 String[] whereArgs = {usuario, senha};
 
-                rs = db.rawQuery(sql, whereArgs);
+                cursor = db.rawQuery(sql, whereArgs);
 
-                rs.moveToFirst();
+                cursor.moveToFirst();
 
-                if (rs.getCount() > 0 && rs != null) {
-                    if (rs.getString(rs.getColumnIndex("ATIVO")).equals("NAO"))
-                        throw new UsuarioInativoException(procurar(rs.getInt(rs.getColumnIndex("id"))));
-                    this.usuarioLogado = procurar(rs.getInt(rs.getColumnIndex("ID")));
+                if (cursor.getCount() > 0 && cursor != null) {
+                    if (cursor.getString(cursor.getColumnIndex("ATIVO")).equals("NAO"))
+                        throw new UsuarioInativoException(procurar(cursor.getInt(cursor.getColumnIndex("ID"))));
+                    this.usuarioLogado = procurar(cursor.getInt(cursor.getColumnIndex("ID")));
                     result = true;
                 } else {
                     result = false;
                 }
             } else {
-                Log.i("Alerta", "banco nao existe ou nao foi aberto");
+                throw new BDException();
             }
         } catch (Exception e) {
             Log.i("erro no metodo login da classe usuario ", "" + e.getMessage());
-            throw new RepositorioException(e);
+            throw new DAOException(e);
         } finally {
-            if (rs != null) {
-                rs.close();
+            if (cursor != null) {
+                cursor.close();
             }
             if (db != null) {
                 if (db.isOpen())
@@ -396,10 +411,6 @@ public class UsuarioDAO implements IUsuarioDAO {
 
     public static Usuario getUsuarioLogado() {
         return usuarioLogado;
-    }
-
-    public static CriarDb getConexao() {
-        return conexao;
     }
 
 }

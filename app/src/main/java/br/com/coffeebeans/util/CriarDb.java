@@ -42,10 +42,10 @@ public class CriarDb extends SQLiteOpenHelper {
 
         try {
             //db.execSQL("drop table atividade");
+            Log.i("oncreate","entrou no oncreate CriarDb");
             db.execSQL(createTableAtividade);
             db.execSQL(createTableUsuario);
-
-            Log.i("db get version", String.valueOf(db.getVersion()));
+            db.execSQL("insert into usuario values(1,'ADMIN','admin','admin','admin@exemplo.com',NULL,'SIM',NULL,'ADMINISTRADOR')");
 
         } catch (NullPointerException e) {
             Log.i("erro NullPointerException classe criar db", "" + e.getMessage());
