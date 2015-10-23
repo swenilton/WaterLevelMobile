@@ -26,12 +26,10 @@ public class UsuarioDAO implements IUsuarioDAO {
     private static CriarDb conexao;
     private static Usuario usuarioLogado;
 
-    //TODO //usuario nao encontrado ao não logar // cadastrar admin através de método // nao poder excluir user adm // permissao para cadastro de usuario //nao deixar cadastrar com o login ADMIN
-
+    //TODO // login facebook testar se o usuario do WL está inativo  //verificar excecoes da entidade //usuario nao encontrado ao não logar
 
     public UsuarioDAO(Context context) throws Exception {
         conexao = CriarDb.getInstance(context);
-
     }
 
     public boolean existe(String nome) throws SQLException, DAOException {
@@ -77,8 +75,6 @@ public class UsuarioDAO implements IUsuarioDAO {
     public void cadastrar(Usuario usuario) throws SQLException, DAOException {
         ContentValues valores = new ContentValues();
         // valores.put("ID", atividade.getId());
-
-
         try {
             valores.put("NOME", usuario.getNome());
             valores.put("LOGIN", usuario.getLogin());
@@ -111,7 +107,7 @@ public class UsuarioDAO implements IUsuarioDAO {
     }
 
     @Override
-    public List<Usuario> getLista() throws SQLException, RepositorioException, DAOException {
+    public List<Usuario> getLista() throws SQLException, DAOException {
         Cursor cursor = null;
         ArrayList<Usuario> usuarios = null;
 
@@ -270,7 +266,7 @@ public class UsuarioDAO implements IUsuarioDAO {
     }
 
     @Override
-    public Usuario loginFacebook(String email) throws RepositorioException, SQLException, DAOException {
+    public Usuario loginFacebook(String email) throws SQLException, DAOException {
         Usuario usuario = null;
         Cursor cursor = null;
 
@@ -320,7 +316,7 @@ public class UsuarioDAO implements IUsuarioDAO {
 
     @Override
     public void alterarSenha(int id, String senha)
-            throws UsuarioNaoEncontradoException, SQLException, RepositorioException, DAOException {
+            throws SQLException, UsuarioNaoEncontradoException, DAOException {
 
         ContentValues valores = new ContentValues();
         String where = "ID =?";
@@ -350,7 +346,7 @@ public class UsuarioDAO implements IUsuarioDAO {
 
     @Override
     public boolean login(String usuario, String senha)
-            throws UsuarioInativoException, RepositorioException, SQLException, DAOException {
+            throws UsuarioInativoException, SQLException, DAOException {
         Cursor cursor = null;
         String sql = "";
         boolean result = false;
