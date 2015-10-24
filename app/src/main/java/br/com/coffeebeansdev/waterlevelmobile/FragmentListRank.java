@@ -8,6 +8,7 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 
 import java.util.List;
 
@@ -15,31 +16,23 @@ import br.com.coffeebeans.atividade.Atividade;
 import br.com.coffeebeans.fachada.Fachada;
 
 
-public class FragmentRank extends Fragment {
+public class FragmentListRank extends Fragment {
     View rootView;
-    List<Atividade> atividades;
+    ListView listView;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.fragment_rank, container, false);
+        rootView = inflater.inflate(R.layout.fragment_list_rank, container, false);
         /** Getting a reference to the ViewPager defined the layout file */
-        ViewPager pager = (ViewPager) rootView.findViewById(R.id.pager);
-
-        try{
-            atividades = Fachada.getInstance(getContext()).atividadeListar();
-        } catch (Exception e){
+        listView = (ListView) rootView.findViewById(R.id.listView);
+        try {
+            RankListAdapter rankListAdapter = new RankListAdapter(getContext(), getFragmentManager(), Fachada.getInstance(getContext()).getUsuarioLista());
+            listView.setAdapter(rankListAdapter);
+        }catch (Exception e){
 
         }
 
-        /** Getting fragment manager */
-        FragmentManager fm = getFragmentManager();
-
-        /** Instantiating FragmentPagerAdapter */
-        MyFragmentPageAdapter pagerAdapter = new MyFragmentPageAdapter(fm, atividades);
-
-        /** Setting the pagerAdapter to the pager object */
-        pager.setAdapter(pagerAdapter);
-        pager.setCurrentItem(0);
         return rootView;
     }
 }

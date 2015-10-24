@@ -31,11 +31,15 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import br.com.coffeebeans.exception.DAOException;
+import br.com.coffeebeans.exception.RepositorioException;
+import br.com.coffeebeans.exception.UsuarioInativoException;
 import br.com.coffeebeans.fachada.Fachada;
 import br.com.coffeebeans.usuario.Usuario;
 
@@ -306,28 +310,21 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
             // TODO: attempt authentication against a network service.
             boolean vai = false;
             try {
-                // Simulate network access.
-                //vai = true;
                 vai = fachada.login(mEmail, mPassword);
                 Thread.sleep(2000);
             } catch (InterruptedException e) {
                 erro = e;
                 vai = false;
-            } catch (Exception e) {
-                Log.i("Erro no login: ", e.getMessage());
+            } catch (SQLException e) {
+                Log.i("Erro no login:\n", e.getMessage());
                 erro = e;
-                vai = false;
+            } catch (UsuarioInativoException e) {
+                Log.i("Erro no login:\n", e.getMessage());
+                erro = e;
+            } catch (DAOException e) {
+                Log.i("Erro no login:\n", e.getMessage());
+                erro = e;
             }
-            /*
-            for (String credential : DUMMY_CREDENTIALS) {
-                String[] pieces = credential.split(":");
-                if (pieces[0].equals(mEmail)) {
-                    // Account exists, return true if the password matches.
-                    return pieces[1].equals(mPassword);
-                }
-            }
-            */
-            // TODO: register the new account here.
             return vai;
         }
 
