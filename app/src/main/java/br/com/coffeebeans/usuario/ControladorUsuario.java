@@ -11,6 +11,7 @@ import br.com.coffeebeans.exception.RepositorioException;
 import br.com.coffeebeans.exception.UsuarioInativoException;
 import br.com.coffeebeans.exception.UsuarioJaExistenteException;
 import br.com.coffeebeans.exception.UsuarioNaoEncontradoException;
+import br.com.coffeebeans.exception.EmailJaExistenteException;
 
 public class ControladorUsuario {
     private IUsuarioDAO iusuario;
@@ -23,8 +24,12 @@ public class ControladorUsuario {
         return iusuario.existe(descricao);
     }
 
+    public boolean existeEmail(String email) throws SQLException, DAOException {
+        return iusuario.existeEmail(email);
+    }
+
     public void cadastrar(Usuario usuario)
-            throws SQLException, UsuarioJaExistenteException, DAOException, PermissaoException {
+            throws SQLException, UsuarioJaExistenteException, DAOException, PermissaoException, EmailJaExistenteException {
 
         if (usuario == null) {
             throw new IllegalArgumentException("Usuario Null");
@@ -34,6 +39,10 @@ public class ControladorUsuario {
         }
         if (existe(usuario.getLogin())) {
             throw new UsuarioJaExistenteException();
+        }
+
+        if (existeEmail(usuario.getEmail())) {
+            throw new EmailJaExistenteException();
         }
 
         iusuario.cadastrar(usuario);

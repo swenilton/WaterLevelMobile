@@ -37,7 +37,7 @@ public class Fachada {
 
     public <E> void cadastrar(E element) throws SQLException, UsuarioJaExistenteException,
             ViolacaoChaveEstrangeiraException, AtividadeJaExistenteException,
-            DAOException, PermissaoException {
+            DAOException, PermissaoException, EmailJaExistenteException {
 
         if (element instanceof Usuario) {
             controladorUsuario.cadastrar((Usuario) element);

@@ -26,7 +26,7 @@ public class UsuarioDAO implements IUsuarioDAO {
     private static CriarDb conexao;
     private static Usuario usuarioLogado;
 
-    //TODO // login facebook testar se o usuario do WL está inativo  //verificar excecoes da entidade //usuario nao encontrado ao não logar
+    //TODO // login facebook testar se o usuario do WL está inativo  //verificar excecoes da entidade //usuario nao encontrado ao não logar // poder alterar só suas proprias informações
 
     public UsuarioDAO(Context context) throws Exception {
         conexao = CriarDb.getInstance(context);
@@ -43,6 +43,45 @@ public class UsuarioDAO implements IUsuarioDAO {
                 String sql = "Select * from " + NOME_TABELA + " where login= ?";
 
                 String[] selectionArgs = {nome};
+
+                cursor = db.rawQuery(sql, selectionArgs);
+
+                cursor.moveToFirst();
+
+                if (cursor.getCount() > 0 && cursor != null) {
+                    existe = true;
+                }
+
+                Log.i("metodo existe usuario", "o usuario existe ");
+            } else {
+                throw new BDException();
+
+            }
+        } catch (Exception e) {
+            Log.i("erro no metodo existir da classe usuario ", "" + e.getMessage());
+            throw new DAOException(e);
+
+        } finally {
+            if (cursor != null) cursor.close();
+            if (db != null) {
+                if (db.isOpen())
+                    db.close();
+            }
+        }
+        return existe;
+    }
+
+    public boolean existeEmail(String email) throws SQLException, DAOException {
+        boolean existe = false;
+        Cursor cursor = null;
+
+        try {
+            db = conexao.openDb();
+            if (db != null) {
+
+                String sql = "Select * from " + NOME_TABELA + " where EMAIL= ?";
+
+                String[] selectionArgs = {email};
 
                 cursor = db.rawQuery(sql, selectionArgs);
 

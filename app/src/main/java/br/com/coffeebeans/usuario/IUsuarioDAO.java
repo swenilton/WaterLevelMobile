@@ -31,5 +31,7 @@ public interface IUsuarioDAO {
 
     public boolean login(String usuario, String senha) throws UsuarioInativoException, SQLException, DAOException;
 
-    boolean existe(String descricao) throws SQLException, DAOException;
+    public boolean existe(String descricao) throws SQLException, DAOException;
+
+    public boolean existeEmail(String email) throws SQLException, DAOException;
 }
