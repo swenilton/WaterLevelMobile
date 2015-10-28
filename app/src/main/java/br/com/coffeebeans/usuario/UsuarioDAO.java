@@ -389,6 +389,7 @@ public class UsuarioDAO implements IUsuarioDAO {
         Cursor cursor = null;
         String sql = "";
         boolean result = false;
+        Usuario inativo = null;
         try {
             if (usuario.contains("@"))
                 sql = "SELECT * FROM USUARIO WHERE EMAIL = ? AND SENHA = ?";
@@ -406,8 +407,10 @@ public class UsuarioDAO implements IUsuarioDAO {
                 cursor.moveToFirst();
 
                 if (cursor.getCount() > 0 && cursor != null) {
-                    if (cursor.getString(cursor.getColumnIndex("ATIVO")).equals("NAO"))
+                    if (cursor.getString(cursor.getColumnIndex("ATIVO")).equals("NAO")) {
+                        inativo = procurar(cursor.getInt(cursor.getColumnIndex("ID")));
                         throw new UsuarioInativoException(procurar(cursor.getInt(cursor.getColumnIndex("ID"))));
+                    }
                     this.usuarioLogado = procurar(cursor.getInt(cursor.getColumnIndex("ID")));
                     result = true;
                 } else {
@@ -416,6 +419,8 @@ public class UsuarioDAO implements IUsuarioDAO {
             } else {
                 throw new BDException();
             }
+        } catch (UsuarioInativoException e) {
+            throw new UsuarioInativoException(inativo);
         } catch (Exception e) {
             Log.i("erro no metodo login da classe usuario ", "" + e.getMessage());
             throw new DAOException(e);
