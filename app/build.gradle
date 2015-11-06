@@ -17,12 +17,30 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    packagingOptions {
+        exclude 'META-INF/jersey-module-version'
+        exclude 'META-INF/services/javax.enterprise.inject.spi.Extension'
+        exclude 'META-INF/services/javax.servlet.ServletContainerInitializer'
+        exclude 'META-INF/services/javax.ws.rs.ext.MessageBodyReader'
+        exclude 'META-INF/services/javax.ws.rs.ext.MessageBodyWriter'
+        exclude 'META-INF/services/com.sun.jersey.spi.HeaderDelegateProvider'
+        exclude 'META-INF/services/com.sun.jersey.spi.inject.InjectableProvider'
+    }
 }
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
+    testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:23.0.1'
     compile 'com.google.android.gms:play-services:8.1.0'
     compile 'com.android.support:design:23.0.1'
     compile 'de.hdodenhof:circleimageview:2.0.0'
+    compile files('libs/asm-3.1.jar')
+    compile files('libs/gson-2.2.4.jar')
+    compile files('libs/jersey-json-1.18.1.jar')
+    compile files('libs/jersey-servlet-1.12.jar')
+    compile files('libs/jsr311-api-1.1.1.jar')
+    compile files('libs/jersey-bundle-1.8.jar')
+    compile files('libs/jersey-core-1.4.jar')
+
 }
