@@ -75,7 +75,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
 
         try{
             fachada = Fachada.getInstance(getApplicationContext());
-
+            if(fachada.getUsuarioLogado() != null) entrar();
         }catch (Exception e){
             Log.i("Erro Login: ", e.getMessage());
             Toast.makeText(getApplicationContext(), "Erro ao instanciar fachada\n" + e.getMessage(),
@@ -109,6 +109,15 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
+    }
+
+    private void entrar() {
+        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(LoginActivity.this).toBundle());
+        } else {
+            startActivity(intent);
+        }
     }
 
     private void populateAutoComplete() {
@@ -334,12 +343,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
             showProgress(false);
 
             if (success) {
-                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(LoginActivity.this).toBundle());
-                } else {
-                    startActivity(intent);
-                }
+                entrar();
                 finish();
             } else {
 //                mPasswordView.setError(getString(R.string.error_incorrect_password));
