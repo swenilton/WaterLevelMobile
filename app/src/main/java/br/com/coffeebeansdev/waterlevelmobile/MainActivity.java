@@ -30,10 +30,12 @@ import android.widget.Toast;
 import java.io.File;
 import java.sql.SQLException;
 
+import br.com.coffeebeans.exception.ClientWebServiceException;
 import br.com.coffeebeans.exception.DAOException;
 import br.com.coffeebeans.fachada.Fachada;
 import br.com.coffeebeans.usuario.Usuario;
 import br.com.coffeebeans.usuario.UsuarioDAO;
+import br.com.coffeebeans.util.ClientWebService;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -88,6 +90,18 @@ public class MainActivity extends AppCompatActivity
         navigationView.setCheckedItem(R.id.nav_inicio);
 
         onNavigationItemSelected(navigationView.getMenu().getItem(0));
+
+        ClientWebService ws=new ClientWebService();
+        try {
+            ws.exemploGetUsers();
+          /*Toast.makeText(this, "\n" + ClientWebService.output,
+                    Toast.LENGTH_LONG).show();*/
+
+        } catch (ClientWebServiceException e) {
+            Toast.makeText(this, "\n" + e.getMessage(),
+                    Toast.LENGTH_LONG).show();
+            e.printStackTrace();
+        }
     }
 
     @Override

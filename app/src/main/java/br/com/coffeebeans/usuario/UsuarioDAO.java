@@ -32,7 +32,7 @@ public class UsuarioDAO implements IUsuarioDAO {
 
     public UsuarioDAO(Context context) throws Exception {
         conexao = CriarDb.getInstance(context);
-        context.deleteDatabase(ConfigDb.NOME_BANCO);
+        //context.deleteDatabase(ConfigDb.NOME_BANCO);
     }
 
     public boolean existe(String nome) throws SQLException, DAOException {
