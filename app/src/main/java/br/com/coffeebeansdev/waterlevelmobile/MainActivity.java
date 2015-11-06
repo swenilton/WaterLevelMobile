@@ -2,26 +2,22 @@ package br.com.coffeebeansdev.waterlevelmobile;
 
 import android.app.ActivityOptions;
 import android.content.Intent;
-import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.util.Log;
-import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -32,8 +28,6 @@ import java.sql.SQLException;
 
 import br.com.coffeebeans.exception.DAOException;
 import br.com.coffeebeans.fachada.Fachada;
-import br.com.coffeebeans.usuario.Usuario;
-import br.com.coffeebeans.usuario.UsuarioDAO;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -55,24 +49,30 @@ public class MainActivity extends AppCompatActivity
         textViewNome = (TextView) findViewById(R.id.tvNome);
         imageViewFoto = (ImageView) findViewById(R.id.imageView);
         progressBar = (ProgressBar) findViewById(R.id.progressBarMain);
-
-        try{
-            fachada = Fachada.getInstance(this);
-            if(fachada.getUsuarioLogado() == null) {
-                sair();
-            } else {
-                textViewNome.setText(fachada.getUsuarioLogado().getNome());
-                textViewEmail.setText(fachada.getUsuarioLogado().getEmail());
-                if (fachada.getUsuarioLogado().getFoto() != null)
-                    imageViewFoto.setImageURI(Uri.fromFile(new File(fachada.getUsuarioLogado().getFoto())));
-                else
-                    imageViewFoto.setImageResource(R.drawable.ic_user);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    progressBar.setVisibility(View.VISIBLE);
+                    fachada = Fachada.getInstance(MainActivity.this);
+                    if (fachada.getUsuarioLogado() == null) {
+                        sair();
+                    } else {
+                        textViewNome.setText(fachada.getUsuarioLogado().getNome());
+                        textViewEmail.setText(fachada.getUsuarioLogado().getEmail());
+                        if (fachada.getUsuarioLogado().getFoto() != null)
+                            imageViewFoto.setImageURI(Uri.fromFile(new File(fachada.getUsuarioLogado().getFoto())));
+                        else
+                            imageViewFoto.setImageResource(R.drawable.ic_user);
+                    }
+                    progressBar.setVisibility(View.INVISIBLE);
+                } catch (Exception e) {
+                    Log.i("ERRO", e.getMessage());
+//                    Toast.makeText(MainActivity.this, "Erro ao instanciar fachada\n" + e.getMessage(),
+//                            Toast.LENGTH_LONG).show();
+                }
             }
-        } catch (Exception e){
-            Log.i("ERRO", e.getMessage());
-            Toast.makeText(this, "Erro ao instanciar fachada\n" + e.getMessage(),
-                    Toast.LENGTH_LONG).show();
-        }
+        }).start();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setVisibility(FloatingActionButton.INVISIBLE);
@@ -127,8 +127,9 @@ public class MainActivity extends AppCompatActivity
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(final MenuItem item) {
         // Handle navigation view item clicks here.
+        progressBar.setVisibility(View.VISIBLE);
         Fragment frgmt = null;
         int id = item.getItemId();
         if (id == R.id.nav_inicio) {
@@ -161,10 +162,11 @@ public class MainActivity extends AppCompatActivity
                 .commit();
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
+        progressBar.setVisibility(View.INVISIBLE);
         return true;
     }
 
-    public void sair(){
+    public void sair() {
         Intent intent = new Intent(MainActivity.this, LoginActivity.class);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this).toBundle());

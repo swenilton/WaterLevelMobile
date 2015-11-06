@@ -61,14 +61,15 @@ public class FragmentUsuario extends Fragment {
     }
 
     public static void popularLista() throws Exception {
-        //new Task().execute();
-        try {
-            fachada = Fachada.getInstance(context);
-            usuarioListAdapter = new UsuarioListAdapter(context, fragmentManager, fachada.getUsuarioLista());
-        } catch (Exception e) {
-            Log.i("Erro TASK LIST USUARIO", e.getMessage());
-            Toast.makeText(context, "Erro ao carregar lista\n" + e.getMessage(), Toast.LENGTH_LONG).show();
-        }
+        new Task().execute();
+//        try {
+//            fachada = Fachada.getInstance(context);
+//            usuarioListAdapter = new UsuarioListAdapter(context, fragmentManager, fachada.getUsuarioLista());
+//            listView.setAdapter(usuarioListAdapter);
+//        } catch (Exception e) {
+//            Log.i("Erro TASK LIST USUARIO", e.getMessage());
+//            Toast.makeText(context, "Erro ao carregar lista\n" + e.getMessage(), Toast.LENGTH_LONG).show();
+//        }
     }
 
     private static class Task extends AsyncTask<Void, Void, String> {
