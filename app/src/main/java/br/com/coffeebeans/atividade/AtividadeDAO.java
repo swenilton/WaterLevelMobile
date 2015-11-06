@@ -13,6 +13,7 @@ import android.util.Log;
 import br.com.coffeebeans.exception.AtividadeNaoEncontradaException;
 import br.com.coffeebeans.exception.BDException;
 import br.com.coffeebeans.exception.DAOException;
+import br.com.coffeebeans.util.ConfigDb;
 import br.com.coffeebeans.util.CriarDb;
 
 public class AtividadeDAO implements IAtividadeDAO {
@@ -21,7 +22,6 @@ public class AtividadeDAO implements IAtividadeDAO {
     private CriarDb conexao;
 
     public AtividadeDAO(Context context) throws Exception {
-        //conexao.openDb();            //simulando erro
         conexao = CriarDb.getInstance(context);
         //TODO //ver ultimas atividades REALIZADAS
         //TODO //adm ver atividades REALIZADAS de todos   //user ver as proprias atividades REALIZADAS
@@ -52,6 +52,10 @@ public class AtividadeDAO implements IAtividadeDAO {
             } else {
                 throw new BDException();
             }
+        } catch (SQLException e) {
+            Log.i("erro no metodo existir da classe atividade DAO ", e.getMessage());
+            throw new SQLException(e);
+
         } catch (Exception e) {
             Log.i("erro no metodo existir da classe atividade DAO ", e.getMessage());
             throw new DAOException(e);
@@ -84,8 +88,11 @@ public class AtividadeDAO implements IAtividadeDAO {
                 throw new BDException();
             }
 
+        } catch (SQLException e) {
+            Log.i("erro ao cadastrar atividade dao ", "" + e.getMessage());
+            throw new SQLException(e);
         } catch (Exception e) {
-            Log.i("erro ao cadastrar atividade ", "" + e.getMessage());
+            Log.i("erro ao cadastrar atividade dao ", "" + e.getMessage());
             throw new DAOException(e);
         } finally {
             if (db != null) {
@@ -99,7 +106,7 @@ public class AtividadeDAO implements IAtividadeDAO {
     @Override
     public List<Atividade> listar() throws SQLException, DAOException {
         Cursor cursor = null;
-        ArrayList<Atividade> atividades = null;
+        List<Atividade> atividades = null;
 
         try {
             db = conexao.openDb();
@@ -126,8 +133,12 @@ public class AtividadeDAO implements IAtividadeDAO {
                 throw new BDException();
             }
 
+        } catch (SQLException e) {
+            Log.i("erro no metodo listar da classe atividade dao ", "" + e.getMessage());
+            throw new SQLException(e);
+
         } catch (Exception e) {
-            Log.i("erro no metodo listar da classe atividade ", "" + e.getMessage());
+            Log.i("erro no metodo listar da classe atividade dao ", "" + e.getMessage());
             throw new DAOException(e);
 
         } finally {
@@ -144,7 +155,7 @@ public class AtividadeDAO implements IAtividadeDAO {
     }
 
     @Override
-    public Atividade procurar(int id) throws SQLException, AtividadeNaoEncontradaException, DAOException {
+    public Atividade procurar(int id) throws SQLException, DAOException {
         Cursor cursor = null;
         Atividade atividade = null;
         try {
@@ -167,8 +178,11 @@ public class AtividadeDAO implements IAtividadeDAO {
             } else {
                 throw new BDException();
             }
+        } catch (SQLException e) {
+            Log.i("erro no metodo procurar da classe atividade dao ", "" + e.getMessage());
+            throw new SQLException(e);
         } catch (Exception e) {
-            Log.i("erro no metodo procurar da classe atividade ", "" + e.getMessage());
+            Log.i("erro no metodo procurar da classe atividade dao ", "" + e.getMessage());
             throw new DAOException(e);
         } finally {
             if (cursor != null)
@@ -183,36 +197,40 @@ public class AtividadeDAO implements IAtividadeDAO {
     }
 
     @Override
-    public void atualizar(Atividade atividade) throws AtividadeNaoEncontradaException, SQLException, DAOException {
+    public void atualizar(Atividade atividade) throws  SQLException, DAOException {
 
         ContentValues valores = new ContentValues();
         String where = "ID =?";
+        if (atividade != null) {
+            try {
 
-        try {
+                valores.put("DESCRICAO", atividade.getDescricao());
 
-            valores.put("DESCRICAO", atividade.getDescricao());
+                String[] whereArgs = {String.valueOf(atividade.getId())};
 
-            String[] whereArgs = {String.valueOf(atividade.getId())};
-
-            db = conexao.openDb();
-            if (db != null) {
-                db.update(NOME_TABELA, valores, where, whereArgs);
-            } else {
-                throw new BDException();
-            }
-        } catch (Exception e) {
-            Log.i("erro metodo atualizar atividade", "" + e.getMessage());
-            throw new DAOException(e);
-        } finally {
-            if (db != null) {
-                if (db.isOpen())
-                    db.close();
+                db = conexao.openDb();
+                if (db != null) {
+                    db.update(NOME_TABELA, valores, where, whereArgs);
+                } else {
+                    throw new BDException();
+                }
+            } catch (SQLException e) {
+                Log.i("erro no metodo atualizar da classe atividade dao ", "" + e.getMessage());
+                throw new SQLException(e);
+            } catch (Exception e) {
+                Log.i("erro no metodo atualizar da classe atividade dao", "" + e.getMessage());
+                throw new DAOException(e);
+            } finally {
+                if (db != null) {
+                    if (db.isOpen())
+                        db.close();
+                }
             }
         }
     }
 
     @Override
-    public void excluir(int id) throws SQLException, AtividadeNaoEncontradaException, DAOException {
+    public void excluir(int id) throws SQLException,DAOException {
         String where = " ID =?";
         try {
 
@@ -224,9 +242,11 @@ public class AtividadeDAO implements IAtividadeDAO {
             else
                 throw new BDException();
 
-
+        } catch (SQLException e) {
+            Log.i("erro no metodo excluir da classe atividade dao ", "" + e.getMessage());
+            throw new SQLException(e);
         } catch (Exception e) {
-            Log.i("erro metodo excluir atividade", "" + e.getMessage());
+            Log.i("erro metodo excluir atividade dao", "" + e.getMessage());
             throw new DAOException(e);
         } finally {
             if (db != null) {

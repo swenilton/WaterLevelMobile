@@ -34,7 +34,7 @@ public class ControladorUsuario {
         if (usuario == null) {
             throw new IllegalArgumentException("Usuario Null");
         }
-        if (!UsuarioDAO.getUsuarioLogado().getPerfil().equals("ADMINISTRADOR")) {
+        if (!getUsuarioLogado().getPerfil().equals("ADMINISTRADOR")) {
             throw new PermissaoException();
         }
         if (existe(usuario.getLogin())) {
@@ -64,12 +64,12 @@ public class ControladorUsuario {
     }
 
     public void atualizar(Usuario usuarioNovo)
-            throws SQLException, UsuarioNaoEncontradoException, DAOException, PermissaoException {
+            throws SQLException, UsuarioNaoEncontradoException, DAOException, PermissaoException, UsuarioJaExistenteException, EmailJaExistenteException {
 
         if (usuarioNovo == null) {
             throw new NullPointerException();
         }
-        if (!UsuarioDAO.getUsuarioLogado().getPerfil().equals("ADMINISTRADOR")) {
+        if (!getUsuarioLogado().getPerfil().equals("ADMINISTRADOR")) {
             throw new PermissaoException();
         }
 
@@ -87,7 +87,7 @@ public class ControladorUsuario {
         if (iusuario.procurar(id) == null) {
             throw new UsuarioNaoEncontradoException();
         }
-        if (!UsuarioDAO.getUsuarioLogado().getPerfil().equals("ADMINISTRADOR")) {
+        if (!getUsuarioLogado().getPerfil().equals("ADMINISTRADOR")) {
             throw new PermissaoException();
         }
         if (iusuario.procurar(id).getId() == 1) {
@@ -112,4 +112,11 @@ public class ControladorUsuario {
         return iusuario.login(usuario, senha);
     }
 
+    public Usuario getUsuarioLogado() throws SQLException, DAOException {
+        return iusuario.getUsuarioLogado();
+    }
+
+    public void logout() throws SQLException, DAOException {
+        iusuario.logout();
+    }
 }

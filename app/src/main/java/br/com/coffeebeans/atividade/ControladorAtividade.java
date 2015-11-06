@@ -37,13 +37,16 @@ public class ControladorAtividade {
         return iatividade.procurar(id);
     }
 
-    public void atualizar(Atividade atividadeNova) throws SQLException, AtividadeNaoEncontradaException, DAOException {
+    public void atualizar(Atividade atividadeNova) throws SQLException, AtividadeNaoEncontradaException, DAOException, AtividadeJaExistenteException {
         if (atividadeNova == null) {
             throw new NullPointerException();
         }
 
         if (iatividade.procurar(atividadeNova.getId()) == null) {
             throw new AtividadeNaoEncontradaException();
+        }
+        if (existe(atividadeNova.getDescricao())) {
+            throw new AtividadeJaExistenteException();
         }
 
         iatividade.atualizar(atividadeNova);

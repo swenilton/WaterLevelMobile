@@ -45,9 +45,6 @@ public class MainActivity extends AppCompatActivity
 
         textViewEmail = (TextView) findViewById(R.id.tvEmail);
         textViewNome = (TextView) findViewById(R.id.tvNome);
-        textViewNome.setText(UsuarioDAO.getUsuarioLogado().getNome());
-        textViewEmail.setText(UsuarioDAO.getUsuarioLogado().getEmail());
-
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setVisibility(FloatingActionButton.INVISIBLE);
 
@@ -65,6 +62,9 @@ public class MainActivity extends AppCompatActivity
 
         try{
             fachada = Fachada.getInstance(this);
+            textViewNome.setText(fachada.getUsuarioLogado().getNome());
+            textViewEmail.setText(fachada.getUsuarioLogado().getEmail());
+
         } catch (Exception e){
             Log.i("ERRO", e.getMessage());
             Toast.makeText(this, "Erro ao instanciar fachada\n" + e.getMessage(),

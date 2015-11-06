@@ -51,7 +51,7 @@ public class Fachada {
     }
 
     public <E> void atualizar(E element)
-            throws SQLException, UsuarioNaoEncontradoException, AtividadeNaoEncontradaException, DAOException, PermissaoException {
+            throws SQLException, UsuarioNaoEncontradoException, AtividadeNaoEncontradaException, DAOException, PermissaoException, AtividadeJaExistenteException, UsuarioJaExistenteException, EmailJaExistenteException {
         if (element instanceof Usuario) {
             controladorUsuario.atualizar((Usuario) element);
         } else if (element instanceof Atividade) {
@@ -90,7 +90,7 @@ public class Fachada {
         return controladorAtividade.listar();
     }
 
-    public List<Usuario> getUsuarioLista() throws SQLException,  DAOException {
+    public List<Usuario> getUsuarioLista() throws SQLException, DAOException {
         return controladorUsuario.getLista();
 
     }
@@ -101,12 +101,12 @@ public class Fachada {
 	 * return controladorAtividadeRealizada.procurar(id); }
 	 */
 
-    public Usuario usuarioProcurar(int id) throws SQLException, UsuarioNaoEncontradoException,DAOException {
+    public Usuario usuarioProcurar(int id) throws SQLException, UsuarioNaoEncontradoException, DAOException {
         return controladorUsuario.procurar(id);
     }
 
     public Atividade atividadeProcurar(int id)
-            throws SQLException, AtividadeNaoEncontradaException, RepositorioException, DAOException {
+            throws SQLException, AtividadeNaoEncontradaException, DAOException {
         return controladorAtividade.procurar(id);
     }
 
@@ -115,7 +115,7 @@ public class Fachada {
     }
 
     public void alterarSenhaUsuario(int id, String senha)
-            throws SQLException, UsuarioNaoEncontradoException,  DAOException {
+            throws SQLException, UsuarioNaoEncontradoException, DAOException {
         controladorUsuario.alterarSenha(id, senha);
     }
 
@@ -124,7 +124,15 @@ public class Fachada {
         return controladorUsuario.login(usuario, senha);
     }
 
-	/*
+    public Usuario getUsuarioLogado() throws SQLException, DAOException {
+
+        return controladorUsuario.getUsuarioLogado();
+    }
+
+    public void logout() throws SQLException, DAOException {
+        controladorUsuario.logout();
+    }
+    /*
 	 * public List<AtividadeRealizada> getUltimasAtividades() throws
 	 * RepositorioException, SQLException { return
 	 * controladorAtividadeRealizada.getUltimasAtividades(); }

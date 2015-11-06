@@ -9,14 +9,13 @@ import android.util.Log;
 import br.com.coffeebeans.exception.BDException;
 
 public class CriarDb extends SQLiteOpenHelper {
-    /*private static final String createTableAtividade = "CREATE TABLE IF NOT EXISTS atividade ( ID INTEGER(11) NOT NULL ,DESCRICAO varchar(45) NOT NULL, "
-            + "PRIMARY KEY  (ID))";
-    */
-    private static final String createTableAtividade = "CREATE TABLE IF NOT EXISTS atividade ( ID INTEGER PRIMARY KEY AUTOINCREMENT,DESCRICAO varchar(45) NOT NULL)";
-
-
+    /*private static final String createTableUserLogado = "CREATE TABLE IF NOT EXISTS usuario_logado (ID INTEGER PRIMARY KEY AUTOINCREMENT,ID_USUARIO INTEGER,FOREIGN KEY(ID_USUARIO)  REFERENCES usuario (ID))";
+    private static final String createTableLogUserLogado = "CREATE TABLE IF NOT EXISTS log_user (ID INTEGER PRIMARY KEY,ID_USER_LOGADO INTEGER,DATA_HORA TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,FOREIGN KEY(ID_USER_LOGADO) REFERENCES usuario_logado(ID))";
+   */
+    private static final String createTableUserLogado = "CREATE TABLE IF NOT EXISTS usuario_logado (ID INTEGER PRIMARY KEY,ID_USUARIO INTEGER NOT NULL)";
+    private static final String createTableAtividade = "CREATE TABLE IF NOT EXISTS atividade (ID INTEGER PRIMARY KEY AUTOINCREMENT,DESCRICAO varchar(45) NOT NULL)";
     private static final String createTableUsuario = "CREATE TABLE IF NOT EXISTS usuario (ID INTEGER PRIMARY KEY AUTOINCREMENT,NOME varchar(100) NOT NULL,LOGIN "
-            + "varchar(45) NOT NULL,SENHA varchar(45) NOT NULL,EMAIL varchar(100) NOT NULL,TELEFONE varchar(45) default NULL,"
+            + "varchar(45) NOT NULL UNIQUE,SENHA varchar(45) NOT NULL,EMAIL varchar(100) NOT NULL UNIQUE,TELEFONE varchar(45) default NULL,"
             + "ATIVO varchar(3) NOT NULL, FOTO varchar(200) default NULL, PERFIL varchar(45) NOT NULL)";
 
     private static CriarDb instance;
@@ -27,8 +26,8 @@ public class CriarDb extends SQLiteOpenHelper {
             if (instance == null) {
                 instance = new CriarDb(context, ConfigDb.NOME_BANCO, null, ConfigDb.DATABASE_VERSION);
             }
-        }catch (Exception e) {
-          throw new Exception(e);
+        } catch (Exception e) {
+            throw new Exception(e);
         }
         return instance;
     }
@@ -41,10 +40,10 @@ public class CriarDb extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) throws NullPointerException {
 
         try {
-            //db.execSQL("drop table atividade");
-            Log.i("oncreate","entrou no oncreate CriarDb");
+            Log.i("oncreate", "entrou no oncreate CriarDb");
             db.execSQL(createTableAtividade);
             db.execSQL(createTableUsuario);
+            db.execSQL(createTableUserLogado);
             db.execSQL("insert into usuario values(1,'ADMIN','admin','admin','admin@exemplo.com',NULL,'SIM',NULL,'ADMINISTRADOR')");
 
         } catch (NullPointerException e) {
@@ -67,14 +66,4 @@ public class CriarDb extends SQLiteOpenHelper {
         }
         return db;
     }
-
-   /* public void closeDb() throws Exception {
-        try {
-            db.close();
-        } catch (Exception e) {
-            Log.i("erro closeDb ", "" + e.getMessage());
-            throw new Exception(e);
-        }
-    } */
-
 }

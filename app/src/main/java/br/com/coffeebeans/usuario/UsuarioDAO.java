@@ -10,26 +10,29 @@ import java.util.List;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import br.com.coffeebeans.exception.BDException;
 import br.com.coffeebeans.exception.DAOException;
-import br.com.coffeebeans.exception.RepositorioException;
+import br.com.coffeebeans.exception.EmailJaExistenteException;
 import br.com.coffeebeans.exception.UsuarioInativoException;
+import br.com.coffeebeans.exception.UsuarioJaExistenteException;
 import br.com.coffeebeans.exception.UsuarioNaoEncontradoException;
+import br.com.coffeebeans.util.ConfigDb;
 import br.com.coffeebeans.util.CriarDb;
 
 public class UsuarioDAO implements IUsuarioDAO {
     private static final String NOME_TABELA = "usuario";
     private SQLiteDatabase db;
     private static CriarDb conexao;
-    private static Usuario usuarioLogado;
 
     //TODO // login facebook testar se o usuario do WL está inativo  //verificar excecoes da entidade //usuario nao encontrado ao não logar // poder alterar só suas proprias informações
 
     public UsuarioDAO(Context context) throws Exception {
         conexao = CriarDb.getInstance(context);
+        context.deleteDatabase(ConfigDb.NOME_BANCO);
     }
 
     public boolean existe(String nome) throws SQLException, DAOException {
@@ -245,7 +248,7 @@ public class UsuarioDAO implements IUsuarioDAO {
     }
 
     @Override
-    public void atualizar(Usuario usuario) throws SQLException, DAOException {
+    public void atualizar(Usuario usuario) throws SQLException, DAOException, SQLiteConstraintException, UsuarioJaExistenteException, EmailJaExistenteException {
         try {
 
             ContentValues valores = new ContentValues();
@@ -268,6 +271,15 @@ public class UsuarioDAO implements IUsuarioDAO {
             } else {
                 throw new BDException();
             }
+        } catch (SQLiteConstraintException e) {
+            Log.i("erro metodo atualizar usuario", "" + e.getMessage());
+            if (e.getMessage().contains("LOGIN"))
+                throw new UsuarioJaExistenteException();
+            else if (e.getMessage().contains("EMAIL"))
+                throw new EmailJaExistenteException();
+
+            else
+                throw new SQLiteConstraintException(e.getMessage());
         } catch (Exception e) {
             Log.i("erro metodo atualizar usuario", "" + e.getMessage());
             throw new DAOException(e);
@@ -411,7 +423,10 @@ public class UsuarioDAO implements IUsuarioDAO {
                         inativo = procurar(cursor.getInt(cursor.getColumnIndex("ID")));
                         throw new UsuarioInativoException(procurar(cursor.getInt(cursor.getColumnIndex("ID"))));
                     }
-                    this.usuarioLogado = procurar(cursor.getInt(cursor.getColumnIndex("ID")));
+                    ContentValues valores = new ContentValues();
+                    valores.put("ID", 1);
+                    valores.put("ID_USUARIO", cursor.getInt(cursor.getColumnIndex("ID")));
+                    db.insert("usuario_logado", null, valores);
                     result = true;
                 } else {
                     result = false;
@@ -449,8 +464,65 @@ public class UsuarioDAO implements IUsuarioDAO {
         return sen;
     }
 
-    public static Usuario getUsuarioLogado() {
-        return usuarioLogado;
-    }
+   @Override
+    public Usuario getUsuarioLogado() throws SQLException, DAOException {
 
+        Cursor cursor = null;
+        Usuario usuario = null;
+
+        try {
+            db = conexao.openDb();
+            if (db != null) {
+
+                String sql = "Select * from usuario_logado where ID= ?";
+                String[] whereArgs = {String.valueOf(1)};
+
+                cursor = db.rawQuery(sql, whereArgs);
+
+                cursor.moveToFirst();
+
+                if (cursor.getCount() > 0 && cursor != null) {
+                    usuario = procurar(cursor.getInt(cursor.getColumnIndex("ID_USUARIO")));
+                    Log.i("procurar usuario logado", "usuario logado achado com sucesso ");
+                }
+            } else {
+                throw new BDException();
+            }
+        } catch (Exception e) {
+            Log.i("erro no metodo procurar usuario logado da classe usuarioDAO ", "" + e.getMessage());
+            throw new DAOException(e);
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+            if (db != null) {
+                if (db.isOpen())
+                    db.close();
+            }
+        }
+        return usuario;
+    }
+    @Override
+    public void logout() throws SQLException, DAOException {
+        try {
+            String where = " ID =?";
+            String[] whereArgs = new String[]{String.valueOf(1)};
+
+            db = conexao.openDb();
+            if (db != null)
+                db.delete("usuario_logado", where, whereArgs);
+            else
+                throw new BDException();
+
+        } catch (Exception e) {
+            Log.i("erro metodo excluir usuarioLogado", "" + e.getMessage());
+            throw new DAOException(e);
+
+        } finally {
+            if (db != null) {
+                if (db.isOpen())
+                    db.close();
+            }
+        }
+    }
 }

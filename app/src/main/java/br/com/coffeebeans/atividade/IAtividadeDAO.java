@@ -12,12 +12,12 @@ public interface IAtividadeDAO {
 	
 	public List<Atividade> listar() throws SQLException, DAOException;
 	
-	public Atividade procurar (int id) throws SQLException, AtividadeNaoEncontradaException, DAOException;
+	public Atividade procurar (int id) throws SQLException, DAOException;
 	
-	public void atualizar(Atividade atividade) throws AtividadeNaoEncontradaException,
+	public void atualizar(Atividade atividade) throws
 			SQLException, DAOException;
 	
-	public void excluir (int id) throws SQLException, AtividadeNaoEncontradaException,DAOException;
+	public void excluir (int id) throws SQLException, DAOException;
 
 	public boolean existe(String descricao) throws SQLException,DAOException;
 }
