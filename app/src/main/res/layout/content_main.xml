@@ -7,4 +7,13 @@
     tools:context="br.com.coffeebeansdev.waterlevelmobile.MainActivity"
     android:id="@+id/content_main">
 
+    <ProgressBar
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/progressBarMain"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:indeterminate="true"
+        android:visibility="invisible" />
 </RelativeLayout>

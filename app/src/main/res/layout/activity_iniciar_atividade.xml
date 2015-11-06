@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context="br.com.coffeebeansdev.waterlevelmobile.IniciarAtividadeActivity"
+    android:fitsSystemWindows="true" >
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Descrição"
+        android:id="@+id/tvDesc"
+        android:textSize="30dp"
+        android:layout_alignParentTop="false"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/tvAtividade"
+        android:textColor="#000000"
+        android:singleLine="false"
+        android:gravity="center"
+        android:background="#FFFFFFFF" />
+
+    <ImageButton
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:id="@+id/btnStart"
+        android:background="@drawable/list_selector_play"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
+
+    <ImageButton
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:id="@+id/btnPause"
+        android:background="@drawable/list_selector_pause"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true" />
+
+    <ImageButton
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:id="@+id/btnStop"
+        android:background="@drawable/list_selector_stop"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Inicio"
+        android:id="@+id/textView5"
+        android:textSize="15dp"
+        android:gravity="center"
+        android:layout_marginTop="70dp"
+        android:layout_below="@+id/tvDesc"
+        android:layout_alignParentStart="true"
+        android:layout_toStartOf="@+id/progressBar2"
+        android:textColor="#000000" />
+
+    <TextView
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/tvInicio2"
+        android:textSize="25dp"
+        android:layout_below="@+id/textView5"
+        android:layout_alignStart="@+id/textView5"
+        android:layout_toStartOf="@+id/textView7"
+        android:layout_alignEnd="@+id/textView5"
+        android:gravity="center"
+        android:textColor="#000000"
+        android:text="00:00:00"
+        android:background="#FFFFFFFF" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Duração"
+        android:id="@+id/textView7"
+        android:textSize="15dp"
+        android:gravity="center"
+        android:layout_alignParentEnd="true"
+        android:layout_alignBottom="@+id/textView5"
+        android:layout_toEndOf="@+id/progressBar2"
+        android:textColor="#000000" />
+
+    <Chronometer
+        android:layout_width="40dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/chronometer2"
+        android:textSize="25dp"
+        android:gravity="center"
+        android:layout_below="@+id/textView7"
+        android:layout_alignEnd="@+id/textView7"
+        android:layout_alignStart="@+id/textView7"
+        android:textColor="#000000"
+        android:background="#FFFFFFFF" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Gasto"
+        android:id="@+id/textView8"
+        android:textSize="15dp"
+        android:gravity="center"
+        android:layout_toStartOf="@+id/btnStop"
+        android:layout_below="@+id/chronometer2"
+        android:layout_alignParentStart="false"
+        android:layout_alignParentEnd="true"
+        android:layout_alignLeft="@+id/chronometer2"
+        android:layout_marginTop="20dp"
+        android:textColor="#000000" />
+
+    <TextView
+        android:layout_width="40dp"
+        android:layout_height="wrap_content"
+        android:text="0,00L"
+        android:id="@+id/textView9"
+        android:textSize="25dp"
+        android:gravity="center"
+        android:layout_below="@+id/textView8"
+        android:layout_alignStart="@+id/textView8"
+        android:layout_alignParentEnd="true"
+        android:textColor="#000000"
+        android:background="#FFFFFFFF" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Status"
+        android:id="@+id/textView10"
+        android:textSize="15dp"
+        android:gravity="center"
+        android:layout_below="@+id/tvInicio2"
+        android:layout_alignParentStart="true"
+        android:layout_alignRight="@+id/tvInicio2"
+        android:layout_marginTop="20dp"
+        android:textColor="#000000" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="PARADA"
+        android:id="@+id/tvStatus2"
+        android:textSize="25dp"
+        android:layout_below="@+id/textView10"
+        android:layout_alignParentStart="true"
+        android:gravity="center"
+        android:layout_alignEnd="@+id/textView10"
+        android:textColor="#000000"
+        android:background="#FFFFFFFF" />
+
+    <ProgressBar
+        style="?android:attr/progressBarStyleSmall"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:id="@+id/progressBar2"
+        android:indeterminate="true"
+        android:visibility="invisible"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="300dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Atividade"
+        android:id="@+id/tvAtividade"
+        android:textSize="15dp"
+        android:gravity="center"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:textColor="#000000" />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:id="@+id/imageView5"
+        android:layout_alignTop="@+id/tvDesc"
+        android:background="@android:drawable/dark_header" />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:id="@+id/imageView6"
+        android:background="@android:drawable/dark_header"
+        android:layout_below="@+id/tvDesc"
+        android:layout_centerHorizontal="true" />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:id="@+id/imageView7"
+        android:background="@android:drawable/dark_header"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/textView5"
+        android:layout_alignEnd="@id/tvInicio2"
+        android:layout_alignStart="@id/tvInicio2" />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:id="@+id/imageView9"
+        android:background="@android:drawable/dark_header"
+        android:layout_alignEnd="@id/chronometer2"
+        android:layout_below="@+id/textView7"
+        android:layout_alignStart="@id/chronometer2" />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:id="@+id/imageView11"
+        android:background="@android:drawable/dark_header"
+        android:layout_alignEnd="@+id/textView9"
+        android:layout_alignTop="@+id/textView9"
+        android:layout_alignStart="@+id/textView9" />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:id="@+id/imageView12"
+        android:background="@android:drawable/dark_header"
+        android:layout_alignEnd="@+id/textView9"
+        android:layout_below="@+id/textView9"
+        android:layout_alignStart="@+id/textView9" />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:id="@+id/imageView13"
+        android:background="@android:drawable/dark_header"
+        android:layout_alignParentStart="true"
+        android:layout_alignTop="@+id/tvStatus2"
+        android:layout_alignStart="@id/tvStatus2"
+        android:layout_alignEnd="@id/tvStatus2" />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:id="@+id/imageView8"
+        android:background="@android:drawable/dark_header"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/tvStatus2"
+        android:layout_alignStart="@id/tvStatus2"
+        android:layout_alignEnd="@id/tvStatus2" />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:id="@+id/imageView10"
+        android:background="@android:drawable/dark_header"
+        android:layout_below="@+id/chronometer2"
+        android:layout_alignEnd="@id/chronometer2"
+        android:layout_alignStart="@id/chronometer2" />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:id="@+id/imageView14"
+        android:background="@android:drawable/dark_header"
+        android:layout_below="@+id/tvInicio2"
+        android:layout_alignParentStart="true"
+        android:layout_alignEnd="@id/tvInicio2"
+        android:layout_alignStart="@id/tvInicio2" />
+
+</RelativeLayout>

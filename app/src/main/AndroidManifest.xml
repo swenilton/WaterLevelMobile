@@ -27,6 +27,12 @@
             android:label="@string/title_activity_main"
             android:theme="@style/AppTheme.NoActionBar" >
         </activity>
+        <activity
+            android:name=".IniciarAtividadeActivity"
+            android:theme="@style/AppTheme"
+            android:screenOrientation="portrait"
+            android:parentActivityName=".MainActivity">
+        </activity>
     </application>
 
 </manifest>

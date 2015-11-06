@@ -6,15 +6,14 @@
     android:background="@drawable/list_selector"
     android:clickable="true"
     android:contextClickable="true">
+
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/imgUsuario"
-        android:layout_width="60dp"
-        android:layout_height="42dp"
-        android:background="#ffffff"
-        android:scaleType="centerCrop"/>
+        android:layout_width="42dp"
+        android:layout_height="42dp" />
     <TextView
         android:id="@+id/textDescricao"
-        android:layout_width="fill_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@+id/imgUsuario"
         android:layout_alignTop="@+id/imgUsuario"
@@ -26,21 +25,23 @@
         android:id="@+id/textPerfil"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/textDescricao"
-        android:layout_toRightOf="@+id/imgUsuario"
         android:text="Perfil"
         android:textColor="#333333"
         android:paddingLeft="5dp"
-        android:paddingTop="3dp" />
+        android:paddingTop="3dp"
+        android:textSize="12sp"
+        android:layout_centerHorizontal="true"
+        android:layout_alignBottom="@+id/imgUsuario" />
     <TextView
         android:id="@+id/textStatus"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/textDescricao"
         android:layout_alignParentRight="true"
         android:text="STATUS"
         android:textColor="#333333"
-        android:paddingTop="3dp" />
+        android:paddingTop="3dp"
+        android:textSize="12sp"
+        android:layout_alignBottom="@+id/imgUsuario" />
     <TextView
         android:id="@+id/textLabelStatus"
         android:layout_width="wrap_content"
@@ -50,5 +51,32 @@
         android:layout_alignParentEnd="false"
         android:layout_alignBaseline="@+id/textStatus"
         android:layout_toLeftOf="@+id/textStatus"
-        android:paddingTop="3dp" />
+        android:paddingTop="3dp"
+        android:textSize="12sp" />
+
+    <TextView
+        android:id="@+id/tvEmail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Email"
+        android:textSize="12sp"
+        android:textColor="@color/dim_foreground_disabled_material_light"
+        android:paddingLeft="5dp"
+        android:layout_alignBottom="@+id/textDescricao"
+        android:layout_toEndOf="@+id/textDescricao" />
+
+    <TextView
+        android:id="@+id/tvLogin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Login"
+        android:textColor="#333333"
+        android:paddingLeft="5dp"
+        android:paddingTop="3dp"
+        android:textSize="12sp"
+        android:layout_toEndOf="@+id/imgUsuario"
+        android:layout_alignParentEnd="false"
+        android:layout_alignParentStart="false"
+        android:layout_toRightOf="@+id/imgUsuario"
+        android:layout_alignBottom="@+id/imgUsuario" />
 </RelativeLayout>

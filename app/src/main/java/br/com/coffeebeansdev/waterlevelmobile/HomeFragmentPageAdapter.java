@@ -3,23 +3,22 @@ package br.com.coffeebeansdev.waterlevelmobile;
 /**
  * Created by swenilton on 23/10/15.
  */
-import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 import java.util.List;
 
-import br.com.coffeebeans.atividade.Atividade;
+import br.com.coffeebeans.repositorio.Repositorio;
 
-public class MyFragmentPageAdapter extends FragmentPagerAdapter{
+public class HomeFragmentPageAdapter extends FragmentPagerAdapter{
 
-    List<Atividade> atividades;
+    List<Repositorio> repositorios;
 
     /** Constructor of the class */
-    public MyFragmentPageAdapter(FragmentManager fm, List<Atividade> atividades) {
+    public HomeFragmentPageAdapter(FragmentManager fm, List<Repositorio> repositorios) {
         super(fm);
-        this.atividades = atividades;
+        this.repositorios = repositorios;
     }
 
     /** This method will be invoked when a page is requested to create */
@@ -29,18 +28,18 @@ public class MyFragmentPageAdapter extends FragmentPagerAdapter{
 //        Bundle data = new Bundle();
 //        data.putInt("current_page", arg0+1);
 //        myFragment.setArguments(data);
-        return new FragmentListRank();
+        return new FragmentHomeBody();
     }
 
     /** Returns the number of pages */
     @Override
     public int getCount() {
-        return atividades.size();
+        return repositorios.size();
     }
 
     @Override
     public CharSequence getPageTitle(int position) {
-        return atividades.get(position).getDescricao();
+        return repositorios.get(position).getDescricao();
     }
 
 

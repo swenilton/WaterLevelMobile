@@ -1,9 +1,11 @@
 package br.com.coffeebeansdev.waterlevelmobile;
 
-import android.content.DialogInterface;
+import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.util.Log;
@@ -14,21 +16,29 @@ import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import java.io.File;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import br.com.coffeebeans.fachada.Fachada;
 import br.com.coffeebeans.usuario.Usuario;
+import it.sephiroth.android.library.tooltip.TooltipManager;
 
 /**
  * Created by swenilton on 04/10/15.
  */
 public class DialogInserirUsuario extends DialogFragment {
 
-    private int IMAGEM_INTERNA = 12;
+    private static final int SELECT_PICTURE = 1;
+    private String selectedImagePath;
     private static View rootView;
     private static ImageView img = null;
+    private Activity activity;
 
     private Fachada fachada;
     public DialogInserirUsuario() {
@@ -38,7 +48,6 @@ public class DialogInserirUsuario extends DialogFragment {
             Log.i("Erro", e.getMessage());
         }
     }
-
 
     public static DialogInserirUsuario newInstance(String title, int id) {
         DialogInserirUsuario frag = new DialogInserirUsuario();
@@ -60,7 +69,7 @@ public class DialogInserirUsuario extends DialogFragment {
 
     @Override
 
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         final String title = getArguments().getString("title");
         getDialog().setTitle(title);
@@ -74,6 +83,40 @@ public class DialogInserirUsuario extends DialogFragment {
         final EditText txtTelefone = (EditText) view.findViewById(R.id.txtTelefone);
         final Spinner spPerfil = (Spinner) view.findViewById(R.id.spinner);
         final Spinner spAtivo = (Spinner) view.findViewById(R.id.spinner2);
+        ImageButton imageButtonFind = (ImageButton) view.findViewById(R.id.imgBtnFind);
+        imageButtonFind.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                intent.setType("image/*");
+                startActivityForResult(Intent.createChooser(intent,
+                        "Select Picture"), SELECT_PICTURE);
+            }
+        });
+        final ImageButton imageButtonHelpAtivo = (ImageButton) view.findViewById(R.id.imgBtnHelpAtivo);
+        imageButtonHelpAtivo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                TooltipManager.getInstance().create(view.getContext(), 1)
+                        .anchor(imageButtonHelpAtivo, TooltipManager.Gravity.LEFT)
+                        .actionBarSize(Utils.getActionBarSize(view.getContext()))
+                        .closePolicy(TooltipManager.ClosePolicy.TouchOutside, 3000)
+                        .text("Usuario inativo não pode entrar no sistema.")
+                        .toggleArrow(true)
+                        .maxWidth(400)
+                        .showDelay(300)
+                        .fitToScreen(true)
+                        
+                        .show();
+            }
+        });
+        ImageButton imageButtonHelpPerfil = (ImageButton) view.findViewById(R.id.imgBtnHelpPerfil);
+        imageButtonHelpPerfil.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(),
                 R.array.perfil_usuario, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -93,8 +136,11 @@ public class DialogInserirUsuario extends DialogFragment {
                 txtTelefone.setText(u.getTelefone());
                 spAtivo.setSelection(getIndex(spAtivo, u.getAtivo()));
                 spPerfil.setSelection(getIndex(spPerfil, u.getPerfil()));
+                if(u.getFoto() != null)
+                    img.setImageURI(Uri.fromFile(new File(u.getFoto())));
             } catch (Exception e){
                 Log.i("Erro: ", e.getMessage());
+                Toast.makeText(getContext(), "Erro\n" + e.getMessage(), Toast.LENGTH_LONG).show();
             }
         }
         Button btnCancelar = (Button) view.findViewById(R.id.btnCancelar);
@@ -144,11 +190,6 @@ public class DialogInserirUsuario extends DialogFragment {
                         focusView = txtLogin;
                         cancela = true;
                     }
-                    if (txtTelefone.getText().toString().isEmpty()) {
-                        txtTelefone.setError(getString(R.string.error_field_required));
-                        focusView = txtTelefone;
-                        cancela = true;
-                    }
                     if (cancela) {
                         focusView.requestFocus();
                     } else {
@@ -156,6 +197,12 @@ public class DialogInserirUsuario extends DialogFragment {
                                 txtSenha.getText().toString(), txtEmail.getText().toString(),
                                 spAtivo.getSelectedItem().toString(), spPerfil.getSelectedItem().toString());
                         u.setTelefone(txtTelefone.getText().toString());
+                        if(selectedImagePath == null) {
+                            File image = new File("android.resource://WaterLevelMobile/" + R.drawable.ic_user);
+                            u.setFoto(image.getPath());
+                        }
+                        else
+                            u.setFoto(selectedImagePath);
 
                         if (title.equals("Inserir Usuario")) {
                             fachada.cadastrar(u);
@@ -172,23 +219,12 @@ public class DialogInserirUsuario extends DialogFragment {
                     }
                 } catch (Exception e) {
                     Log.i("Erro: ", e.getMessage());
-                    Toast.makeText(getContext(), "Erro\n" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Erro\n" + e.getMessage(), Toast.LENGTH_LONG).show();
                 }
-            }
-        });
-        img.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-                intent.setType("image/*");
-                startActivityForResult(intent, IMAGEM_INTERNA);
             }
         });
         txtNome.requestFocus();
         getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
-    }
-    public static void setImg(Bitmap bmp){
-        img.setImageBitmap(bmp);
     }
     private int getIndex(Spinner spinner, String myString) {
         int index = 0;
@@ -201,8 +237,14 @@ public class DialogInserirUsuario extends DialogFragment {
         return index;
     }
     private boolean isEmailValid(String email) {
-        //TODO: Replace this with your own logic
-        return email.contains("@") && email.contains(".");
+        if ((email == null) || (email.trim().length() == 0))
+            return false;
+        String emailPattern = "\\b(^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@([A-Za-z0-9-])" +
+                "+(\\.[A-Za-z0-9-]+)*((\\.[A-Za-z0-9]{2,})" +
+                "|(\\.[A-Za-z0-9]{2,}\\.[A-Za-z0-9]{2,}))$)\\b";
+        Pattern pattern = Pattern.compile(emailPattern, Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(email);
+        return matcher.matches();
     }
 
     private boolean isPasswordValid(String password) {
@@ -210,5 +252,30 @@ public class DialogInserirUsuario extends DialogFragment {
         return password.length() > 4;
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == getActivity().RESULT_OK) {
+            if (requestCode == SELECT_PICTURE) {
+                Uri selectedImageUri = data.getData();
+                selectedImagePath = getPath(selectedImageUri);
+                img.setImageURI(selectedImageUri);
+            }
+        }
+    }
 
+    public String getPath(Uri contentUri) {
+        String[] campos = { MediaStore.Images.Media.DATA };
+        Cursor cursor = super.getActivity().getContentResolver().query(contentUri, campos, null, null, null);
+        cursor.moveToFirst();
+        String path = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA));
+        cursor.close();
+        return path;
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        this.activity = activity;
+    }
 }

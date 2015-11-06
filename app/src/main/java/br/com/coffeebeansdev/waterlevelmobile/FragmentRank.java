@@ -32,10 +32,10 @@ public class FragmentRank extends Fragment {
         }
 
         /** Getting fragment manager */
-        FragmentManager fm = getFragmentManager();
+        FragmentManager fm = getChildFragmentManager();
 
         /** Instantiating FragmentPagerAdapter */
-        MyFragmentPageAdapter pagerAdapter = new MyFragmentPageAdapter(fm, atividades);
+        RankFragmentPageAdapter pagerAdapter = new RankFragmentPageAdapter(fm, atividades);
 
         /** Setting the pagerAdapter to the pager object */
         pager.setAdapter(pagerAdapter);

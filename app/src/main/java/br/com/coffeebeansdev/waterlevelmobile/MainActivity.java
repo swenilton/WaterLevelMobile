@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -22,9 +23,14 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.File;
+import java.sql.SQLException;
+
+import br.com.coffeebeans.exception.DAOException;
 import br.com.coffeebeans.fachada.Fachada;
 import br.com.coffeebeans.usuario.Usuario;
 import br.com.coffeebeans.usuario.UsuarioDAO;
@@ -35,6 +41,8 @@ public class MainActivity extends AppCompatActivity
     private Fachada fachada;
     private TextView textViewEmail;
     private TextView textViewNome;
+    private ImageView imageViewFoto;
+    private ProgressBar progressBar;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -45,6 +53,27 @@ public class MainActivity extends AppCompatActivity
 
         textViewEmail = (TextView) findViewById(R.id.tvEmail);
         textViewNome = (TextView) findViewById(R.id.tvNome);
+        imageViewFoto = (ImageView) findViewById(R.id.imageView);
+        progressBar = (ProgressBar) findViewById(R.id.progressBarMain);
+
+        try{
+            fachada = Fachada.getInstance(this);
+            if(fachada.getUsuarioLogado() == null) {
+                sair();
+            } else {
+                textViewNome.setText(fachada.getUsuarioLogado().getNome());
+                textViewEmail.setText(fachada.getUsuarioLogado().getEmail());
+                if (fachada.getUsuarioLogado().getFoto() != null)
+                    imageViewFoto.setImageURI(Uri.fromFile(new File(fachada.getUsuarioLogado().getFoto())));
+                else
+                    imageViewFoto.setImageResource(R.drawable.ic_user);
+            }
+        } catch (Exception e){
+            Log.i("ERRO", e.getMessage());
+            Toast.makeText(this, "Erro ao instanciar fachada\n" + e.getMessage(),
+                    Toast.LENGTH_LONG).show();
+        }
+
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setVisibility(FloatingActionButton.INVISIBLE);
 
@@ -59,17 +88,6 @@ public class MainActivity extends AppCompatActivity
         navigationView.setCheckedItem(R.id.nav_inicio);
 
         onNavigationItemSelected(navigationView.getMenu().getItem(0));
-
-        try{
-            fachada = Fachada.getInstance(this);
-            textViewNome.setText(fachada.getUsuarioLogado().getNome());
-            textViewEmail.setText(fachada.getUsuarioLogado().getEmail());
-
-        } catch (Exception e){
-            Log.i("ERRO", e.getMessage());
-            Toast.makeText(this, "Erro ao instanciar fachada\n" + e.getMessage(),
-                    Toast.LENGTH_SHORT).show();
-        }
     }
 
     @Override
@@ -100,12 +118,7 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.action_settings) {
             return true;
         } else if (id == R.id.action_logout) {
-            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
-            } else {
-                startActivity(intent);
-            }
+            sair();
             return true;
         }
 
@@ -123,16 +136,16 @@ public class MainActivity extends AppCompatActivity
             setTitle("Inicio");
         } else if (id == R.id.nav_usuario) {
             frgmt = new FragmentUsuario();
-            setTitle("Usuario");
+            setTitle("Usuarios");
         } else if (id == R.id.nav_atividade) {
             frgmt = new FragmentAtividade();
-            setTitle("Atividade");
+            setTitle("Atividades");
         } else if (id == R.id.nav_config) {
             frgmt = new FragmentConfig();
             setTitle("Configurações");
         } else if (id == R.id.nav_iniciar_atividade) {
             frgmt = new FragmentIniciarAtividade();
-            setTitle("Iniciar Atividade");
+            setTitle("Selecione a Atividade");
         } else if (id == R.id.nav_rank) {
             frgmt = new FragmentRank();
             setTitle("Rank");
@@ -150,26 +163,24 @@ public class MainActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent intent){
-        if(requestCode == 12){
-            if(resultCode == RESULT_OK){
 
-                Uri imagemSelecionada = intent.getData();
-
-                String[] colunas = {MediaStore.Images.Media.DATA};
-
-                Cursor cursor = getContentResolver().query(imagemSelecionada, colunas, null, null, null);
-                cursor.moveToFirst();
-
-                int indexColuna = cursor.getColumnIndex(colunas[0]);
-                String pathImg = cursor.getString(indexColuna);
-                cursor.close();
-
-                Bitmap bitmap = BitmapFactory.decodeFile(pathImg);
-                DialogInserirUsuario.setImg(bitmap);
-
-            }
+    public void sair(){
+        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
+        } else {
+            startActivity(intent);
+        }
+        try {
+            fachada.logout();
+        } catch (SQLException e) {
+            Log.i("ERRO", e.getMessage());
+            Toast.makeText(this, "Erro ao fazer logof\n" + e.getMessage(),
+                    Toast.LENGTH_LONG).show();
+        } catch (DAOException e) {
+            Log.i("ERRO", e.getMessage());
+            Toast.makeText(this, "Erro ao fazer logof\n" + e.getMessage(),
+                    Toast.LENGTH_LONG).show();
         }
     }
 }

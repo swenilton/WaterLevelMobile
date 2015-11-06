@@ -1,13 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/modal"
-
     android:layout_width="wrap_content" android:layout_height="wrap_content"
-
     android:layout_gravity="center" android:orientation="vertical"
-    android:padding="5dp">
-
+    android:padding="16dp">
 
     <de.hdodenhof.circleimageview.CircleImageView
         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -16,19 +12,21 @@
         android:id="@+id/imageView2"
         android:layout_gravity="center_horizontal"
         android:clickable="true"
-        android:layout_marginTop="15dp"
         app:civ_border_width="2dp"
         app:civ_border_color="#FFcccccc"
-        android:src="@android:drawable/ic_search_category_default" />
+        android:scaleType="centerCrop"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentStart="false" />
 
     <EditText
-        android:layout_width="300dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="textPersonName"
+        android:inputType="textCapWords"
         android:ems="10"
         android:id="@+id/txtNome"
         android:hint="Nome"
-        android:capitalize="words" />
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/imageView2" />
 
     <EditText
         android:layout_width="match_parent"
@@ -36,7 +34,8 @@
         android:inputType="textPersonName"
         android:ems="10"
         android:id="@+id/txtLogin"
-        android:hint="Login" />
+        android:hint="Login"
+        android:layout_below="@+id/txtNome" />
 
     <EditText
         android:layout_width="match_parent"
@@ -44,7 +43,10 @@
         android:inputType="textEmailAddress"
         android:ems="10"
         android:id="@+id/txtEmail"
-        android:hint="Email" />
+        android:hint="Email"
+        android:layout_alignParentTop="false"
+        android:layout_alignParentStart="false"
+        android:layout_below="@+id/txtLogin" />
 
     <EditText
         android:layout_width="match_parent"
@@ -53,7 +55,8 @@
         android:ems="10"
         android:id="@+id/txtSenha"
         android:hint="Senha"
-        android:password="true" />
+        android:password="true"
+        android:layout_below="@+id/txtEmail" />
 
     <EditText
         android:layout_width="match_parent"
@@ -62,7 +65,8 @@
         android:ems="10"
         android:id="@+id/txtConfirmaSenha"
         android:hint="Confirmar Senha"
-        android:password="true" />
+        android:password="true"
+        android:layout_below="@+id/txtSenha" />
 
     <EditText
         android:layout_width="match_parent"
@@ -71,15 +75,8 @@
         android:ems="10"
         android:id="@+id/txtTelefone"
         android:hint="Telefone"
-        android:phoneNumber="true" />
-
-    <TextView
-        android:layout_width="148dp"
-        android:layout_height="wrap_content"
-        android:text="Perfil"
-        android:id="@+id/lblPerfil"
-        android:width="150dp"
-        android:gravity="center_horizontal" />
+        android:phoneNumber="true"
+        android:layout_below="@+id/txtConfirmaSenha" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -87,39 +84,93 @@
         android:text="Ativo"
         android:id="@+id/lblAtivo"
         android:layout_gravity="right"
-        android:layout_marginTop="-17dp"
         android:width="106dp"
+        android:gravity="center_horizontal"
+        android:layout_below="@+id/txtTelefone"
+        android:layout_alignParentRight="true"
+        android:layout_alignStart="@+id/spinner2" />
+
+    <ImageButton
+        android:layout_width="18dp"
+        android:layout_height="18dp"
+        android:id="@+id/imgBtnHelpAtivo"
+        android:layout_gravity="right"
+        android:background="@android:drawable/ic_menu_help"
+        android:layout_below="@+id/txtTelefone"
+        android:layout_alignRight="@+id/lblAtivo" />
+
+    <TextView
+        android:layout_width="148dp"
+        android:layout_height="wrap_content"
+        android:text="Perfil"
+        android:id="@+id/lblPerfil"
+        android:width="150dp"
+        android:layout_below="@+id/txtTelefone"
         android:gravity="center_horizontal" />
+
+    <ImageButton
+        android:layout_width="18dp"
+        android:layout_height="18dp"
+        android:id="@+id/imgBtnHelpPerfil"
+        android:layout_gravity="center_horizontal"
+        android:background="@android:drawable/ic_menu_help"
+        android:layout_below="@+id/txtTelefone"
+        android:layout_alignParentRight="false"
+        android:layout_alignRight="@+id/lblPerfil" />
 
     <Spinner
         android:layout_width="150dp"
         android:layout_height="28dp"
         android:id="@+id/spinner"
         android:spinnerMode="dropdown"
+        android:layout_below="@+id/lblPerfil"
         android:textAlignment="center" />
 
     <Spinner
-        android:layout_width="106dp"
+        android:layout_width="120dp"
         android:layout_height="28dp"
         android:id="@+id/spinner2"
         android:spinnerMode="dropdown"
-        android:layout_marginTop="-28dp"
-        android:layout_gravity="right" />
+        android:layout_gravity="right"
+        android:layout_below="@+id/lblAtivo"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="false"
+        android:layout_alignParentStart="false"
+        android:textAlignment="center" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Cancelar"
         android:id="@+id/btnCancelar"
-        android:layout_gravity="center" />
+        android:layout_gravity="center"
+        android:layout_below="@+id/spinner"
+        android:layout_alignParentRight="false"
+        android:layout_toLeftOf="@+id/btnSalvar" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Salvar"
         android:id="@+id/btnSalvar"
-        android:layout_marginLeft="100dp"
-        android:layout_marginTop="-48sp"
-        android:layout_gravity="center" />
+        android:layout_gravity="center"
+        android:layout_below="@+id/spinner2"
+        android:layout_alignParentEnd="false"
+        android:layout_alignParentStart="false"
+        android:layout_alignParentRight="true" />
 
-</LinearLayout>
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imgBtnFind"
+        android:layout_alignWithParentIfMissing="false"
+        android:layout_alignTop="@+id/imageView2"
+        android:layout_centerHorizontal="true"
+        android:layout_alignBottom="@+id/imageView2"
+        android:layout_alignRight="@+id/imageView2"
+        android:layout_alignLeft="@+id/imageView2"
+        android:background="@android:drawable/ic_menu_search"
+        android:layout_margin="16dp"
+        android:alpha="0.5" />
+
+</RelativeLayout>

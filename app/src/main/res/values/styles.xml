@@ -29,5 +29,26 @@
         <item name="android:minWidth">1dip</item>
         <item name="android:maxWidth">12dip</item>
     </style>
-
+    <style name="ToolTipLayoutCustomStyle">
+        <item name="ttlm_padding">25dip</item>
+        <item name="ttlm_strokeColor">#ffe5da7d</item>
+        <item name="ttlm_backgroundColor">#ffe5da7d</item>
+        <item name="ttlm_strokeWeight">0dip</item>
+        <item name="ttlm_cornerRadius">8dip</item>
+    </style>
+    <style name="ToolTipLayoutDefaultStyle">
+        <item name="ttlm_padding">@dimen/ttlm_default_padding</item>
+        <item name="ttlm_strokeColor">@color/ttlm_default_stroke_color</item>
+        <item name="ttlm_backgroundColor">@color/ttlm_default_background_color</item>
+        <item name="ttlm_strokeWeight">@dimen/ttlm_default_stroke_weight</item>
+        <item name="ttlm_cornerRadius">@dimen/ttlm_default_corner_radius</item>
+        <item name="ttlm_arrowRatio">1.4</item>
+    </style>
+    <style name="Toggle">
+        <item name="android:background">@drawable/toggle_button_bgc</item>
+        <item name="android:textOn"></item>
+        <item name="android:textOff"></item>
+        <item name="android:layout_width">50dp</item>
+        <item name="android:layout_height">40dp</item>
+    </style>
 </resources>

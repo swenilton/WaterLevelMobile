@@ -63,7 +63,7 @@ public class AtividadeListAdapter extends BaseAdapter {
         final View view = inflater.inflate(R.layout.list_view_atividade, null);
         TextView textDesc = (TextView)view.findViewById(R.id.textDescricao);
         textDesc.setText(atividade.getDescricao());
-        ImageButton btnDelete = (ImageButton) view.findViewById(R.id.btnDelete);
+        ImageButton btnDelete = (ImageButton) view.findViewById(R.id.btnStop);
         ImageButton btnEdit = (ImageButton) view.findViewById(R.id.btnEdit);
         btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -16,7 +16,8 @@
             android:background="#ff85CAED"
             android:textColor="#fff"
             android:paddingTop="4dp"
-            android:paddingBottom="4dp" />
+            android:paddingBottom="4dp"
+            android:visibility="visible" />
 
     </android.support.v4.view.ViewPager>
 </RelativeLayout>
