@@ -6,14 +6,12 @@ import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
-
 import br.com.coffeebeans.exception.BDException;
 import br.com.coffeebeans.exception.DAOException;
 import br.com.coffeebeans.exception.EmailJaExistenteException;
@@ -28,11 +26,10 @@ public class UsuarioDAO implements IUsuarioDAO {
     private SQLiteDatabase db;
     private static CriarDb conexao;
 
-    //TODO // login facebook testar se o usuario do WL está inativo  //verificar excecoes da entidade //usuario nao encontrado ao não logar // poder alterar só suas proprias informações
+    //TODO //login face// login face testar se o usuario do WL está inativo
 
     public UsuarioDAO(Context context) throws Exception {
         conexao = CriarDb.getInstance(context);
-        //context.deleteDatabase(ConfigDb.NOME_BANCO);
     }
 
     public boolean existe(String nome) throws SQLException, DAOException {
@@ -60,10 +57,13 @@ public class UsuarioDAO implements IUsuarioDAO {
                 throw new BDException();
 
             }
-        } catch (Exception e) {
-            Log.i("erro no metodo existir da classe usuario ", "" + e.getMessage());
-            throw new DAOException(e);
+        } catch (SQLException e) {
+            Log.i("erro no metodo existir da classe usuario DAO ", e.getMessage());
+            throw new SQLException(e);
 
+        } catch (Exception e) {
+            Log.i("erro no metodo existir da classe usuario DAO ", "" + e.getMessage());
+            throw new DAOException(e);
         } finally {
             if (cursor != null) cursor.close();
             if (db != null) {
@@ -94,13 +94,16 @@ public class UsuarioDAO implements IUsuarioDAO {
                     existe = true;
                 }
 
-                Log.i("metodo existe usuario", "o usuario existe ");
+                Log.i("metodo existeEmail usuario DAO", "o usuario existe ");
             } else {
                 throw new BDException();
 
             }
+        } catch (SQLException e) {
+            Log.i("erro no metodo existeEmail da classe usuario DAO ", e.getMessage());
+            throw new SQLException(e);
         } catch (Exception e) {
-            Log.i("erro no metodo existir da classe usuario ", "" + e.getMessage());
+            Log.i("erro no metodo existeEmail da classe usuario DAO ", "" + e.getMessage());
             throw new DAOException(e);
 
         } finally {
@@ -116,7 +119,7 @@ public class UsuarioDAO implements IUsuarioDAO {
     @Override
     public void cadastrar(Usuario usuario) throws SQLException, DAOException {
         ContentValues valores = new ContentValues();
-        // valores.put("ID", atividade.getId());
+
         try {
             valores.put("NOME", usuario.getNome());
             valores.put("LOGIN", usuario.getLogin());
@@ -130,16 +133,16 @@ public class UsuarioDAO implements IUsuarioDAO {
             db = conexao.openDb();
 
             if (db != null) {
-
                 db.insert(NOME_TABELA, null, valores);
             } else {
                 throw new BDException();
             }
-
+        } catch (SQLException e) {
+            Log.i("erro ao cadastrar usuario dao ", "" + e.getMessage());
+            throw new SQLException(e);
         } catch (Exception e) {
-            Log.i("erro ao cadastrar usuario ", "" + e.getMessage());
+            Log.i("erro ao cadastrar usuario dao ", "" + e.getMessage());
             throw new DAOException(e);
-
         } finally {
             if (db != null) {
                 if (db.isOpen())
@@ -183,7 +186,9 @@ public class UsuarioDAO implements IUsuarioDAO {
             } else {
                 throw new BDException();
             }
-
+        } catch (SQLException e) {
+            Log.i("erro ao listar usuario dao ", "" + e.getMessage());
+            throw new SQLException(e);
         } catch (Exception e) {
             Log.i("erro no metodo listar da classe usuario dao ", "" + e.getMessage());
             throw new DAOException(e);
@@ -232,6 +237,9 @@ public class UsuarioDAO implements IUsuarioDAO {
             } else {
                 throw new BDException();
             }
+        } catch (SQLException e) {
+            Log.i("erro ao procurar usuario dao ", "" + e.getMessage());
+            throw new SQLException(e);
         } catch (Exception e) {
             Log.i("erro no metodo procurar da classe usuarioDAO ", "" + e.getMessage());
             throw new DAOException(e);
@@ -271,6 +279,8 @@ public class UsuarioDAO implements IUsuarioDAO {
             } else {
                 throw new BDException();
             }
+
+            //campos login e email são unicos no bd
         } catch (SQLiteConstraintException e) {
             Log.i("erro metodo atualizar usuario", "" + e.getMessage());
             if (e.getMessage().contains("LOGIN"))
@@ -280,8 +290,12 @@ public class UsuarioDAO implements IUsuarioDAO {
 
             else
                 throw new SQLiteConstraintException(e.getMessage());
+
+        } catch (SQLException e) {
+            Log.i("erro ao atualizar usuario dao ", "" + e.getMessage());
+            throw new SQLException(e);
         } catch (Exception e) {
-            Log.i("erro metodo atualizar usuario", "" + e.getMessage());
+            Log.i("erro metodo atualizar usuario dao", "" + e.getMessage());
             throw new DAOException(e);
         } finally {
 
@@ -304,6 +318,9 @@ public class UsuarioDAO implements IUsuarioDAO {
             else
                 throw new BDException();
 
+        } catch (SQLException e) {
+            Log.i("erro ao excluir usuario dao ", "" + e.getMessage());
+            throw new SQLException(e);
         } catch (Exception e) {
             Log.i("erro metodo excluir usuarioDAO", "" + e.getMessage());
             throw new DAOException(e);
@@ -324,12 +341,9 @@ public class UsuarioDAO implements IUsuarioDAO {
         try {
             db = conexao.openDb();
             if (db != null) {
-
                 String sql = "Select * from " + NOME_TABELA + " where EMAIL= ?";
                 String[] whereArgs = {email};
-
                 cursor = db.rawQuery(sql, whereArgs);
-
                 cursor.moveToFirst();
 
                 if (cursor.getCount() > 0 && cursor != null) {
@@ -347,6 +361,9 @@ public class UsuarioDAO implements IUsuarioDAO {
             } else {
                 throw new BDException();
             }
+        } catch (SQLException e) {
+            Log.i("erro no metodo loginFacebook da classe usuario dao ", "" + e.getMessage());
+            throw new SQLException(e);
         } catch (Exception e) {
             Log.i("erro no metodo loginFacebook da classe usuario ", "" + e.getMessage());
             throw new DAOException(e);
@@ -383,8 +400,12 @@ public class UsuarioDAO implements IUsuarioDAO {
 
             else
                 throw new BDException();
+
+        } catch (SQLException e) {
+            Log.i("erro no metodo alterarSenha da classe usuario dao ", "" + e.getMessage());
+            throw new SQLException(e);
         } catch (Exception e) {
-            Log.i("erro no metodo alterarSenha da classe usuario ", "" + e.getMessage());
+            Log.i("erro no metodo alterarSenha da classe usuario dao ", "" + e.getMessage());
             throw new DAOException(e);
         } finally {
             if (db != null) {
@@ -434,10 +455,14 @@ public class UsuarioDAO implements IUsuarioDAO {
             } else {
                 throw new BDException();
             }
+        } catch (SQLException e) {
+            Log.i("erro no metodo login da classe usuario dao ", "" + e.getMessage());
+            throw new SQLException(e);
         } catch (UsuarioInativoException e) {
+            Log.i("erro usuario inativo dao ", "" + e.getMessage());
             throw new UsuarioInativoException(inativo);
         } catch (Exception e) {
-            Log.i("erro no metodo login da classe usuario ", "" + e.getMessage());
+            Log.i("erro no metodo login da classe usuario dao ", "" + e.getMessage());
             throw new DAOException(e);
         } finally {
             if (cursor != null) {
@@ -464,7 +489,7 @@ public class UsuarioDAO implements IUsuarioDAO {
         return sen;
     }
 
-   @Override
+    @Override
     public Usuario getUsuarioLogado() throws SQLException, DAOException {
 
         Cursor cursor = null;
@@ -488,6 +513,11 @@ public class UsuarioDAO implements IUsuarioDAO {
             } else {
                 throw new BDException();
             }
+
+        } catch (SQLException e) {
+            Log.i("erro no metodo procurar usuario logado da classe usuarioDAO ", "" + e.getMessage());
+            throw new SQLException(e);
+
         } catch (Exception e) {
             Log.i("erro no metodo procurar usuario logado da classe usuarioDAO ", "" + e.getMessage());
             throw new DAOException(e);
@@ -502,6 +532,7 @@ public class UsuarioDAO implements IUsuarioDAO {
         }
         return usuario;
     }
+
     @Override
     public void logout() throws SQLException, DAOException {
         try {
@@ -514,8 +545,12 @@ public class UsuarioDAO implements IUsuarioDAO {
             else
                 throw new BDException();
 
+        } catch (SQLException e) {
+            Log.i("erro no metodo logout da classe usuarioDAO ", "" + e.getMessage());
+            throw new SQLException(e);
+
         } catch (Exception e) {
-            Log.i("erro metodo excluir usuarioLogado", "" + e.getMessage());
+            Log.i("erro no metodo logout da classe usuarioDAO", "" + e.getMessage());
             throw new DAOException(e);
 
         } finally {

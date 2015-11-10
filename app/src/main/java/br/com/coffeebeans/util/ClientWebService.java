@@ -36,7 +36,7 @@ public class ClientWebService {
     public class ThreadResponse extends AsyncTask<Void, Void, String> {
         //TODO //como tratar exceções nesse método?
         @Override
-        protected String doInBackground(Void... params) {
+        protected String doInBackground(Void... params)   {
             try {
 
                 response = webResource.type(MediaType.APPLICATION_JSON).get(ClientResponse.class);
@@ -47,6 +47,8 @@ public class ClientWebService {
                 Log.i("", "getCause" + String.valueOf(e.getCause()));
                 Log.i("", "getStrackTrace " + String.valueOf(e.getStackTrace()));
                 e.printStackTrace();
+
+                //throw new ClientWebServiceException(e);
             }
             return "sucesso na execucao da thread";
         }
