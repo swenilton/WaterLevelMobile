@@ -11,6 +11,31 @@ android {
         versionCode 1
         versionName "1.0"
     }
+    dexOptions {
+        preDexLibraries = false
+        javaMaxHeapSize "2g"
+    }
+
+    afterEvaluate {
+        tasks.matching {
+            it.name.startsWith('dex')
+        }.each { dx ->
+            if (dx.additionalParameters == null) {
+                dx.additionalParameters = ['--multi-dex']
+            } else {
+                dx.additionalParameters += '--multi-dex'
+            }
+
+             // Add more additional parameters like this:
+            // dx.additionalParameters += '--main-dex-list=class-list.txt'
+            //dx.additionalParameters += '--minimal-main-dex'
+        }
+    }
+
+    project.tasks.withType(com.android.build.gradle.tasks.Dex) {
+        additionalParameters=['--core-library']
+    }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -21,10 +46,13 @@ android {
         exclude 'META-INF/jersey-module-version'
         exclude 'META-INF/services/javax.enterprise.inject.spi.Extension'
         exclude 'META-INF/services/javax.servlet.ServletContainerInitializer'
-        exclude 'META-INF/services/javax.ws.rs.ext.MessageBodyReader'
+        //exclude 'META-INF/services/javax.ws.rs.ext.MessageBodyReader'
         exclude 'META-INF/services/javax.ws.rs.ext.MessageBodyWriter'
         exclude 'META-INF/services/com.sun.jersey.spi.HeaderDelegateProvider'
         exclude 'META-INF/services/com.sun.jersey.spi.inject.InjectableProvider'
+        exclude 'META-INF/ASL2.0'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/NOTICE'
     }
 }
 
@@ -42,5 +70,9 @@ dependencies {
     compile files('libs/jsr311-api-1.1.1.jar')
     compile files('libs/jersey-bundle-1.8.jar')
     compile files('libs/jersey-core-1.4.jar')
+    compile files('libs/jackson-core-asl-1.9.2.jar')
+    compile files('libs/jackson-jaxrs-1.9.2.jar')
+    compile files('libs/jackson-mapper-asl-1.9.2.jar')
+    compile files('libs/jackson-xc-1.9.2.jar')
 
 }

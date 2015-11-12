@@ -5,6 +5,7 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+
 import com.sun.jersey.spi.service.ServiceFinder.ServiceIteratorProvider;
 
 /**
@@ -19,19 +20,29 @@ public class AndroidServiceIteratorProvider<T> extends ServiceIteratorProvider<T
     private static final String[] com_sun_jersey_spi_HeaderDelegateProvider = {
             "com.sun.jersey.core.impl.provider.header.MediaTypeProvider",
             "com.sun.jersey.core.impl.provider.header.StringProvider"
+
     };
 
-    private static final String[] com_sun_jersey_spi_inject_InjectableProvider = {
-    };
+    private static final String[] com_sun_jersey_spi_inject_InjectableProvider = {/*"com.sun.jersey.core.impl.provider.xml.XMLStreamReaderContextProvider", "com.sun.jersey.core.impl.provider.xml.SAXParserContextProvider",
+            "com.sun.jersey.core.impl.provider.xml.DocumentBuilderFactoryProvider", "com.sun.jersey.core.impl.provider.xml.TransformerFactoryProvider"
+   */ };
 
     private static final String[] javax_ws_rs_ext_MessageBodyReader = {
             "com.sun.jersey.core.impl.provider.entity.StringProvider",
-            "com.sun.jersey.core.impl.provider.entity.ReaderProvider"
+            "com.sun.jersey.core.impl.provider.entity.ReaderProvider", "com.sun.jersey.json.impl.provider.entity.JSONRootElementProvider$App",
+            "com.sun.jersey.json.impl.provider.entity.JSONRootElementProvider$General",
+            "com.sun.jersey.json.impl.provider.entity.JSONJAXBElementProvider$App",
+            "com.sun.jersey.json.impl.provider.entity.JSONJAXBElementProvider$General","com.sun.jersey.json.impl.provider.entity.JSONObjectProvider$App",
+            "com.sun.jersey.json.impl.provider.entity.JSONObjectProvider$General"
     };
 
     private static final String[] javax_ws_rs_ext_MessageBodyWriter = {
             "com.sun.jersey.core.impl.provider.entity.StringProvider",
-            "com.sun.jersey.core.impl.provider.entity.ReaderProvider"
+            "com.sun.jersey.core.impl.provider.entity.ReaderProvider","com.sun.jersey.json.impl.provider.entity.JSONRootElementProvider$App",
+            "com.sun.jersey.json.impl.provider.entity.JSONRootElementProvider$General",
+            "com.sun.jersey.json.impl.provider.entity.JSONJAXBElementProvider$App",
+            "com.sun.jersey.json.impl.provider.entity.JSONJAXBElementProvider$General","com.sun.jersey.json.impl.provider.entity.JSONObjectProvider$App",
+            "com.sun.jersey.json.impl.provider.entity.JSONObjectProvider$General"
     };
 
     static {
@@ -78,11 +89,11 @@ public class AndroidServiceIteratorProvider<T> extends ServiceIteratorProvider<T
                 classes.add(service.cast(Class.forName(classesNames[i])
                         .newInstance()));
             } catch (IllegalAccessException e) {
-                Log.v(TAG, MESSAGE,e);
+                Log.v(TAG, MESSAGE, e);
             } catch (InstantiationException e) {
-                Log.v(TAG, MESSAGE,e);
+                Log.v(TAG, MESSAGE, e);
             } catch (ClassNotFoundException e) {
-                Log.v(TAG, MESSAGE,e);
+                Log.v(TAG, MESSAGE, e);
             }
         }
 
