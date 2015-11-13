@@ -32,8 +32,10 @@ import com.google.android.gms.auth.api.signin.FacebookSignInConfig;
 import java.io.File;
 import java.sql.SQLException;
 
+import br.com.coffeebeans.exception.ClientWebServiceException;
 import br.com.coffeebeans.exception.DAOException;
 import br.com.coffeebeans.fachada.Fachada;
+import br.com.coffeebeans.util.ClientWebService;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -94,6 +96,12 @@ public class MainActivity extends AppCompatActivity
         navigationView.setCheckedItem(R.id.nav_inicio);
 
         onNavigationItemSelected(navigationView.getMenu().getItem(0));
+        ClientWebService cws = new ClientWebService();
+        try {
+            cws.exemploGetUsers();
+        } catch (ClientWebServiceException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
