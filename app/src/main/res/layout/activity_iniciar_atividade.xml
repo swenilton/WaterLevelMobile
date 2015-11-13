@@ -20,10 +20,9 @@
         android:layout_alignParentTop="false"
         android:layout_centerHorizontal="true"
         android:layout_below="@+id/tvAtividade"
-        android:textColor="#000000"
+        android:textColor="@color/black"
         android:singleLine="false"
-        android:gravity="center"
-        android:background="#FFFFFFFF" />
+        android:gravity="center" />
 
     <ImageButton
         android:layout_width="70dp"
@@ -59,8 +58,7 @@
         android:layout_marginTop="70dp"
         android:layout_below="@+id/tvDesc"
         android:layout_alignParentStart="true"
-        android:layout_toStartOf="@+id/progressBar2"
-        android:textColor="#000000" />
+        android:layout_toStartOf="@+id/progressBar2" />
 
     <TextView
         android:layout_width="100dp"
@@ -72,9 +70,8 @@
         android:layout_toStartOf="@+id/textView7"
         android:layout_alignEnd="@+id/textView5"
         android:gravity="center"
-        android:textColor="#000000"
-        android:text="00:00:00"
-        android:background="#FFFFFFFF" />
+        android:textColor="@color/black"
+        android:text="00:00:00" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -85,8 +82,7 @@
         android:gravity="center"
         android:layout_alignParentEnd="true"
         android:layout_alignBottom="@+id/textView5"
-        android:layout_toEndOf="@+id/progressBar2"
-        android:textColor="#000000" />
+        android:layout_toEndOf="@+id/progressBar2" />
 
     <Chronometer
         android:layout_width="40dp"
@@ -97,8 +93,7 @@
         android:layout_below="@+id/textView7"
         android:layout_alignEnd="@+id/textView7"
         android:layout_alignStart="@+id/textView7"
-        android:textColor="#000000"
-        android:background="#FFFFFFFF" />
+        android:textColor="@color/black" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -112,8 +107,7 @@
         android:layout_alignParentStart="false"
         android:layout_alignParentEnd="true"
         android:layout_alignLeft="@+id/chronometer2"
-        android:layout_marginTop="20dp"
-        android:textColor="#000000" />
+        android:layout_marginTop="20dp" />
 
     <TextView
         android:layout_width="40dp"
@@ -125,8 +119,7 @@
         android:layout_below="@+id/textView8"
         android:layout_alignStart="@+id/textView8"
         android:layout_alignParentEnd="true"
-        android:textColor="#000000"
-        android:background="#FFFFFFFF" />
+        android:textColor="@color/black" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -138,8 +131,7 @@
         android:layout_below="@+id/tvInicio2"
         android:layout_alignParentStart="true"
         android:layout_alignRight="@+id/tvInicio2"
-        android:layout_marginTop="20dp"
-        android:textColor="#000000" />
+        android:layout_marginTop="20dp" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -152,8 +144,7 @@
         android:layout_alignParentStart="true"
         android:gravity="center"
         android:layout_alignEnd="@+id/textView10"
-        android:textColor="#000000"
-        android:background="#FFFFFFFF" />
+        android:textColor="@color/black" />
 
     <ProgressBar
         style="?android:attr/progressBarStyleSmall"
@@ -173,21 +164,20 @@
         android:textSize="15dp"
         android:gravity="center"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:textColor="#000000" />
+        android:layout_centerHorizontal="true" />
 
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:id="@+id/imageView5"
         android:layout_alignTop="@+id/tvDesc"
-        android:background="@android:drawable/dark_header" />
+        android:background="@android:drawable/divider_horizontal_bright" />
 
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:id="@+id/imageView6"
-        android:background="@android:drawable/dark_header"
+        android:background="@android:drawable/divider_horizontal_bright"
         android:layout_below="@+id/tvDesc"
         android:layout_centerHorizontal="true" />
 
@@ -195,7 +185,7 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:id="@+id/imageView7"
-        android:background="@android:drawable/dark_header"
+        android:background="@android:drawable/divider_horizontal_bright"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/textView5"
         android:layout_alignEnd="@id/tvInicio2"
@@ -205,7 +195,7 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:id="@+id/imageView9"
-        android:background="@android:drawable/dark_header"
+        android:background="@android:drawable/divider_horizontal_bright"
         android:layout_alignEnd="@id/chronometer2"
         android:layout_below="@+id/textView7"
         android:layout_alignStart="@id/chronometer2" />
@@ -214,7 +204,7 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:id="@+id/imageView11"
-        android:background="@android:drawable/dark_header"
+        android:background="@android:drawable/divider_horizontal_bright"
         android:layout_alignEnd="@+id/textView9"
         android:layout_alignTop="@+id/textView9"
         android:layout_alignStart="@+id/textView9" />
@@ -223,7 +213,7 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:id="@+id/imageView12"
-        android:background="@android:drawable/dark_header"
+        android:background="@android:drawable/divider_horizontal_bright"
         android:layout_alignEnd="@+id/textView9"
         android:layout_below="@+id/textView9"
         android:layout_alignStart="@+id/textView9" />
@@ -232,7 +222,7 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:id="@+id/imageView13"
-        android:background="@android:drawable/dark_header"
+        android:background="@android:drawable/divider_horizontal_bright"
         android:layout_alignParentStart="true"
         android:layout_alignTop="@+id/tvStatus2"
         android:layout_alignStart="@id/tvStatus2"
@@ -242,7 +232,7 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:id="@+id/imageView8"
-        android:background="@android:drawable/dark_header"
+        android:background="@android:drawable/divider_horizontal_bright"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/tvStatus2"
         android:layout_alignStart="@id/tvStatus2"
@@ -252,7 +242,7 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:id="@+id/imageView10"
-        android:background="@android:drawable/dark_header"
+        android:background="@android:drawable/divider_horizontal_bright"
         android:layout_below="@+id/chronometer2"
         android:layout_alignEnd="@id/chronometer2"
         android:layout_alignStart="@id/chronometer2" />
@@ -261,7 +251,7 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:id="@+id/imageView14"
-        android:background="@android:drawable/dark_header"
+        android:background="@android:drawable/divider_horizontal_bright"
         android:layout_below="@+id/tvInicio2"
         android:layout_alignParentStart="true"
         android:layout_alignEnd="@id/tvInicio2"

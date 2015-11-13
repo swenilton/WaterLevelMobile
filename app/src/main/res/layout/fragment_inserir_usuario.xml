@@ -146,13 +146,13 @@
         android:layout_gravity="center"
         android:layout_below="@+id/spinner"
         android:layout_alignParentRight="false"
-        android:layout_toLeftOf="@+id/btnSalvar" />
+        android:layout_toLeftOf="@+id/btnEnviar" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Salvar"
-        android:id="@+id/btnSalvar"
+        android:id="@+id/btnEnviar"
         android:layout_gravity="center"
         android:layout_below="@+id/spinner2"
         android:layout_alignParentEnd="false"

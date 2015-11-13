@@ -4,7 +4,7 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:id="@+id/scrollView2" >
 
         <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -50,7 +50,181 @@
                 android:alpha="0.5"
                 android:textAlignment="center"
                 android:gravity="center_vertical|center_horizontal" />
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/imageView15"
+                android:layout_below="@+id/progressBar"
+                android:layout_alignParentStart="true"
+                android:background="@android:drawable/divider_horizontal_bright"
+                android:layout_marginTop="10dp" />
+
         </RelativeLayout>
     </ScrollView>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/scrollView2"
+        android:layout_alignParentStart="true"
+        android:id="@+id/layoutBomba">
+
+        <RadioGroup
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textView6"
+            android:layout_alignEnd="@+id/radioButton"
+            android:baselineAligned="false"
+            android:measureWithLargestChild="false"
+            android:id="@+id/radioGroup"
+            android:layout_marginLeft="10dp">
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Manual"
+                android:id="@+id/radioButton2"
+                android:checked="false"
+                android:layout_alignTop="@+id/radioButton"
+                android:layout_centerHorizontal="true" />
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Automatico"
+                android:id="@+id/radioButton"
+                android:layout_alignTop="@+id/textView6"
+                android:layout_alignStart="@+id/textView6"
+                android:checked="false" />
+        </RadioGroup>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/layoutAutomatico"
+            android:layout_alignParentTop="false"
+            android:layout_alignParentStart="false"
+            android:layout_toEndOf="@+id/radioGroup"
+            android:layout_below="@+id/textView6"
+            android:visibility="invisible"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp">
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/tfLimiteMinAuto"
+                android:hint="Limite Min"
+                android:layout_below="@+id/tfLimiteMax"
+                android:layout_alignStart="@+id/tfLimiteMax"
+                android:inputType="numberDecimal"
+                android:numeric="decimal" />
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/tfLimiteMaxAuto"
+                android:hint="Limite Max"
+                android:layout_below="@+id/tfLimiteMinAuto"
+                android:layout_alignParentStart="true"
+                android:inputType="numberDecimal"
+                android:numeric="decimal" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Salvar"
+                android:id="@+id/button"
+                android:layout_alignParentTop="false"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentStart="false"
+                android:layout_alignParentBottom="false"
+                android:layout_alignBottom="@+id/tfLimiteMaxAuto" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textView6"
+            android:layout_toEndOf="@+id/radioGroup"
+            android:id="@+id/layoutManual"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:visibility="invisible">
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/tfLimiteMax"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentStart="true"
+                android:hint="Limite Max"
+                android:inputType="numberDecimal"
+                android:numeric="decimal" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Salvar"
+                android:id="@+id/btnSalvarManual"
+                android:layout_below="@+id/tfLimiteMax"
+                android:layout_alignParentEnd="true" />
+
+            <ToggleButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="New ToggleButton"
+                android:id="@+id/toggleButtonLigar"
+                android:textOn="Desligar"
+                android:textOff="Ligar"
+                android:checked="false"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true" />
+
+        </RelativeLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Acionamento da Bomba"
+            android:id="@+id/textView6"
+            android:layout_alignParentBottom="false"
+            android:layout_alignParentStart="false"
+            android:layout_marginLeft="10dp"
+            android:layout_below="@+id/scrollView2"
+            android:layout_alignParentTop="false"
+            android:layout_marginBottom="10dp" />
+    </RelativeLayout>
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Ver Ultimas\nAtividades"
+        android:id="@+id/btnAtividades"
+        android:layout_below="@+id/layoutBomba"
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="10dp" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Ver Ultimos\nAcionamentos"
+        android:id="@+id/btnAcionamentos"
+        android:layout_below="@+id/layoutBomba"
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="10dp" />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageView16"
+        android:background="@android:drawable/divider_horizontal_bright"
+        android:layout_below="@+id/layoutBomba"
+        android:layout_alignParentStart="true" />
 
 </RelativeLayout>

@@ -10,6 +10,8 @@ import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -17,7 +19,10 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
+import android.text.method.LinkMovementMethod;
+import android.util.Base64;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -31,8 +36,36 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.AccessToken;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookActivity;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
+import com.facebook.GraphRequest;
+import com.facebook.GraphRequestAsyncTask;
+import com.facebook.GraphResponse;
+import com.facebook.HttpMethod;
+import com.facebook.Profile;
+import com.facebook.internal.CallbackManagerImpl;
+import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
+import com.google.android.gms.auth.api.signin.FacebookSignInConfig;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.gson.JsonArray;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.JSONStringer;
+
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.security.Signature;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -48,16 +81,6 @@ import br.com.coffeebeans.usuario.Usuario;
  */
 public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
 
-    /**
-     * A dummy authentication store containing known user names and passwords.
-     * TODO: remove after connecting to a real authentication system.
-     */
-    private static final String[] DUMMY_CREDENTIALS = new String[]{
-            "foo@example.com:hello", "bar@example.com:world"
-    };
-    /**
-     * Keep track of the login task to ensure we can cancel it if requested.
-     */
     private UserLoginTask mAuthTask = null;
 
     // UI references.
@@ -67,12 +90,20 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
     private View mLoginFormView;
     private TextView mEsqueceuSenha;
     private Fachada fachada;
+    private LoginButton loginButton;
+    private CallbackManager callbackManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        FacebookSdk.sdkInitialize(getApplicationContext());
+        callbackManager = CallbackManager.Factory.create();
         setContentView(R.layout.activity_login);
-
+        loginButton = (LoginButton) findViewById(R.id.login_button);
+        List<String> permissoes = new ArrayList<>();
+        permissoes.add("email");
+        permissoes.add("public_profile");
+        loginButton.setReadPermissions("email", "public_profile");
         try{
             fachada = Fachada.getInstance(getApplicationContext());
             if(fachada.getUsuarioLogado() != null) entrar();
@@ -82,10 +113,65 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
                     Toast.LENGTH_LONG).show();
         }
 
+        loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+                GraphRequest request = GraphRequest.newMeRequest(
+                        loginResult.getAccessToken(),
+                        new GraphRequest.GraphJSONObjectCallback() {
+                            @Override
+                            public void onCompleted(
+                                    JSONObject object,
+                                    GraphResponse response) {
+                                // Application code
+                                //Log.e("LoginActivity", response.toString() + "    " + object.toString());
+                                try {
+                                    // String name = object.getString("name");
+                                    String email = object.getString("email");
+//                                    String id = object.getString("id");
+//                                    String gender = object.getString("gender");
+//                                    Log.e("LoginActivity", name + "    " + email + "   " + id + "   " + gender);
+                                    if (fachada.loginFacebook(email)) entrar();
+                                    else
+                                        onError(new FacebookException("Email não cadastrado no sistema"));
+                                } catch (Exception e) {
+                                    Toast.makeText(getApplicationContext(), "Erro ao logar com facebook\n" + e.getMessage(), Toast.LENGTH_LONG).show();
+                                }
+
+                            }
+                        });
+                Bundle parameters = new Bundle();
+                parameters.putString("fields", "id,name,email,gender, birthday");
+                request.setParameters(parameters);
+                request.executeAsync();
+            }
+
+            @Override
+            public void onCancel() {
+                // App code
+                Log.e("LOGIN Cancle", "LOGIN Cancle");
+            }
+
+            @Override
+            public void onError(FacebookException exception) {
+                // App code
+                Log.e("LOGIN Facebook erro", exception.getMessage());
+                Toast.makeText(getApplicationContext(), "Erro ao logar com facebook\n" + exception.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         populateAutoComplete();
         mEsqueceuSenha = (TextView) findViewById(R.id.tvEsqueceuSenha);
+        mEsqueceuSenha.setMovementMethod(LinkMovementMethod.getInstance());
+        mEsqueceuSenha.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                android.app.FragmentManager fm = getFragmentManager();
+                DialogRecuperarSenha dialogRecuperarSenha = DialogRecuperarSenha.newInstance();
+            }
+        });
 
         mPasswordView = (EditText) findViewById(R.id.password);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -359,6 +445,13 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
             mAuthTask = null;
             showProgress(false);
         }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        callbackManager.onActivityResult(requestCode, resultCode, data);
     }
 }
 

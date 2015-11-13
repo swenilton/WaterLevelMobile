@@ -13,6 +13,8 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TabHost;
 import android.widget.TextSwitcher;
 import android.widget.TextView;
@@ -24,12 +26,14 @@ import br.com.coffeebeans.fachada.Fachada;
 
 
 public class FragmentHomeBody extends Fragment {
-    View rootView;
+    View rootView, automatico, manual;
     private ProgressBar progressBar;
     private TextView textView;
     boolean isRunning = true;
     Random random = new Random();
     int oldProgress = 0;
+    RadioGroup radioGroup;
+    RadioButton radioButtonManual, radioButtonAutomatico;
 
     Handler handler = new Handler(){
         @Override
@@ -49,6 +53,27 @@ public class FragmentHomeBody extends Fragment {
 
         progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
         textView = (TextView) rootView.findViewById(R.id.lblNivel);
+
+
+        automatico = rootView.findViewById(R.id.layoutAutomatico);
+        manual = rootView.findViewById(R.id.layoutManual);
+        radioGroup = (RadioGroup) rootView.findViewById(R.id.radioGroup);
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                if(checkedId == R.id.radioButton){
+                    automatico.setVisibility(View.VISIBLE);
+                    manual.setVisibility(View.INVISIBLE);
+                } else {
+                    manual.setVisibility(View.VISIBLE);
+                    automatico.setVisibility(View.INVISIBLE);
+                }
+            }
+        });
+
+        radioButtonAutomatico = (RadioButton) rootView.findViewById(R.id.radioButton);
+        radioButtonManual = (RadioButton) rootView.findViewById(R.id.radioButton2);
+
 
         return rootView;
     }

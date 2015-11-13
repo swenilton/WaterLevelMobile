@@ -14,9 +14,18 @@
         android:layout_height="wrap_content"
         android:inputType="textPersonName"
         android:ems="10"
-        android:id="@+id/txtDescricao"
-        android:hint="Descrição"
+        android:id="@+id/txtEmail"
+        android:hint="Email"
         android:capitalize="characters" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="*A senha será enviada para seu email."
+        android:id="@+id/textView4"
+        android:textSize="10dp"
+        android:paddingLeft="10dp" />
 
     <Button
         android:layout_width="wrap_content"
@@ -28,7 +37,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Salvar"
+        android:text="Enviar"
         android:id="@+id/btnEnviar"
         android:layout_marginLeft="100dp"
         android:layout_marginTop="-48sp"

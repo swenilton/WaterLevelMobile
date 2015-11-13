@@ -70,7 +70,7 @@ public class DialogInserirAtividade extends DialogFragment {
                 dismiss();
             }
         });
-        Button btnSalvar = (Button) view.findViewById(R.id.btnSalvar);
+        Button btnSalvar = (Button) view.findViewById(R.id.btnEnviar);
         btnSalvar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

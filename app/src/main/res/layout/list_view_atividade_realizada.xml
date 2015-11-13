@@ -7,14 +7,14 @@
     android:clickable="true"
     android:contextClickable="true">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text=">"
-        android:id="@+id/tv"
-        android:textSize="40dp"
+    <ImageView
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:id="@+id/imageView"
         android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        android:autoText="false"
+        android:background="@drawable/ic_arrow_right" />
 
     <TextView
         android:id="@+id/textDescricao"
@@ -26,6 +26,6 @@
         android:layout_marginRight="5dp"
         android:layout_centerVertical="true"
         android:layout_alignParentStart="true"
-        android:layout_toStartOf="@id/tv" />
+        android:layout_toStartOf="@id/imageView" />
 
 </RelativeLayout>

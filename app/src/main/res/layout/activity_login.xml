@@ -73,6 +73,14 @@
                 android:visibility="visible"
                 android:layout_below="@+id/password"
                 android:layout_alignParentLeft="true" />
+
+            <com.facebook.login.widget.LoginButton
+                android:id="@+id/login_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="30dp"
+                android:layout_marginBottom="30dp" />
         </LinearLayout>
 
         <ProgressBar android:id="@+id/login_progress" style="?android:attr/progressBarStyleLarge"
@@ -95,7 +103,8 @@
         android:layout_gravity="center_horizontal"
         android:textColor="@color/common_signin_btn_dark_text_default"
         android:visibility="visible"
-        android:clickable="true" />
+        android:clickable="true"
+        android:textIsSelectable="false" />
 
 </LinearLayout>
 

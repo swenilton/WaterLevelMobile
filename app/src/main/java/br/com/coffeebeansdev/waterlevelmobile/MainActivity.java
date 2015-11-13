@@ -23,6 +23,12 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.FacebookActivity;
+import com.facebook.FacebookSdk;
+import com.facebook.Profile;
+import com.facebook.login.LoginManager;
+import com.google.android.gms.auth.api.signin.FacebookSignInConfig;
+
 import java.io.File;
 import java.sql.SQLException;
 
@@ -147,8 +153,11 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_iniciar_atividade) {
             frgmt = new FragmentIniciarAtividade();
             setTitle("Selecione a Atividade");
+        } else if (id == R.id.nav_dispositivos) {
+            frgmt = new FragmentIniciarAtividade();
+            setTitle("Dispositivos");
         } else if (id == R.id.nav_rank) {
-            frgmt = new FragmentRank();
+            frgmt = new FragmentDisp();
             setTitle("Rank");
         } else if (id == R.id.nav_share) {
 
@@ -175,11 +184,13 @@ public class MainActivity extends AppCompatActivity
         }
         try {
             fachada.logout();
+            if(Profile.getCurrentProfile() != null)
+                LoginManager.getInstance().logOut();
         } catch (SQLException e) {
             Log.i("ERRO", e.getMessage());
             Toast.makeText(this, "Erro ao fazer logof\n" + e.getMessage(),
                     Toast.LENGTH_LONG).show();
-        } catch (DAOException e) {
+        } catch (Exception e) {
             Log.i("ERRO", e.getMessage());
             Toast.makeText(this, "Erro ao fazer logof\n" + e.getMessage(),
                     Toast.LENGTH_LONG).show();
