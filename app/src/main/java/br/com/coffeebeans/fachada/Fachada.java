@@ -110,7 +110,7 @@ public class Fachada {
         return controladorAtividade.procurar(id);
     }
 
-    public Usuario loginFacebook(String email) throws SQLException, DAOException {
+    public boolean loginFacebook(String email) throws SQLException, DAOException {
         return controladorUsuario.loginFacebook(email);
     }
 
