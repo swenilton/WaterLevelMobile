@@ -35,7 +35,7 @@ public class ClientWebService {
 
             Client client = Client.create(clientConfig);
 
-            webResource = client.resource("http://10.0.2.2:8080/WaterLevel/user/all");
+            webResource = client.resource("http://10.0.2.2:8080/WaterLevel/WS/user/all");
             ThreadResponse threadResponse = new ThreadResponse();
             threadResponse.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
