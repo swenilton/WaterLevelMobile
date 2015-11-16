@@ -1,14 +1,14 @@
 package br.com.coffeebeansdev.waterlevelmobile;
 
 import android.app.ActivityOptions;
+import android.app.Fragment;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
+import android.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -23,17 +23,13 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.facebook.FacebookActivity;
-import com.facebook.FacebookSdk;
 import com.facebook.Profile;
 import com.facebook.login.LoginManager;
-import com.google.android.gms.auth.api.signin.FacebookSignInConfig;
 
 import java.io.File;
 import java.sql.SQLException;
 
 import br.com.coffeebeans.exception.ClientWebServiceException;
-import br.com.coffeebeans.exception.DAOException;
 import br.com.coffeebeans.fachada.Fachada;
 import br.com.coffeebeans.util.ClientWebService;
 
@@ -162,17 +158,17 @@ public class MainActivity extends AppCompatActivity
             frgmt = new FragmentIniciarAtividade();
             setTitle("Selecione a Atividade");
         } else if (id == R.id.nav_dispositivos) {
-            frgmt = new FragmentIniciarAtividade();
+            frgmt = new FragmentDisp();
             setTitle("Dispositivos");
         } else if (id == R.id.nav_rank) {
-            frgmt = new FragmentDisp();
+            frgmt = new FragmentRank();
             setTitle("Rank");
         } else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_send) {
 
         }
-        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentManager fragmentManager = getFragmentManager();
         fragmentManager
                 .beginTransaction()
                 .replace(R.id.content_main, frgmt)

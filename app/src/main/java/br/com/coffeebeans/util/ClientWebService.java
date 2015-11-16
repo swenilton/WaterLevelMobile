@@ -50,11 +50,11 @@ public class ClientWebService {
         protected String doInBackground(Void... params) {
             try {
 
-                response = webResource.type(MediaType.APPLICATION_JSON).get(ClientResponse.class);
-                listaUsers = new ObjectMapper().readValue(
-                        response.getEntity(String.class),
-                        new TypeReference<ArrayList<Usuario>>() {
-                        });
+                //response = webResource.type(MediaType.APPLICATION_JSON).get(ClientResponse.class);
+//                listaUsers = new ObjectMapper().readValue(
+//                        response.getEntity(String.class),
+//                        new TypeReference<ArrayList<Usuario>>() {
+//                        });
 
             } catch (Exception e) {
                 Log.i("", "getMessage :" + e.getMessage());
@@ -71,12 +71,12 @@ public class ClientWebService {
         protected void onPostExecute(String message) {
 
             Log.i("", message);
-            Log.i("", "Resposta do servidor: " + listaUsers.toString());
+            //Log.i("", "Resposta do servidor: " + listaUsers.toString());
 
-            if (response.getStatus() != 200) {
-                throw new RuntimeException("Failed : HTTP error code : "
-                        + response.getStatus());
-            }
+//            if (response.getStatus() != 200) {
+//                throw new RuntimeException("Failed : HTTP error code : "
+//                        + response.getStatus());
+//            }
         }
     }
 

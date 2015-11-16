@@ -9,6 +9,8 @@ import br.com.coffeebeans.atividade.Atividade;
 import br.com.coffeebeans.atividade.AtividadeRealizada;
 import br.com.coffeebeans.atividade.ControladorAtividade;
 import br.com.coffeebeans.atividade.ControladorAtividadeRealizada;
+import br.com.coffeebeans.dispositivo.ControladorDispositivo;
+import br.com.coffeebeans.dispositivo.Dispositivo;
 import br.com.coffeebeans.exception.*;
 import br.com.coffeebeans.usuario.ControladorUsuario;
 import br.com.coffeebeans.usuario.Usuario;
@@ -19,13 +21,14 @@ public class Fachada {
     ControladorUsuario controladorUsuario;
     ControladorAtividade controladorAtividade;
     ControladorAtividadeRealizada controladorAtividadeRealizada;
+    ControladorDispositivo controladorDispositivo;
 
     private Fachada(Context context) throws Exception {
         Fachada.context = context;
         this.controladorAtividade = new ControladorAtividade(context);
         this.controladorUsuario = new ControladorUsuario(context);
         this.controladorAtividadeRealizada = new ControladorAtividadeRealizada();
-
+        this.controladorDispositivo = new ControladorDispositivo(context);
     }
 
     public static Fachada getInstance(Context context) throws Exception {
@@ -43,6 +46,8 @@ public class Fachada {
             controladorUsuario.cadastrar((Usuario) element);
         } else if (element instanceof Atividade) {
             controladorAtividade.cadastrar((Atividade) element);
+        } else if (element instanceof Dispositivo) {
+            controladorDispositivo.cadastrar((Dispositivo) element);
         } else if (element instanceof AtividadeRealizada) {
             // controladorAtividadeRealizada.cadastrar((AtividadeRealizada)
             // element);
@@ -51,11 +56,13 @@ public class Fachada {
     }
 
     public <E> void atualizar(E element)
-            throws SQLException, UsuarioNaoEncontradoException, AtividadeNaoEncontradaException, DAOException, PermissaoException, AtividadeJaExistenteException, UsuarioJaExistenteException, EmailJaExistenteException {
+            throws SQLException, UsuarioNaoEncontradoException, AtividadeNaoEncontradaException, DAOException, PermissaoException, AtividadeJaExistenteException, UsuarioJaExistenteException, EmailJaExistenteException, DispositivoNaoEncontradoException, DispositivoJaExistenteException {
         if (element instanceof Usuario) {
             controladorUsuario.atualizar((Usuario) element);
         } else if (element instanceof Atividade) {
             controladorAtividade.atualizar((Atividade) element);
+        } else if (element instanceof Dispositivo) {
+            controladorDispositivo.atualizar((Dispositivo) element);
         } else if (element instanceof AtividadeRealizada) {
             // controladorAtividadeRealizada.atualizar((AtividadeRealizada)
             // element);
@@ -110,7 +117,7 @@ public class Fachada {
         return controladorAtividade.procurar(id);
     }
 
-    public Usuario loginFacebook(String email) throws SQLException, DAOException {
+    public boolean loginFacebook(String email) throws SQLException, DAOException {
         return controladorUsuario.loginFacebook(email);
     }
 
@@ -131,6 +138,30 @@ public class Fachada {
 
     public void logout() throws SQLException, DAOException {
         controladorUsuario.logout();
+    }
+
+    public Dispositivo dispositivoProcurar(int id) throws DispositivoNaoEncontradoException, SQLException, DAOException {
+        return controladorDispositivo.procurar(id);
+    }
+
+    public Dispositivo dispositivoProcurarNome(String nome) throws DispositivoNaoEncontradoException, SQLException, DAOException {
+        return controladorDispositivo.procurarNome(nome);
+    }
+
+    public List<Dispositivo> dispositivoListar() throws SQLException, DAOException {
+        return controladorDispositivo.listar();
+    }
+
+    public void dispositivoRemover(int id) throws DispositivoNaoEncontradoException, SQLException, DAOException {
+        controladorDispositivo.remover(id);
+    }
+
+    public void setDispositivoAtivo(Dispositivo dispositivoAtivo) throws DispositivoNaoEncontradoException, SQLException, DAOException {
+        controladorDispositivo.setDispositivoAtivo(dispositivoAtivo);
+    }
+
+    public Dispositivo getDispositivoAtivo() throws SQLException, DAOException {
+        return controladorDispositivo.getDispositivoAtivo();
     }
     /*
 	 * public List<AtividadeRealizada> getUltimasAtividades() throws

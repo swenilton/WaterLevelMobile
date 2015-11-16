@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:padding="5dp"
+    android:background="@drawable/list_selector">
+
+    <TextView
+        android:id="@+id/txtNome"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Nome"
+        android:textSize="20dp"
+        android:textColor="#333333"
+        android:paddingLeft="5dp"
+        android:layout_toStartOf="@+id/btnEdit"
+        android:layout_marginRight="5dp" />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:id="@+id/btnDelete"
+        android:src="@android:drawable/ic_menu_close_clear_cancel"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentStart="false"
+        android:layout_alignParentTop="false"
+        android:layout_alignParentRight="false"
+        android:layout_alignWithParentIfMissing="false"
+        android:layout_alignBottom="@+id/btnEdit" />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btnEdit"
+        android:src="@android:drawable/ic_menu_edit"
+        android:layout_toStartOf="@+id/btnDelete" />
+
+    <TextView
+        android:id="@+id/textView11"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Host"
+        android:textColor="#333333"
+        android:paddingLeft="5dp"
+        android:textSize="8dp"
+        android:layout_alignStart="@+id/txtNome"
+        android:layout_below="@+id/txtNome" />
+
+    <TextView
+        android:id="@+id/txtHost"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="IP"
+        android:textColor="#333333"
+        android:paddingLeft="5dp"
+        android:textSize="12dp"
+        android:layout_below="@+id/textView11"
+        android:layout_alignStart="@+id/textView11" />
+
+    <TextView
+        android:id="@+id/textView12"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Porta"
+        android:textColor="#333333"
+        android:paddingLeft="5dp"
+        android:textSize="8dp"
+        android:layout_alignTop="@+id/textView11"
+        android:layout_toEndOf="@+id/textView11"
+        android:layout_marginStart="65dp" />
+
+    <TextView
+        android:id="@+id/txtPorta"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Porta"
+        android:textColor="#333333"
+        android:paddingLeft="5dp"
+        android:textSize="12dp"
+        android:layout_below="@+id/textView12"
+        android:layout_alignStart="@+id/textView12" />
+
+</RelativeLayout>

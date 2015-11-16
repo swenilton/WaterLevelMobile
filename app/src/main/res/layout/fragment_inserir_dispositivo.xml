@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/modal"
+    android:layout_width="wrap_content" android:layout_height="wrap_content"
+    android:layout_gravity="center" android:orientation="vertical"
+    android:padding="16dp">
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textCapWords"
+        android:ems="10"
+        android:id="@+id/txtNome"
+        android:hint="Nome"
+        android:layout_centerHorizontal="true" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:id="@+id/txtHost"
+        android:hint="Host"
+        android:layout_below="@+id/txtNome"
+        android:layout_toStartOf="@+id/btnEnviar" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:ems="10"
+        android:id="@+id/txtPorta"
+        android:hint="Porta"
+        android:layout_below="@+id/txtNome"
+        android:layout_toEndOf="@+id/txtHost" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Cancelar"
+        android:id="@+id/btnCancelar"
+        android:layout_gravity="center"
+        android:layout_below="@+id/txtHost"
+        android:layout_alignEnd="@+id/txtHost" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Salvar"
+        android:id="@+id/btnEnviar"
+        android:layout_gravity="center"
+        android:layout_below="@+id/txtHost"
+        android:layout_alignParentEnd="true" />
+
+</RelativeLayout>

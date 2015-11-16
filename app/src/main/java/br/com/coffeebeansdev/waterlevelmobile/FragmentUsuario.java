@@ -1,23 +1,16 @@
 package br.com.coffeebeansdev.waterlevelmobile;
 
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.Context;
-import android.content.Intent;
-import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.AsyncTask;
-import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -42,7 +35,7 @@ public class FragmentUsuario extends Fragment {
         rootView = inflater.inflate(R.layout.fragment_usuario, container, false);
         listView = (ListView) rootView.findViewById(R.id.listView);
         progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar2);
-        context = getContext();
+        context = getActivity();
         fragmentManager = getFragmentManager();
         try{
             popularLista();

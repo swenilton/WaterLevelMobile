@@ -1,9 +1,9 @@
 package br.com.coffeebeansdev.waterlevelmobile;
 
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,7 +26,7 @@ public class FragmentRank extends Fragment {
         ViewPager pager = (ViewPager) rootView.findViewById(R.id.pager);
 
         try{
-            atividades = Fachada.getInstance(getContext()).atividadeListar();
+            atividades = Fachada.getInstance(getActivity()).atividadeListar();
         } catch (Exception e){
 
         }
@@ -35,7 +35,7 @@ public class FragmentRank extends Fragment {
         FragmentManager fm = getChildFragmentManager();
 
         /** Instantiating FragmentPagerAdapter */
-        RankFragmentPageAdapter pagerAdapter = new RankFragmentPageAdapter(fm, atividades);
+        RankFragmentPageAdapter pagerAdapter = new RankFragmentPageAdapter(atividades);
 
         /** Setting the pagerAdapter to the pager object */
         pager.setAdapter(pagerAdapter);

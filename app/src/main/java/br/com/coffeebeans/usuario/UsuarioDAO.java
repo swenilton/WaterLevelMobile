@@ -18,7 +18,6 @@ import br.com.coffeebeans.exception.EmailJaExistenteException;
 import br.com.coffeebeans.exception.UsuarioInativoException;
 import br.com.coffeebeans.exception.UsuarioJaExistenteException;
 import br.com.coffeebeans.exception.UsuarioNaoEncontradoException;
-import br.com.coffeebeans.util.ConfigDb;
 import br.com.coffeebeans.util.CriarDb;
 
 public class UsuarioDAO implements IUsuarioDAO {
@@ -334,41 +333,47 @@ public class UsuarioDAO implements IUsuarioDAO {
     }
 
     @Override
-    public Usuario loginFacebook(String email) throws SQLException, DAOException {
-        Usuario usuario = null;
+    public boolean loginFacebook(String email) throws SQLException, DAOException {
         Cursor cursor = null;
+        boolean result = false;
+        Usuario inativo = null;
 
         try {
+            String sql = "SELECT * FROM USUARIO WHERE EMAIL = ?";
+
             db = conexao.openDb();
+
             if (db != null) {
-                String sql = "Select * from " + NOME_TABELA + " where EMAIL= ?";
+
                 String[] whereArgs = {email};
+
                 cursor = db.rawQuery(sql, whereArgs);
+
                 cursor.moveToFirst();
 
                 if (cursor.getCount() > 0 && cursor != null) {
-                    usuario = new Usuario(cursor.getString(cursor.getColumnIndex("NOME")),
-                            cursor.getString(cursor.getColumnIndex("LOGIN")), cursor.getString(cursor.getColumnIndex("SENHA")),
-                            cursor.getString(cursor.getColumnIndex("EMAIL")), cursor.getString(cursor.getColumnIndex("ATIVO")),
-                            cursor.getString(cursor.getColumnIndex("PERFIL")));
-
-                    usuario.setId(cursor.getInt(cursor.getColumnIndex("ID")));
-                    usuario.setTelefone(cursor.getString(cursor.getColumnIndex("TELEFONE")));
-                    usuario.setFoto(cursor.getString(cursor.getColumnIndex("FOTO")));
-
-                    Log.i("procurar usuario", "usuario achado com sucesso ");
+                    if (cursor.getString(cursor.getColumnIndex("ATIVO")).equals("NAO")) {
+                        inativo = procurar(cursor.getInt(cursor.getColumnIndex("ID")));
+                        throw new UsuarioInativoException(inativo);
+                    }
+                    ContentValues valores = new ContentValues();
+                    valores.put("ID", 1);
+                    valores.put("ID_USUARIO", cursor.getInt(cursor.getColumnIndex("ID")));
+                    db.insert("usuario_logado", null, valores);
+                    result = true;
+                } else {
+                    result = false;
                 }
             } else {
                 throw new BDException();
             }
         } catch (SQLException e) {
-            Log.i("erro no metodo loginFacebook da classe usuario dao ", "" + e.getMessage());
+            Log.i("erro no metodo loginFacebook da classe usuario dao ", e.getMessage());
             throw new SQLException(e);
         } catch (Exception e) {
-            Log.i("erro no metodo loginFacebook da classe usuario ", "" + e.getMessage());
+            Log.i("erro no metodo loginFacebook da classe usuario ", e.getMessage());
             throw new DAOException(e);
         } finally {
-
             if (cursor != null) {
                 cursor.close();
             }
@@ -376,10 +381,8 @@ public class UsuarioDAO implements IUsuarioDAO {
                 if (db.isOpen())
                     db.close();
             }
-
         }
-        return usuario;
-
+        return result;
     }
 
     @Override
@@ -442,7 +445,7 @@ public class UsuarioDAO implements IUsuarioDAO {
                 if (cursor.getCount() > 0 && cursor != null) {
                     if (cursor.getString(cursor.getColumnIndex("ATIVO")).equals("NAO")) {
                         inativo = procurar(cursor.getInt(cursor.getColumnIndex("ID")));
-                        throw new UsuarioInativoException(procurar(cursor.getInt(cursor.getColumnIndex("ID"))));
+                        throw new UsuarioInativoException(inativo);
                     }
                     ContentValues valores = new ContentValues();
                     valores.put("ID", 1);
@@ -456,13 +459,13 @@ public class UsuarioDAO implements IUsuarioDAO {
                 throw new BDException();
             }
         } catch (SQLException e) {
-            Log.i("erro no metodo login da classe usuario dao ", "" + e.getMessage());
+            Log.i("erro no metodo login da classe usuario dao ", e.getMessage());
             throw new SQLException(e);
         } catch (UsuarioInativoException e) {
-            Log.i("erro usuario inativo dao ", "" + e.getMessage());
+            Log.i("erro usuario inativo dao ", e.getMessage());
             throw new UsuarioInativoException(inativo);
         } catch (Exception e) {
-            Log.i("erro no metodo login da classe usuario dao ", "" + e.getMessage());
+            Log.i("erro no metodo login da classe usuario dao ", e.getMessage());
             throw new DAOException(e);
         } finally {
             if (cursor != null) {
@@ -499,7 +502,7 @@ public class UsuarioDAO implements IUsuarioDAO {
             db = conexao.openDb();
             if (db != null) {
 
-                String sql = "Select * from usuario_logado where ID= ?";
+                String sql = "SELECT * FROM USUARIO_LOGADO WHERE ID = ?";
                 String[] whereArgs = {String.valueOf(1)};
 
                 cursor = db.rawQuery(sql, whereArgs);
@@ -536,12 +539,12 @@ public class UsuarioDAO implements IUsuarioDAO {
     @Override
     public void logout() throws SQLException, DAOException {
         try {
-            String where = " ID =?";
+            String where = "ID = ?";
             String[] whereArgs = new String[]{String.valueOf(1)};
 
             db = conexao.openDb();
             if (db != null)
-                db.delete("usuario_logado", where, whereArgs);
+                db.delete("USUARIO_LOGADO", where, whereArgs);
             else
                 throw new BDException();
 

@@ -1,28 +1,21 @@
 package br.com.coffeebeansdev.waterlevelmobile;
 
+import android.app.Fragment;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.TabHost;
-import android.widget.TextSwitcher;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.Random;
-
-import br.com.coffeebeans.fachada.Fachada;
 
 
 public class FragmentHomeBody extends Fragment {
@@ -94,12 +87,12 @@ public class FragmentHomeBody extends Fragment {
                             handler.sendMessage(handler.obtainMessage());
                         } catch (InterruptedException e) {
                             Log.i("Erro ProgressBar", e.getMessage());
-                            Toast.makeText(getContext(), "Erro ProgressBar\n" + e.getMessage(),
+                            Toast.makeText(getActivity(), "Erro ProgressBar\n" + e.getMessage(),
                                     Toast.LENGTH_SHORT).show();
                             break;
                         } catch (Exception e) {
                             Log.i("Erro ProgressBar", e.getMessage());
-                            Toast.makeText(getContext(), "Erro ProgressBar\n" + e.getMessage(),
+                            Toast.makeText(getActivity(), "Erro ProgressBar\n" + e.getMessage(),
                                     Toast.LENGTH_SHORT).show();
                             break;
                         }
@@ -107,7 +100,7 @@ public class FragmentHomeBody extends Fragment {
                 }
                 catch(Throwable t) {
                     Log.i("Erro Thread", t.getMessage());
-                    Toast.makeText(getContext(), "Erro thread\n" + t.getMessage(),
+                    Toast.makeText(getActivity(), "Erro thread\n" + t.getMessage(),
                             Toast.LENGTH_SHORT).show();
                 }
             }

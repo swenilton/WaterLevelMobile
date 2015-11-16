@@ -1,13 +1,13 @@
 package br.com.coffeebeansdev.waterlevelmobile;
 
 import android.app.Activity;
+import android.app.DialogFragment;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -117,11 +117,11 @@ public class DialogInserirUsuario extends DialogFragment {
 
             }
         });
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(),
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(),
                 R.array.perfil_usuario, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spPerfil.setAdapter(adapter);
-        ArrayAdapter<CharSequence> adapter2 = ArrayAdapter.createFromResource(getContext(),
+        ArrayAdapter<CharSequence> adapter2 = ArrayAdapter.createFromResource(getActivity(),
                 R.array.status_usuario, android.R.layout.simple_spinner_item);
         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spAtivo.setAdapter(adapter2);
@@ -140,7 +140,7 @@ public class DialogInserirUsuario extends DialogFragment {
                     img.setImageURI(Uri.fromFile(new File(u.getFoto())));
             } catch (Exception e){
                 Log.i("Erro: ", e.getMessage());
-                Toast.makeText(getContext(), "Erro\n" + e.getMessage(), Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), "Erro\n" + e.getMessage(), Toast.LENGTH_LONG).show();
             }
         }
         Button btnCancelar = (Button) view.findViewById(R.id.btnCancelar);
@@ -206,20 +206,20 @@ public class DialogInserirUsuario extends DialogFragment {
 
                         if (title.equals("Inserir Usuario")) {
                             fachada.cadastrar(u);
-                            Toast.makeText(getContext(), "Usuario salvo com sucesso", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), "Usuario salvo com sucesso", Toast.LENGTH_SHORT).show();
                             FragmentUsuario.popularLista();
                             dismiss();
                         } else {
                             u.setId(id);
                             fachada.atualizar(u);
-                            Toast.makeText(getContext(), "Usuario salvo com sucesso", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), "Usuario salvo com sucesso", Toast.LENGTH_SHORT).show();
                             FragmentUsuario.popularLista();
                             dismiss();
                         }
                     }
                 } catch (Exception e) {
                     Log.i("Erro: ", e.getMessage());
-                    Toast.makeText(getContext(), "Erro\n" + e.getMessage(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), "Erro\n" + e.getMessage(), Toast.LENGTH_LONG).show();
                 }
             }
         });

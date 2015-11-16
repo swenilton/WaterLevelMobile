@@ -27,6 +27,7 @@ public class AtividadeDAO implements IAtividadeDAO {
         //TODO //adm ver atividades REALIZADAS de todos   //user ver as proprias atividades REALIZADAS
     }
 
+    @Override
     public boolean existe(String descricao) throws SQLException, DAOException {
         boolean existe = false;
         Cursor cursor = null;

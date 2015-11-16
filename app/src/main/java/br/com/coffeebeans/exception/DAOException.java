@@ -5,6 +5,6 @@ package br.com.coffeebeans.exception;
  */
 public class DAOException extends Exception {
     public DAOException(Exception e) {
-    super("Erro no DAO "+e.getMessage());
+    super("Erro no DAO\n"+e.getMessage());
     }
 }

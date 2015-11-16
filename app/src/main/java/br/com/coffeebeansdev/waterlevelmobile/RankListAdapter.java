@@ -1,9 +1,9 @@
 package br.com.coffeebeansdev.waterlevelmobile;
 
-import android.app.AlertDialog;
+import android.app.FragmentManager;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.support.v4.app.FragmentManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.List;
 
@@ -25,10 +24,8 @@ public class RankListAdapter extends BaseAdapter {
     private List<Usuario> usuarios;
     private Context context;
     private Fachada fachada;
-    private FragmentManager fragmentManager;
 
-    public RankListAdapter(Context context, FragmentManager fragmentManager, List<Usuario> usuarios) {
-        this.fragmentManager = fragmentManager;
+    public RankListAdapter(Context context, List<Usuario> usuarios) {
         this.context = context;
         this.usuarios = usuarios;
         try {
@@ -63,56 +60,51 @@ public class RankListAdapter extends BaseAdapter {
         textNome.setText(usuario.getNome());
         TextView tvPosicao = (TextView) view.findViewById(R.id.lblPosicao);
         tvPosicao.setText(position + 1 + "º");
-//        TextView textPerfil = (TextView)view.findViewById(R.id.textPerfil);
-//        textPerfil.setText(usuario.getPerfil());
-//        TextView textStatus = (TextView)view.findViewById(R.id.textStatus);
-//        textStatus.setText(usuario.getAtivo());
-//        ImageView img = (ImageView)view.findViewById(R.id.imgUsuario);
-//        img.setImageResource(0);
-//        view.setOnLongClickListener(new View.OnLongClickListener() {
-//            @Override
-//            public boolean onLongClick(View v) {
-//                final AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
-//                builder.setTitle("Opções")
-//                        .setItems(R.array.opc_menu, new DialogInterface.OnClickListener() {
-//                            public void onClick(DialogInterface dialog, int which) {
-//                                if (which == 0) {
-//                                    FragmentManager fm = fragmentManager;
-//                                    DialogInserirUsuario inserirUsuario = DialogInserirUsuario.newInstance("Atualizar Usuario", usuario.getId());
-//                                    inserirUsuario.show(fm, "fragment_inserir_usuario");
-//                                    dialog.dismiss();
-//                                } else {
-//                                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
-//                                    builder.setMessage("Tem certeza que deseja excluir o registro selecionado?")
-//                                            .setPositiveButton("Sim", new DialogInterface.OnClickListener() {
-//                                                public void onClick(DialogInterface dialog, int id) {
-//                                                    try {
-//                                                        fachada.usuarioRemover(usuario.getId());
-//                                                        Toast.makeText(context, "Usuario removido.",
-//                                                                Toast.LENGTH_LONG).show();
-//                                                        FragmentUsuario.popularLista();
-//                                                        dialog.dismiss();
-//                                                    } catch (Exception e) {
-//                                                        Toast.makeText(context, "Erro ao remover usuario\n" + e.getMessage(),
-//                                                                Toast.LENGTH_LONG).show();
-//                                                    }
-//                                                }
-//                                            })
-//                                            .setNegativeButton("Não", new DialogInterface.OnClickListener() {
-//                                                public void onClick(DialogInterface dialog, int id) {
-//                                                    dialog.dismiss();
-//                                                }
-//                                            });
-//                                    builder.create();
-//                                    builder.show();
-//                                }
-//                            }
-//                        });
-//                builder.create();
-//                builder.show();
-//                return true;
-//            }
-//        });
+        ImageView imageView = (ImageView)view.findViewById(R.id.imgUsuario);
+        if(usuario.getFoto() != null) {
+            imageView.setImageBitmap(decodeSampledBitmapFromPath(usuario.getFoto(), 100, 100));
+        } else {
+            imageView.setImageResource(R.drawable.ic_user);
+//            imageView.setBackgroundResource(R.color.cinza);
+        }
         return view;
+    }
+
+    public static Bitmap decodeSampledBitmapFromPath(String path, int reqWidth, int reqHeight) {
+
+        //Bitmap bmp = BitmapFactory.decodeFile(usuario.getFoto());
+        final BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        Bitmap bmp = BitmapFactory.decodeFile(path, options);
+        // Calculate inSampleSize
+        options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
+        // Decode bitmap with inSampleSize set
+        options.inJustDecodeBounds = false;
+        bmp = BitmapFactory.decodeFile(path, options);
+
+        return bmp;
+    }
+
+    public static int calculateInSampleSize(
+            BitmapFactory.Options options, int reqWidth, int reqHeight) {
+        // Raw height and width of image
+        final int height = options.outHeight;
+        final int width = options.outWidth;
+        int inSampleSize = 1;
+
+        if (height > reqHeight || width > reqWidth) {
+
+            final int halfHeight = height / 2;
+            final int halfWidth = width / 2;
+
+            // Calculate the largest inSampleSize value that is a power of 2 and keeps both
+            // height and width larger than the requested height and width.
+            while ((halfHeight / inSampleSize) > reqHeight
+                    && (halfWidth / inSampleSize) > reqWidth) {
+                inSampleSize *= 2;
+            }
+        }
+
+        return inSampleSize;
     }
 }

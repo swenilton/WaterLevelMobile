@@ -1,11 +1,11 @@
 package br.com.coffeebeansdev.waterlevelmobile;
 
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.Fragment;
 import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,7 +27,7 @@ public class FragmentAtividade extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_atividade, container, false);
         listView = (ListView) rootView.findViewById(R.id.listView);
-        context = getContext();
+        context = getActivity();
         fragmentManager = getFragmentManager();
         try{
             popularLista();

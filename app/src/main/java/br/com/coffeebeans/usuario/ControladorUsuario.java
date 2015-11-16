@@ -97,7 +97,7 @@ public class ControladorUsuario {
 
     }
 
-    public Usuario loginFacebook(String email) throws SQLException, DAOException {
+    public boolean loginFacebook(String email) throws SQLException, DAOException {
         return iusuario.loginFacebook(email);
     }
     public void alterarSenha(int id, String senha)

@@ -1,23 +1,16 @@
 package br.com.coffeebeansdev.waterlevelmobile;
 
+import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
-import android.os.SystemClock;
-import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Chronometer;
-import android.widget.ImageButton;
-import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.ToggleButton;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 import br.com.coffeebeans.atividade.Atividade;

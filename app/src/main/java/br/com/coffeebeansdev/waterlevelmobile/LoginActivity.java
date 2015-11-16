@@ -8,6 +8,7 @@ import android.app.ActivityOptions;
 import android.app.LoaderManager.LoaderCallbacks;
 import android.content.Context;
 import android.content.CursorLoader;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
 import android.content.pm.PackageInfo;
@@ -20,6 +21,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.internal.view.ContextThemeWrapper;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.util.Base64;
@@ -66,7 +69,9 @@ import java.security.Signature;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -106,10 +111,18 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
         loginButton.setReadPermissions("email", "public_profile");
         try{
             fachada = Fachada.getInstance(getApplicationContext());
-            if(fachada.getUsuarioLogado() != null) entrar();
         }catch (Exception e){
-            Log.i("Erro Login: ", e.getMessage());
-            Toast.makeText(getApplicationContext(), "Erro ao instanciar fachada\n" + e.getMessage(),
+            Log.i("Erro Login", e.getMessage());
+            Toast.makeText(getApplicationContext(), "Erro ao instanciar fachada no login\n" + e.getMessage(),
+                    Toast.LENGTH_LONG).show();
+        }
+
+        try {
+            if(dispositivo())
+                if(fachada.getUsuarioLogado() != null) entrar();
+        } catch (Exception e) {
+            Log.i("Erro Login", e.getMessage());
+            Toast.makeText(getApplicationContext(), "Erro ao verificar usuario logado\n" + e.getMessage(),
                     Toast.LENGTH_LONG).show();
         }
 
@@ -123,14 +136,8 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
                             public void onCompleted(
                                     JSONObject object,
                                     GraphResponse response) {
-                                // Application code
-                                //Log.e("LoginActivity", response.toString() + "    " + object.toString());
                                 try {
-                                    // String name = object.getString("name");
                                     String email = object.getString("email");
-//                                    String id = object.getString("id");
-//                                    String gender = object.getString("gender");
-//                                    Log.e("LoginActivity", name + "    " + email + "   " + id + "   " + gender);
                                     if (fachada.loginFacebook(email)) entrar();
                                     else
                                         onError(new FacebookException("Email não cadastrado no sistema"));
@@ -195,6 +202,37 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
+    }
+
+    private boolean dispositivo() {
+        final Map a = new HashMap();
+        a.put("result", false);
+        try {
+            if(fachada.getDispositivoAtivo() == null){
+                AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.myDialog));
+                builder.setMessage("Não existe nenhum dispositivo(Raspberry) cadastrado.\nDeseja Cadastrar um agora?")
+                        .setTitle("Dispositivo não encontrado").setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        DialogInserirDispositivo inserirDispositivo = DialogInserirDispositivo.newInstance("Novo Dispositivo", 0);
+                        inserirDispositivo.show(getFragmentManager(), "fragment_inserir_dispositivo");
+                        a.put("result", true);
+                    }
+                }).setNegativeButton("Não", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        System.exit(0);
+                        a.put("result", true);
+                    }
+                }).create().show();
+            } else a.put("result", true);
+        } catch (Exception e) {
+            Log.i("Erro Login", e.getMessage());
+            Toast.makeText(getApplicationContext(), "Erro ao verificar dispositivo ativo\n" + e.getMessage(),
+                    Toast.LENGTH_LONG).show();
+        }
+        return (boolean) a.get("result");
     }
 
     private void entrar() {

@@ -1,8 +1,8 @@
 package br.com.coffeebeansdev.waterlevelmobile;
 
+import android.app.DialogFragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -88,21 +88,21 @@ public class DialogInserirAtividade extends DialogFragment {
                     } else {
                         if (title.equals("Inserir Atividade")) {
                             fachada.cadastrar(a);
-                            Toast.makeText(getContext(), "Atividade salva com sucesso", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), "Atividade salva com sucesso", Toast.LENGTH_SHORT).show();
                             FragmentAtividade.popularLista();
                             dismiss();
                         } else {
                             a.setId(id);
                             a.setDescricao(txtDesc.getText().toString());
                             fachada.atualizar(a);
-                            Toast.makeText(getContext(), "Atividade salva com sucesso", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), "Atividade salva com sucesso", Toast.LENGTH_SHORT).show();
                             FragmentAtividade.popularLista();
                             dismiss();
                         }
                     }
                 } catch (Exception e){
                     Log.i("Erro: ", e.getMessage());
-                    Toast.makeText(getContext(), "Erro\n" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "Erro\n" + e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
         });

@@ -10,9 +10,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
-import br.com.coffeebeans.atividade.Atividade;
 import br.com.coffeebeans.fachada.Fachada;
 
 /**

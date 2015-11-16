@@ -26,7 +26,7 @@ public interface IUsuarioDAO {
     public void excluir(int id) throws SQLException,
             UsuarioNaoEncontradoException, DAOException;
 
-    public Usuario loginFacebook(String email) throws SQLException, DAOException;
+    public boolean loginFacebook(String email) throws SQLException, DAOException;
 
     public void alterarSenha(int id, String senha)
             throws UsuarioNaoEncontradoException, SQLException,
