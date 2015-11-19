@@ -62,7 +62,7 @@ public class ClientWebService {
                 Log.i("", "getStrackTrace " + String.valueOf(e.getStackTrace()));
                 e.printStackTrace();
 
-                //throw new ClientWebServiceException(e);
+//                throw new ClientWebServiceException(e);
             }
             return "sucesso na execucao da thread";
         }

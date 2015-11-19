@@ -25,4 +25,15 @@
         android:layout_marginBottom="@dimen/fab_margin"
         android:longClickable="false" />
 
+    <ProgressBar
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/progressBar3"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="214dp"
+        android:layout_centerHorizontal="true"
+        android:indeterminate="true"
+        android:visibility="gone" />
+
 </RelativeLayout>

@@ -132,7 +132,7 @@ public class DialogInserirDispositivo extends DialogFragment {
                             d.setId(id);
                             fachada.atualizar(d);
                             Toast.makeText(getActivity(), "Dispositivo salvo com sucesso", Toast.LENGTH_SHORT).show();
-                            FragmentAtividade.popularLista();
+                            FragmentDisp.popularLista();
                             dismiss();
                         }
                     }

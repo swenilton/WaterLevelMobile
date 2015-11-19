@@ -1,5 +1,8 @@
 package br.com.coffeebeans.atividade;
 
+import org.codehaus.jackson.JsonParseException;
+
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -19,5 +22,5 @@ public interface IAtividadeDAO {
 	
 	public void excluir (int id) throws SQLException, DAOException;
 
-	public boolean existe(String descricao) throws SQLException,DAOException;
+	public boolean existe(String descricao) throws SQLException, DAOException;
 }

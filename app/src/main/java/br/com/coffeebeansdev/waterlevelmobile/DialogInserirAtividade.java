@@ -1,6 +1,7 @@
 package br.com.coffeebeansdev.waterlevelmobile;
 
 import android.app.DialogFragment;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -12,6 +13,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.android.gms.gcm.Task;
+
 import br.com.coffeebeans.atividade.Atividade;
 import br.com.coffeebeans.fachada.Fachada;
 
@@ -21,6 +24,7 @@ import br.com.coffeebeans.fachada.Fachada;
 public class DialogInserirAtividade extends DialogFragment {
 
     private Fachada fachada;
+    private EditText txtDesc;
     public DialogInserirAtividade() {
         try {
             fachada = Fachada.getInstance(Fachada.context);
@@ -55,10 +59,10 @@ public class DialogInserirAtividade extends DialogFragment {
         final String title = getArguments().getString("title");
         getDialog().setTitle(title);
         final int id = getArguments().getInt("id");
-        final EditText txtDesc = (EditText) view.findViewById(R.id.txtDescricao);
+        txtDesc = (EditText) view.findViewById(R.id.txtDescricao);
         if (!title.equals("Inserir Atividade")){
             try {
-                txtDesc.setText(fachada.atividadeProcurar(id).getDescricao());
+                new TaskAtividade("EDITAR").execute();
             } catch (Exception e){
                 Log.i("Erro: ", e.getMessage());
             }
@@ -87,17 +91,10 @@ public class DialogInserirAtividade extends DialogFragment {
                         focusView.requestFocus();
                     } else {
                         if (title.equals("Inserir Atividade")) {
-                            fachada.cadastrar(a);
-                            Toast.makeText(getActivity(), "Atividade salva com sucesso", Toast.LENGTH_SHORT).show();
-                            FragmentAtividade.popularLista();
-                            dismiss();
+                            new TaskAtividade("CADASTRAR", a).execute();
                         } else {
                             a.setId(id);
-                            a.setDescricao(txtDesc.getText().toString());
-                            fachada.atualizar(a);
-                            Toast.makeText(getActivity(), "Atividade salva com sucesso", Toast.LENGTH_SHORT).show();
-                            FragmentAtividade.popularLista();
-                            dismiss();
+                            new TaskAtividade("ATUALIZAR", a).execute();
                         }
                     }
                 } catch (Exception e){
@@ -108,5 +105,61 @@ public class DialogInserirAtividade extends DialogFragment {
         });
         txtDesc.requestFocus();
         getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+    }
+
+    private class TaskAtividade extends AsyncTask<Void, Void, String> {
+
+        String cmd;
+        Atividade atividade;
+
+        public TaskAtividade(String cmd){
+            this.cmd = cmd;
+        }
+
+        public TaskAtividade(String cmd, Atividade a){
+            this.cmd = cmd;
+            this.atividade = a;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            //showProgress(true);
+            try {
+                //fachada = Fachada.getInstance(getContext());
+            } catch (Exception e) {
+                Log.i("Erro Fachada", "Erro ao instancia fachada " + e.getMessage());
+                Toast.makeText(getActivity(), "Erro ao instancia fachada\n" + e.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        }
+
+        @Override
+        protected String doInBackground(Void... params) {
+            try {
+                if(cmd.equals("EDITAR")){
+                    atividade = fachada.atividadeProcurar(getArguments().getInt("id"));
+                } else if(cmd.equals("CADASTRAR")){
+                    fachada.cadastrar(atividade);
+                } else if(cmd.equals("ATUALIZAR")){
+                    fachada.atualizar(atividade);
+                }
+                return "Atividade salva com sucesso";
+            } catch (Exception e) {
+                Log.i("Erro", "Erro dialog atividades " + e.getMessage());
+//                Toast.makeText(getActivity(), "Erro dialog atividades\n" + e.getMessage(), Toast.LENGTH_LONG).show();
+                return e.getMessage();
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            if(cmd.equals("EDITAR")){
+                txtDesc.setText(atividade.getDescricao());
+            } else {
+                Toast.makeText(getActivity(), s, Toast.LENGTH_SHORT).show();
+                dismiss();
+                new FragmentAtividade().executeTask();
+            }
+            //showProgress(false);
+        }
     }
 }

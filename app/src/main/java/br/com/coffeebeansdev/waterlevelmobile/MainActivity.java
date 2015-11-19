@@ -92,12 +92,6 @@ public class MainActivity extends AppCompatActivity
         navigationView.setCheckedItem(R.id.nav_inicio);
 
         onNavigationItemSelected(navigationView.getMenu().getItem(0));
-        ClientWebService cws = new ClientWebService();
-        try {
-            cws.exemploGetUsers();
-        } catch (ClientWebServiceException e) {
-            e.printStackTrace();
-        }
     }
 
     @Override

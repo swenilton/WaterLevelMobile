@@ -30,4 +30,5 @@ public class Atividade {
 		return "Atividade [id=" + id + ", descricao=" + descricao +"]";
 	}	
 
+	public Atividade(){}
 }

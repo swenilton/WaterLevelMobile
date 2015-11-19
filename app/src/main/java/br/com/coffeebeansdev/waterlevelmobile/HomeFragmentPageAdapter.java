@@ -86,6 +86,7 @@ public class HomeFragmentPageAdapter extends PagerAdapter {
 
     @Override
     public Object instantiateItem(final ViewGroup container, int position) {
+        /*
         LayoutInflater inflater = (LayoutInflater) container.getContext().getSystemService(container.getContext().LAYOUT_INFLATER_SERVICE);
         rootView = inflater.inflate(R.layout.tab_rep, null);
 
@@ -147,6 +148,8 @@ public class HomeFragmentPageAdapter extends PagerAdapter {
 
         ((ViewPager) container).addView(rootView, 0);
         return rootView;
+        */
+        return container;
     }
 
 

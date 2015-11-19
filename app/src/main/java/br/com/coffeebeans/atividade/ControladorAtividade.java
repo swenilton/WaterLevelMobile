@@ -1,5 +1,6 @@
 package br.com.coffeebeans.atividade;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -13,7 +14,7 @@ public class ControladorAtividade {
     private IAtividadeDAO iatividade;
 
     public ControladorAtividade(Context context) throws Exception {
-        this.iatividade = new AtividadeDAO(context);
+        this.iatividade = new AtividadeDAOWS();
     }
 
     public void cadastrar(Atividade atividade) throws SQLException, DAOException, AtividadeJaExistenteException {
@@ -41,14 +42,9 @@ public class ControladorAtividade {
         if (atividadeNova == null) {
             throw new NullPointerException();
         }
-
         if (iatividade.procurar(atividadeNova.getId()) == null) {
             throw new AtividadeNaoEncontradaException();
         }
-        if (existe(atividadeNova.getDescricao())) {
-            throw new AtividadeJaExistenteException();
-        }
-
         iatividade.atualizar(atividadeNova);
     }
 

@@ -35,7 +35,7 @@ public class FragmentHome extends Fragment {
         pager = (ViewPager) rootView.findViewById(R.id.pager);
 
         /** Getting fragment manager */
-        FragmentManager fm = getChildFragmentManager();
+        final FragmentManager fm = getChildFragmentManager();
 
         List<Repositorio> repositorios = new ArrayList<>();
         repositorios.add(new RepositorioRetangular("Repositorio 1", 180.0, 10.0, 100.0, 2.0));
@@ -43,6 +43,26 @@ public class FragmentHome extends Fragment {
 
         /** Instantiating FragmentPagerAdapter */
         HomeFragmentPageAdapter pagerAdapter = new HomeFragmentPageAdapter(repositorios);
+
+        pager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                FragmentHomeBody fhb = new FragmentHomeBody();
+
+                fm.beginTransaction().replace(R.id.content_main, fhb).commit();
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+
 
         /** Setting the pagerAdapter to the pager object */
         pager.setAdapter(pagerAdapter);

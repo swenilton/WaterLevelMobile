@@ -13,6 +13,7 @@ import android.content.Intent;
 import android.content.Loader;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -101,14 +102,6 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        FacebookSdk.sdkInitialize(getApplicationContext());
-        callbackManager = CallbackManager.Factory.create();
-        setContentView(R.layout.activity_login);
-        loginButton = (LoginButton) findViewById(R.id.login_button);
-        List<String> permissoes = new ArrayList<>();
-        permissoes.add("email");
-        permissoes.add("public_profile");
-        loginButton.setReadPermissions("email", "public_profile");
         try{
             fachada = Fachada.getInstance(getApplicationContext());
         }catch (Exception e){
@@ -116,7 +109,6 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
             Toast.makeText(getApplicationContext(), "Erro ao instanciar fachada no login\n" + e.getMessage(),
                     Toast.LENGTH_LONG).show();
         }
-
         try {
             if(dispositivo())
                 if(fachada.getUsuarioLogado() != null) entrar();
@@ -125,7 +117,14 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
             Toast.makeText(getApplicationContext(), "Erro ao verificar usuario logado\n" + e.getMessage(),
                     Toast.LENGTH_LONG).show();
         }
-
+        FacebookSdk.sdkInitialize(getApplicationContext());
+        callbackManager = CallbackManager.Factory.create();
+        setContentView(R.layout.activity_login);
+        loginButton = (LoginButton) findViewById(R.id.login_button);
+        List<String> permissoes = new ArrayList<>();
+        permissoes.add("email");
+        permissoes.add("public_profile");
+        loginButton.setReadPermissions("email", "public_profile");
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
