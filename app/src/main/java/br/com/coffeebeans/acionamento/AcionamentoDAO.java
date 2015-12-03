@@ -162,9 +162,10 @@ public class AcionamentoDAO implements IAcionamentoDAO {
 	}
 
 	@Override
-	public Acionamento procurarFim(Timestamp data1, Timestamp data2)
+	public Acionamento procurarFim(Date data1, Date data2)
 			throws SQLException, AcionamentoNaoEncontradoException,
 			RepositorioException {
+
 		Acionamento acionamento = null;
 
 		PreparedStatement stmt = null;
@@ -173,8 +174,9 @@ public class AcionamentoDAO implements IAcionamentoDAO {
 		try {
 			String sql = "SELECT * FROM ACIONAMENTO where DATA_HORA_FIM BETWEEN ? and ?";
 			stmt = this.conexao.prepareStatement(sql);
-			stmt.setTimestamp(1, data1);
-			stmt.setTimestamp(2, data2);
+			stmt.setTimestamp(1, new Timestamp(data1.getTime()));
+			stmt.setTimestamp(2, new Timestamp(data2.getTime()));
+
 			rs = stmt.executeQuery();
 
 			if (rs.next()) {

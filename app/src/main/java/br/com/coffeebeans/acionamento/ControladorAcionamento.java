@@ -3,6 +3,7 @@ package br.com.coffeebeans.acionamento;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.List;
 
 import br.com.coffeebeans.exception.AcionamentoJaExistenteException;
 import br.com.coffeebeans.exception.AcionamentoNaoEncontradoException;
@@ -13,7 +14,7 @@ public class ControladorAcionamento {
 	private IAcionamentoDAO iAcionamento;
 
 	public ControladorAcionamento() throws Exception {
-		this.iAcionamento = new AcionamentoDAO();
+		this.iAcionamento = new AcionamentoDaoWs();
 	}
 
 	public void cadastrar(Acionamento acionamento) throws SQLException,
@@ -39,9 +40,9 @@ public class ControladorAcionamento {
 		iAcionamento.cadastrar(acionamento);
 	}
 
-	public ArrayList<Acionamento> listar() throws SQLException,
+	public List<Acionamento> listar() throws SQLException,
 			ListaVaziaException, RepositorioException {
-		ArrayList<Acionamento> acs = iAcionamento.listar();
+		List<Acionamento> acs = iAcionamento.listar();
 		try {
 			for (Acionamento ac : acs) {
 				//ac.setBomba(Fachada.getInstance()
@@ -53,9 +54,9 @@ public class ControladorAcionamento {
 		return acs;
 	}
 
-	public ArrayList<Acionamento> getUltimosAcionamentos() throws SQLException,
+	public List<Acionamento> getUltimosAcionamentos() throws SQLException,
 			ListaVaziaException, RepositorioException {
-		ArrayList<Acionamento> acs = iAcionamento.getUltimosAcionamentos();
+		List<Acionamento> acs = iAcionamento.getUltimosAcionamentos();
 		try {
 			for (Acionamento ac : acs) {
 				//ac.setBomba(Fachada.getInstance()

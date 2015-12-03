@@ -1,11 +1,11 @@
 package br.com.coffeebeans.acionamento;
-
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-
 import br.com.coffeebeans.bomba.Bomba;
+import javax.xml.bind.annotation.XmlRootElement;
 
+@XmlRootElement
 public class Acionamento {
 
 	private int id;
@@ -14,6 +14,18 @@ public class Acionamento {
 	private Date dataHoraFim;
 	private int idBomba;
 	private String tempo;
+	private String dateHoraInicio;
+	private String dateHoraFim;
+
+
+	public Acionamento(Bomba bomba, Date dataHoraInicio, Date dataHoraFim,String dateHoraInicio,String dateHoraFim) {
+		this.bomba = bomba;
+		this.dataHoraInicio = dataHoraInicio;
+		this.dataHoraFim = dataHoraFim;
+		this.tempo = calculaTempo(dataHoraInicio, dataHoraFim);
+		this.dateHoraInicio=dateHoraInicio;
+		this.dateHoraFim=dateHoraFim;
+	}
 
 	public Acionamento(Bomba bomba, Date dataHoraInicio, Date dataHoraFim) {
 		this.bomba = bomba;
@@ -52,6 +64,23 @@ public class Acionamento {
 		return new SimpleDateFormat("HH:mm:ss").format(resultado.getTime());
 	}
 
+	public String getDateHoraInicio() {
+		return dateHoraInicio;
+	}
+
+	public void setDateHoraInicio(String dateHoraInicio) {
+		this.dateHoraInicio = dateHoraInicio;
+	}
+
+	public String getDateHoraFim() {
+		return dateHoraFim;
+	}
+
+	public void setDateHoraFim(String dateHoraFim) {
+		this.dateHoraFim = dateHoraFim;
+	}
+
+	
 	public String getTempo() {
 		return tempo;
 	}
@@ -98,10 +127,12 @@ public class Acionamento {
 
 	@Override
 	public String toString() {
-		return "Acionamento [id=" + id + ", bomba=" + bomba.getDescricao()
-				+ ", dataHoraInicio=" + dataHoraInicio.toString()
+		return "Acionamento [id=" + id +  ", dataHoraInicio=" + dataHoraInicio.toString()
 				+ ", dataHoraFim=" + dataHoraFim.toString() + ", idBomba="
 				+ idBomba + ", tempo=" + tempo + "]";
 	}
 
+	public Acionamento() {
+		
+	}
 }
