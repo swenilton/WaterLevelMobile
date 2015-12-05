@@ -1,13 +1,17 @@
 package br.com.coffeebeans.atividade;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import br.com.coffeebeans.exception.AtividadeJaExistenteException;
 import br.com.coffeebeans.exception.AtividadeNaoEncontradaException;
+import br.com.coffeebeans.exception.DAOException;
 import br.com.coffeebeans.exception.ListaVaziaException;
 import br.com.coffeebeans.exception.RepositorioException;
 import br.com.coffeebeans.exception.ViolacaoChaveEstrangeiraException;
+import br.com.coffeebeans.usuario.Usuario;
 
 public interface IAtividadeRealizadaDAO {
 
@@ -21,7 +25,7 @@ public interface IAtividadeRealizadaDAO {
 	public AtividadeRealizada procurar(int id) throws SQLException,
 			AtividadeNaoEncontradaException, RepositorioException;
 
-	public AtividadeRealizada procurar(String descricao) throws SQLException,
+	public List<AtividadeRealizada> procurar(String descricao) throws SQLException,
 			AtividadeNaoEncontradaException, RepositorioException;
 
 	public void atualizar(AtividadeRealizada atividadeRealizada)
@@ -34,4 +38,7 @@ public interface IAtividadeRealizadaDAO {
 
 	public List<AtividadeRealizada> listar(int id) throws SQLException,
 			ListaVaziaException, RepositorioException;
+
+	boolean existe(int id_usuario, int id_atividade, Date dataHoraInicio,
+				   Date dataHoraFim) throws SQLException, DAOException;
 }

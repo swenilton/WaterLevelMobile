@@ -28,7 +28,7 @@ public class Fachada {
         Fachada.context = context;
         this.controladorAtividade = new ControladorAtividade(context);
         this.controladorUsuario = new ControladorUsuario(context);
-        this.controladorAtividadeRealizada = new ControladorAtividadeRealizada();
+        this.controladorAtividadeRealizada = new ControladorAtividadeRealizada(context);
         this.controladorDispositivo = new ControladorDispositivo(context);
     }
 
