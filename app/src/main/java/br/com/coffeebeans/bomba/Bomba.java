@@ -1,7 +1,8 @@
 package br.com.coffeebeans.bomba;
-
+import javax.xml.bind.annotation.XmlRootElement;
 import br.com.coffeebeans.repositorio.Repositorio;
 
+@XmlRootElement
 public class Bomba {
 	private int codigo;
 	private String descricao;
@@ -35,6 +36,7 @@ public class Bomba {
 		this.potencia = potencia;
 		this.vazao = vazao;
 		this.acionamento = acionamento;
+		this.idRepositorioEnche=idRepositorioEnche;
 	}
 
 	public int getIdRepositorioEnche() {
@@ -126,4 +128,7 @@ public class Bomba {
 				+ ", idRepositorioSeca=" + idRepositorioSeca + "]" + "\n";
 	}
 	
+	public Bomba() {
+		
+	}
 }

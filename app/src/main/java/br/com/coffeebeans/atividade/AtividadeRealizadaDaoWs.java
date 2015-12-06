@@ -50,6 +50,8 @@ public class AtividadeRealizadaDaoWs implements IAtividadeRealizadaDAO {
                 JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
         clientConfig.getClasses().add(JacksonJsonProvider.class);
         client = Client.create(clientConfig);
+        objectMapper=new ObjectMapper();
+
     }
 
     @Override

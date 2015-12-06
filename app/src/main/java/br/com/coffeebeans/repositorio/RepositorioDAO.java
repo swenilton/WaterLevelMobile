@@ -5,17 +5,19 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 import br.com.coffeebeans.exception.RepositorioException;
 import br.com.coffeebeans.exception.RepositorioJaExistenteException;
 import br.com.coffeebeans.exception.RepositorioNaoEncontradoException;
+//import br.com.coffeebeans.util.Conexao;
 
 public class RepositorioDAO implements IRepositorioDAO {
 	private Connection connection = null;
 	private String sistema = "mysql";
 
 	public RepositorioDAO() throws Exception {
-		//this.connection = Conexao.conectar(sistema);
+	//	this.connection = Conexao.conectar(sistema);
 	}
 
 	@Override
@@ -62,7 +64,7 @@ public class RepositorioDAO implements IRepositorioDAO {
 	}
 
 	@Override
-	public ArrayList<Repositorio> listar() throws SQLException,
+	public List<Repositorio> listar() throws SQLException,
 			RepositorioException {
 		ArrayList<Repositorio> repositorios = new ArrayList<Repositorio>();
 		PreparedStatement stmt = null;

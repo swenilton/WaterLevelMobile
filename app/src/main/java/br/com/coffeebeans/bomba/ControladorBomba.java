@@ -1,7 +1,10 @@
 package br.com.coffeebeans.bomba;
 
+import android.content.Context;
+
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 import br.com.coffeebeans.exception.BombaJaExistenteException;
 import br.com.coffeebeans.exception.BombaNaoEncontradaException;
@@ -12,8 +15,8 @@ import br.com.coffeebeans.exception.ViolacaoChaveEstrangeiraException;
 public class ControladorBomba {
 	private IBombaDAO iBomba;
 
-	public ControladorBomba() throws Exception {
-		this.iBomba = new BombaDAO();
+	public ControladorBomba(Context context) throws Exception {
+		this.iBomba = new BombaDaoWs();
 	}
 
 	public void cadastrar(Bomba bomba) throws SQLException,
@@ -27,13 +30,13 @@ public class ControladorBomba {
 		}
 		if (!(bomba.getAcionamento().equals(Bomba.ACIONAMENTO_AUTOMATICO))
 				&& (!bomba.getAcionamento().equals(Bomba.ACIONAMENTO_MANUAL))) {
-			throw new IllegalArgumentException("Modo de acionamento inválido");
+			throw new IllegalArgumentException("Modo de acionamento invalido");
 		}
 		iBomba.cadastrar(bomba);
 
 	}
 
-	public ArrayList<Bomba> listar() throws SQLException, ListaVaziaException {
+	public List<Bomba> listar() throws SQLException, ListaVaziaException {
 		return iBomba.listar();
 
 	}

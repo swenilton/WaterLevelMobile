@@ -1,5 +1,9 @@
 package br.com.coffeebeans.repositorio;
+import javax.xml.bind.annotation.XmlRootElement;
 
+import org.codehaus.jackson.annotate.JsonTypeInfo;
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.WRAPPER_OBJECT, property = "type")
+@XmlRootElement
 public abstract class Repositorio {
 	private int id;
 	private String descricao;
@@ -7,9 +11,9 @@ public abstract class Repositorio {
 	private Double profundidade;
 	private Double limiteMaximo;
 	private Double limiteMinimo;
-	
 
-	public Repositorio(String descricao, double capacidade, Double profundidade, Double limiteMinimo, Double limiteMaximo) {
+	public Repositorio(String descricao, double capacidade,
+			Double profundidade, Double limiteMinimo, Double limiteMaximo) {
 		this.descricao = descricao;
 		this.capacidade = capacidade;
 		this.profundidade = profundidade;
@@ -20,9 +24,10 @@ public abstract class Repositorio {
 
 	@Override
 	public String toString() {
-		return "Id="+id + ", Descricao=" + descricao + ", capacidade=" + capacidade
-				+ ", profundidade= " + profundidade + " limiteMaximo="
-				+ limiteMaximo + ", limiteMinimo=" + limiteMinimo;
+		return "Id=" + id + ", Descricao=" + descricao + ", capacidade="
+				+ capacidade + ", profundidade= " + profundidade
+				+ " limiteMaximo=" + limiteMaximo + ", limiteMinimo="
+				+ limiteMinimo;
 	}
 
 	public int getId() {
@@ -73,4 +78,9 @@ public abstract class Repositorio {
 	public void setLimiteMinimo(Double limiteMinimo) {
 		this.limiteMinimo = limiteMinimo;
 	}
-}
+
+	public Repositorio() {
+
+	}
+
+	}

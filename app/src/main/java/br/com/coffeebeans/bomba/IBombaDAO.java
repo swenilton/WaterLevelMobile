@@ -2,6 +2,7 @@ package br.com.coffeebeans.bomba;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 import br.com.coffeebeans.exception.BombaJaExistenteException;
 import br.com.coffeebeans.exception.BombaNaoEncontradaException;
@@ -14,7 +15,7 @@ public interface IBombaDAO {
 			BombaJaExistenteException, ViolacaoChaveEstrangeiraException,
 			RepositorioException;
 
-	public ArrayList<Bomba> listar() throws SQLException, ListaVaziaException;
+	public List<Bomba> listar() throws SQLException, ListaVaziaException;
 
 	public Bomba procurar(int id) throws SQLException,
 			BombaNaoEncontradaException;

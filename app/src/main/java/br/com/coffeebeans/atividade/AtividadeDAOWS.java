@@ -33,6 +33,7 @@ public class AtividadeDAOWS implements IAtividadeDAO {
                 JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
         clientConfig.getClasses().add(JacksonJsonProvider.class);
         client = Client.create(clientConfig);
+
     }
 
     @Override

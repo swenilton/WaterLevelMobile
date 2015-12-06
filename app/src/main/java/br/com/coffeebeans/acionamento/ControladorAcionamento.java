@@ -1,8 +1,11 @@
 package br.com.coffeebeans.acionamento;
 
+import android.content.Context;
+
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import br.com.coffeebeans.exception.AcionamentoJaExistenteException;
@@ -13,7 +16,7 @@ import br.com.coffeebeans.exception.RepositorioException;
 public class ControladorAcionamento {
 	private IAcionamentoDAO iAcionamento;
 
-	public ControladorAcionamento() throws Exception {
+	public ControladorAcionamento(Context context) throws Exception {
 		this.iAcionamento = new AcionamentoDaoWs();
 	}
 
@@ -78,7 +81,7 @@ public class ControladorAcionamento {
 
 	}
 
-	public Acionamento procurarIni(Timestamp data1, Timestamp data2)
+	public Acionamento procurarIni(Date data1, Date data2)
 			throws SQLException, AcionamentoNaoEncontradoException,
 			RepositorioException {
 		if (iAcionamento.procurarIni(data1, data2) == null) {
@@ -88,7 +91,7 @@ public class ControladorAcionamento {
 
 	}
 
-	public Acionamento procurarFim(Timestamp data1, Timestamp data2)
+	public Acionamento procurarFim(Date data1, Date data2)
 			throws SQLException, AcionamentoNaoEncontradoException,
 			RepositorioException {
 		if (iAcionamento.procurarIni(data1, data2) == null) {
