@@ -195,16 +195,20 @@ public class AcionamentoDaoWs implements IAcionamentoDAO {
             acionamento.setDateHoraFim(dtHoraFim);
             webResource.type(MediaType.APPLICATION_JSON).put(acionamento);
         } catch (Exception e) {
-          e.getMessage();
+            e.getMessage();
         }
     }
 
     @Override
     public void excluir(int id) throws SQLException, AcionamentoNaoEncontradoException, RepositorioException {
-        webResource = client
-                .resource("http://10.0.2.2:8080/WaterLevel/WS4/acionamento/excluir/" + id);
-        clientResponse = webResource.type(
-                MediaType.APPLICATION_JSON).delete(ClientResponse.class);
+        try {
+            webResource = client
+                    .resource("http://10.0.2.2:8080/WaterLevel/WS4/acionamento/excluir/" + id);
+            clientResponse = webResource.type(
+                    MediaType.APPLICATION_JSON).delete(ClientResponse.class);
+        } catch (Exception e) {
+           throw new RepositorioException(e);
+        }
     }
 
     @Override
@@ -230,5 +234,6 @@ public class AcionamentoDaoWs implements IAcionamentoDAO {
         } catch (Exception e) {
             throw new RepositorioException(e);
         }
-        return list2;    }
+        return list2;
+    }
 }
