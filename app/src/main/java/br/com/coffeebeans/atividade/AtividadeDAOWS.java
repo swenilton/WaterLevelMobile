@@ -1,5 +1,7 @@
 package br.com.coffeebeans.atividade;
 
+import android.content.Context;
+
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
@@ -20,27 +22,31 @@ import java.util.List;
 
 import javax.ws.rs.core.MediaType;
 
+import br.com.coffeebeans.dispositivo.Dispositivo;
+import br.com.coffeebeans.dispositivo.DispositivoDAO;
 import br.com.coffeebeans.exception.DAOException;
 import br.com.coffeebeans.util.AndroidServiceIteratorProvider;
 
 public class AtividadeDAOWS implements IAtividadeDAO {
     private Client client;
     private WebResource webResource;
-    public AtividadeDAOWS() throws Exception {
+    private DispositivoDAO dispositivoDAO;
+    public AtividadeDAOWS(Context context) throws Exception {
         ServiceFinder.setIteratorProvider(new AndroidServiceIteratorProvider());
         ClientConfig clientConfig = new DefaultClientConfig();
         clientConfig.getFeatures().put(
                 JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
         clientConfig.getClasses().add(JacksonJsonProvider.class);
         client = Client.create(clientConfig);
-
+        dispositivoDAO = new DispositivoDAO(context);
     }
 
     @Override
     public boolean existe(String descricao) throws SQLException, DAOException {
         webResource = client
-                .resource("http://10.0.2.2:8080/WaterLevel/WS2/atividade/existe/"
-                        + descricao.replace(" ", "%20"));
+                .resource("http://" + dispositivoDAO.getDispositivoAtivo().getHost() + ":"
+                        + dispositivoDAO.getDispositivoAtivo().getPorta()
+                        + "/WaterLevel/WS2/atividade/existe/" + descricao.replace(" ", "%20"));
 
         ClientResponse response = webResource.type(
                 MediaType.APPLICATION_JSON).get(ClientResponse.class);
@@ -58,7 +64,9 @@ public class AtividadeDAOWS implements IAtividadeDAO {
     @Override
     public void cadastrar(Atividade atividade) throws SQLException, DAOException {
         webResource = client
-                .resource("http://10.0.2.2:8080/WaterLevel/WS2/atividade/add");
+                .resource("http://" + dispositivoDAO.getDispositivoAtivo().getHost() + ":"
+                        + dispositivoDAO.getDispositivoAtivo().getPorta()
+                        + "/WaterLevel/WS2/atividade/add");
         webResource.type(MediaType.APPLICATION_JSON).post(atividade);
     }
 
@@ -66,7 +74,9 @@ public class AtividadeDAOWS implements IAtividadeDAO {
     public List<Atividade> listar() throws SQLException, DAOException {
         List<Atividade> list2 = new ArrayList<>();
         webResource = client
-                .resource("http://10.0.2.2:8080/WaterLevel/WS2/atividade/all");
+                .resource("http://" + dispositivoDAO.getDispositivoAtivo().getHost() + ":"
+                        + dispositivoDAO.getDispositivoAtivo().getPorta()
+                        + "/WaterLevel/WS2/atividade/all");
 
         ClientResponse response = webResource.type(
                 MediaType.APPLICATION_JSON).get(ClientResponse.class);
@@ -90,7 +100,9 @@ public class AtividadeDAOWS implements IAtividadeDAO {
     @Override
     public Atividade procurar(int id) throws SQLException, DAOException {
         WebResource webResource4 = client
-                .resource("http://10.0.2.2:8080/WaterLevel/WS2/atividade/procurar/" + id);
+                .resource("http://" + dispositivoDAO.getDispositivoAtivo().getHost() + ":"
+                        + dispositivoDAO.getDispositivoAtivo().getPorta()
+                        + "/WaterLevel/WS2/atividade/procurar/" + id);
 
         ClientResponse response3 = webResource4.type(
                 MediaType.APPLICATION_JSON).get(ClientResponse.class);
@@ -109,14 +121,18 @@ public class AtividadeDAOWS implements IAtividadeDAO {
 
     @Override
     public void atualizar(Atividade atividade) throws  SQLException, DAOException {
-        webResource = client.resource("http://10.0.2.2:8080/WaterLevel/WS2/atividade/update");
+        webResource = client.resource("http://" + dispositivoDAO.getDispositivoAtivo().getHost() + ":"
+                + dispositivoDAO.getDispositivoAtivo().getPorta()
+                + "/WaterLevel/WS2/atividade/update");
         webResource.type(MediaType.APPLICATION_JSON).put(atividade);
     }
 
     @Override
     public void excluir(int id) throws SQLException,DAOException {
         WebResource webResource6 = client
-                .resource("http://10.0.2.2:8080/WaterLevel/WS2/atividade/excluir/" + id);
+                .resource("http://" + dispositivoDAO.getDispositivoAtivo().getHost() + ":"
+                        + dispositivoDAO.getDispositivoAtivo().getPorta()
+                        + "/WaterLevel/WS2/atividade/excluir/" + id);
         ClientResponse response = webResource6.type(
                 MediaType.APPLICATION_JSON).delete(ClientResponse.class);
     }

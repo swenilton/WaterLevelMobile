@@ -55,7 +55,7 @@ public class CriarDb extends SQLiteOpenHelper {
             db.execSQL("insert into usuario values(1,'ADMIN','admin','admin','admin@exemplo.com',NULL,'SIM',NULL,'ADMINISTRADOR')");
         } catch (NullPointerException e) {
             Log.i("erro NullPointerException classe criar db", e.getMessage());
-            throw new NullPointerException("");
+            throw new NullPointerException("Erro ao criar tabelas");
         }
     }
 
@@ -66,6 +66,8 @@ public class CriarDb extends SQLiteOpenHelper {
     public SQLiteDatabase openDb() throws Exception {
         try {
             db = getWritableDatabase();
+            db.execSQL(createDispositivo);
+            db.execSQL(createTableDispositivoAtivo);
         } catch (Exception e) {
             Log.i("erro open db ", "" + e.getMessage());
             throw new Exception(e);

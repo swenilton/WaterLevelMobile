@@ -14,7 +14,7 @@ public class ControladorAtividade {
     private IAtividadeDAO iatividade;
 
     public ControladorAtividade(Context context) throws Exception {
-        this.iatividade = new AtividadeDAOWS();
+        this.iatividade = new AtividadeDAOWS(context);
     }
 
     public void cadastrar(Atividade atividade) throws SQLException, DAOException, AtividadeJaExistenteException {
