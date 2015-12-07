@@ -166,11 +166,13 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_send) {
 
         }
-        FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager
-                .beginTransaction()
-                .replace(R.id.content_main, frgmt)
-                .commit();
+        if (id == R.id.nav_inicio) {} else {
+            FragmentManager fragmentManager = getFragmentManager();
+            fragmentManager
+                    .beginTransaction()
+                    .replace(R.id.content_main, frgmt)
+                    .commit();
+        }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         progressBar.setVisibility(View.INVISIBLE);
