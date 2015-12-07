@@ -66,7 +66,7 @@ public class UsuarioDaoWs implements IUsuarioDAO {
                     .resource("http://10.0.2.2:8080/WaterLevel/WS/user/add");
             webResource.type(MediaType.APPLICATION_JSON).post(usuario);
         } catch (Exception e) {
-        throw new DAOException(e);
+            throw new DAOException(e);
         }
     }
 
@@ -162,7 +162,16 @@ public class UsuarioDaoWs implements IUsuarioDAO {
 
     @Override
     public void alterarSenha(int id, String senha) throws UsuarioNaoEncontradoException, SQLException, DAOException {
+        try {
+            webResource = client
+                    .resource("http://10.0.2.2/WaterLevel/WS/user/newPwd/" + id + "/" + senha);
 
+            Login login= new Login(id,senha);
+            webResource.type(MediaType.APPLICATION_JSON).put(login);
+
+        } catch (Exception e) {
+            throw new DAOException(e);
+        }
     }
 
     @Override
