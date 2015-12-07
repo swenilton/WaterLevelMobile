@@ -9,6 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.gms.appindexing.AndroidAppUri;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,7 +25,7 @@ import br.com.coffeebeans.repositorio.RepositorioRetangular;
  * Use the {@link FragmentHome#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class FragmentHome extends Fragment {
+public class FragmentHome extends android.support.v4.app.Fragment {
     View rootView;
     ViewPager pager;
 
@@ -35,7 +37,8 @@ public class FragmentHome extends Fragment {
         pager = (ViewPager) rootView.findViewById(R.id.pager);
 
         /** Getting fragment manager */
-        final FragmentManager fm = getChildFragmentManager();
+        //final FragmentManager fm = getChildFragmentManager();
+
 
         List<Repositorio> repositorios = new ArrayList<>();
         repositorios.add(new RepositorioRetangular("Repositorio 1", 180.0, 10.0, 100.0, 2.0));
@@ -43,26 +46,6 @@ public class FragmentHome extends Fragment {
 
         /** Instantiating FragmentPagerAdapter */
         HomeFragmentPageAdapter pagerAdapter = new HomeFragmentPageAdapter(repositorios);
-
-        pager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                FragmentHomeBody fhb = new FragmentHomeBody();
-
-                fm.beginTransaction().replace(R.id.content_main, fhb).commit();
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-        });
-
 
         /** Setting the pagerAdapter to the pager object */
         pager.setAdapter(pagerAdapter);

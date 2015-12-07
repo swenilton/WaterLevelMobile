@@ -137,7 +137,11 @@ public class MainActivity extends AppCompatActivity
         Fragment frgmt = null;
         int id = item.getItemId();
         if (id == R.id.nav_inicio) {
-            frgmt = new FragmentHome();
+            android.support.v4.app.Fragment frag = new FragmentHome();
+            android.support.v4.app.FragmentManager fragM = getSupportFragmentManager();
+            fragM.beginTransaction()
+                    .replace(R.id.content_main, frag)
+                    .commit();
             setTitle("Inicio");
         } else if (id == R.id.nav_usuario) {
             frgmt = new FragmentUsuario();
