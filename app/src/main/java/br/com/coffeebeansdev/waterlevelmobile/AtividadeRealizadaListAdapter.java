@@ -34,11 +34,6 @@ public class AtividadeRealizadaListAdapter extends BaseAdapter {
         this.fragmentManager = fragmentManager;
         this.context = context;
         this.atividades = atividades;
-        try {
-            this.fachada = Fachada.getInstance(context);
-        } catch (Exception e) {
-            Log.i("Fachada: ", e.getMessage());
-        }
     }
 
     @Override

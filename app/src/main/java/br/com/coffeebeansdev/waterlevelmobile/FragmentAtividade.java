@@ -95,7 +95,7 @@ public class FragmentAtividade extends Fragment {
                 atividadeListAdapter = new AtividadeListAdapter(context, fragmentManager, fachada.atividadeListar());
             } catch (Exception e) {
                 Log.i("Erro listarAtividade", "Erro ao listar atividades " + e.getMessage());
-                Toast.makeText(context, "Erro ao listar atividades\n" + e.getMessage(), Toast.LENGTH_LONG).show();
+                //Toast.makeText(context, "Erro ao listar atividades\n" + e.getMessage(), Toast.LENGTH_LONG).show();
             }
             return "";
         }

@@ -5,12 +5,16 @@ package br.com.coffeebeansdev.waterlevelmobile;
  */
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.Context;
+import android.os.AsyncTask;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -22,6 +26,8 @@ public class RankFragmentPageAdapter extends PagerAdapter {
     List<Atividade> atividades;
     View rootview;
     ListView listView;
+    Fachada fachada;
+    Context context;
 
     /** Constructor of the class */
     public RankFragmentPageAdapter(List<Atividade> atividades) {
@@ -58,6 +64,7 @@ public class RankFragmentPageAdapter extends PagerAdapter {
     public Object instantiateItem(ViewGroup container, int position) {
         LayoutInflater inflater = (LayoutInflater) container.getContext().getSystemService(container.getContext().LAYOUT_INFLATER_SERVICE);
         rootview = inflater.inflate(R.layout.fragment_list_rank, null);
+        context = container.getContext();
 
         listView = (ListView) rootview.findViewById(R.id.listView);
         try {

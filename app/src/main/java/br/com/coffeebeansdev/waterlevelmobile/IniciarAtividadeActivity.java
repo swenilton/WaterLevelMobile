@@ -6,11 +6,13 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.SystemClock;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Chronometer;
@@ -44,40 +46,8 @@ public class IniciarAtividadeActivity extends AppCompatActivity {
         setTitle("Iniciar Atividade");
         tvDesc = (TextView) findViewById(R.id.tvDesc);
         id = (int)getIntent().getExtras().get("id");
-        try{
-            fachada = Fachada.getInstance(getApplicationContext());
-            atividade = fachada.atividadeProcurar(id);
-        }catch (Exception e){
 
-        }
-        tvDesc.setText(atividade.getDescricao());
-        chronometer = (Chronometer) findViewById(R.id.chronometer2);
-        tvInicio = (TextView) findViewById(R.id.tvInicio2);
-        tvStatus = (TextView) findViewById(R.id.tvStatus2);
-        progressBar = (ProgressBar) findViewById(R.id.progressBar2);
-        btnPause = (ImageButton) findViewById(R.id.btnPause);
-        btnStart = (ImageButton) findViewById(R.id.btnStart);
-        btnStop = (ImageButton) findViewById(R.id.btnStop);
-        btnStart.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                start();
-            }
-        });
-        btnPause.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                pause();
-            }
-        });
-        btnStop.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                stop();
-            }
-        });
-        btnPause.setEnabled(false);
-        btnStop.setEnabled(false);
+        new TaskAtividade().execute();
     }
 
     private void stop() {
@@ -153,5 +123,61 @@ public class IniciarAtividadeActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         super.onBackPressed();
         return true;
+    }
+
+    private class TaskAtividade extends AsyncTask<Void, Void, String> {
+
+        @Override
+        protected void onPreExecute() {
+                try {
+                    fachada = Fachada.getInstance(getApplicationContext());
+                } catch (Exception e) {
+                    Log.i("Erro Fachada", "Erro ao instancia fachada " + e.getMessage());
+                    Toast.makeText(getApplicationContext(), "Erro ao instancia fachada\n" + e.getMessage(), Toast.LENGTH_LONG).show();
+                }
+        }
+
+        @Override
+        protected String doInBackground(Void... params) {
+            try {
+                atividade = fachada.atividadeProcurar(id);
+            } catch (Exception e) {
+                Log.i("Erro listarAtividade", "Erro ao listar atividades " + e.getMessage());
+                //Toast.makeText(context, "Erro ao listar atividades\n" + e.getMessage(), Toast.LENGTH_LONG).show();
+            }
+            return "";
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            tvDesc.setText(atividade.getDescricao());
+            chronometer = (Chronometer) findViewById(R.id.chronometer2);
+            tvInicio = (TextView) findViewById(R.id.tvInicio2);
+            tvStatus = (TextView) findViewById(R.id.tvStatus2);
+            progressBar = (ProgressBar) findViewById(R.id.progressBar2);
+            btnPause = (ImageButton) findViewById(R.id.btnPause);
+            btnStart = (ImageButton) findViewById(R.id.btnStart);
+            btnStop = (ImageButton) findViewById(R.id.btnStop);
+            btnStart.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    start();
+                }
+            });
+            btnPause.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    pause();
+                }
+            });
+            btnStop.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    stop();
+                }
+            });
+            btnPause.setEnabled(false);
+            btnStop.setEnabled(false);
+        }
     }
 }
